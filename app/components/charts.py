@@ -16,7 +16,7 @@ SIMILARITY_BUCKETS = (
     (0.80, 0.85, "Some overlap in style", "blue"),
     (0.85, 0.90, "Close style match", "orange"),
     (0.90, 0.94, "Style twin", "green"),
-    (0.94, 1.01, "Basketball doppelgänger", "green"),
+    (0.94, 1.01, "Basketball doppelgänger", "violet"),
 )
 
 
