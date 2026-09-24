@@ -1,0 +1,150 @@
+{
+  "created_at": "2026-09-22T10:54:10+00:00",
+  "champion_model_id": "play-style-v1",
+  "design": "For each fold, refit the frozen v1 architecture only on seasons ending at least one year before the candidate season, then retrieve the same player's adjacent season. The v1 architecture was originally selected on 2024-25 -> 2023-24, so this measures multi-year robustness rather than fully nested hyperparameter selection.",
+  "folds": {
+    "broad_offensive": [
+      {
+        "training_end": "1996-97",
+        "query_season": "1998-99",
+        "candidate_season": "1997-98"
+      },
+      {
+        "training_end": "2001-02",
+        "query_season": "2003-04",
+        "candidate_season": "2002-03"
+      },
+      {
+        "training_end": "2006-07",
+        "query_season": "2008-09",
+        "candidate_season": "2007-08"
+      },
+      {
+        "training_end": "2011-12",
+        "query_season": "2013-14",
+        "candidate_season": "2012-13"
+      },
+      {
+        "training_end": "2016-17",
+        "query_season": "2018-19",
+        "candidate_season": "2017-18"
+      },
+      {
+        "training_end": "2020-21",
+        "query_season": "2022-23",
+        "candidate_season": "2021-22"
+      },
+      {
+        "training_end": "2021-22",
+        "query_season": "2023-24",
+        "candidate_season": "2022-23"
+      },
+      {
+        "training_end": "2022-23",
+        "query_season": "2024-25",
+        "candidate_season": "2023-24"
+      },
+      {
+        "training_end": "2023-24",
+        "query_season": "2025-26",
+        "candidate_season": "2024-25"
+      }
+    ],
+    "recent": [
+      {
+        "training_end": "2020-21",
+        "query_season": "2022-23",
+        "candidate_season": "2021-22"
+      },
+      {
+        "training_end": "2021-22",
+        "query_season": "2023-24",
+        "candidate_season": "2022-23"
+      },
+      {
+        "training_end": "2022-23",
+        "query_season": "2024-25",
+        "candidate_season": "2023-24"
+      },
+      {
+        "training_end": "2023-24",
+        "query_season": "2025-26",
+        "candidate_season": "2024-25"
+      }
+    ]
+  },
+  "summary": [
+    {
+      "profile": "Broad history",
+      "lens": "Defensive",
+      "method": "Denoising autoencoder",
+      "recall_at_1": 0.2313616467906991,
+      "recall_at_3": 0.4154168246961972,
+      "recall_at_5": 0.5030767706029033,
+      "recall_at_10": 0.6302650005062665,
+      "mean_reciprocal_rank": 0.3635413372361454,
+      "median_rank": 5.375,
+      "folds": 4
+    },
+    {
+      "profile": "Broad history",
+      "lens": "Offensive",
+      "method": "Denoising autoencoder",
+      "recall_at_1": 0.46343028141370357,
+      "recall_at_3": 0.6412984109680626,
+      "recall_at_5": 0.7119679550532767,
+      "recall_at_10": 0.8016381993273713,
+      "mean_reciprocal_rank": 0.5799391702303328,
+      "median_rank": 1.6666666666666667,
+      "folds": 9
+    },
+    {
+      "profile": "Broad history",
+      "lens": "Overall",
+      "method": "Denoising autoencoder",
+      "recall_at_1": 0.7050094841757696,
+      "recall_at_3": 0.8409702540573293,
+      "recall_at_5": 0.8826002406648554,
+      "recall_at_10": 0.9391714693176851,
+      "mean_reciprocal_rank": 0.7854875671870758,
+      "median_rank": 1.0,
+      "folds": 4
+    },
+    {
+      "profile": "Modern detailed",
+      "lens": "Defensive",
+      "method": "Denoising autoencoder",
+      "recall_at_1": 0.22375736552256295,
+      "recall_at_3": 0.4048574039962346,
+      "recall_at_5": 0.5022258875165293,
+      "recall_at_10": 0.6208058576340423,
+      "mean_reciprocal_rank": 0.3552019345683251,
+      "median_rank": 5.25,
+      "folds": 4
+    },
+    {
+      "profile": "Modern detailed",
+      "lens": "Offensive",
+      "method": "Denoising autoencoder",
+      "recall_at_1": 0.5187443288287259,
+      "recall_at_3": 0.6998089826322619,
+      "recall_at_5": 0.7740253737445745,
+      "recall_at_10": 0.8463907037795171,
+      "mean_reciprocal_rank": 0.6337252565144587,
+      "median_rank": 1.5,
+      "folds": 4
+    },
+    {
+      "profile": "Modern detailed",
+      "lens": "Overall",
+      "method": "Denoising autoencoder",
+      "recall_at_1": 0.6997286501626798,
+      "recall_at_3": 0.8419249863915679,
+      "recall_at_5": 0.8825565700987775,
+      "recall_at_10": 0.9382943418034323,
+      "mean_reciprocal_rank": 0.7828871294677181,
+      "median_rank": 1.0,
+      "folds": 4
+    }
+  ]
+}

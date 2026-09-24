@@ -1,0 +1,17 @@
+{
+  "created_at": "2026-09-03T14:46:29+00:00",
+  "format": "Apache Parquet (Snappy compression)",
+  "missingness_policy": "Unavailable historical fields remain null or absent; shot-detail coverage must never be inferred before 1996-97.",
+  "partitioning": "player_game_stats/season=<season>/season_type=<type>/",
+  "row_counts": {
+    "box_score_rows": 1395301,
+    "shot_event_rows": 6328071,
+    "team_box_score_rows": 146560
+  },
+  "sources": {
+    "box_scores": "https://www.kaggle.com/datasets/eoinamoore/historical-nba-data-and-player-box-scores",
+    "shot_detail": "https://huggingface.co/datasets/cdechoch/nba-data-archive",
+    "team_box_scores": "https://www.kaggle.com/datasets/eoinamoore/historical-nba-data-and-player-box-scores",
+    "player_team_assignments_2021-22": "https://stats.nba.com/stats/leaguegamelog"
+  }
+}

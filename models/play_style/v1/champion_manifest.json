@@ -1,0 +1,35 @@
+{
+  "model_id": "play-style-v1",
+  "status": "champion",
+  "frozen_at": "2026-09-22T10:33:01Z",
+  "training_end": "2022-23",
+  "selection_pair": "2024-25 -> 2023-24",
+  "untouched_test_pair": "2025-26 -> 2024-25",
+  "selected_methods": {
+    "Broad history": {
+      "Offensive": "Denoising autoencoder",
+      "Defensive": "Denoising autoencoder",
+      "Overall": "Denoising autoencoder"
+    },
+    "Modern detailed": {
+      "Offensive": "Denoising autoencoder",
+      "Defensive": "Denoising autoencoder",
+      "Overall": "Denoising autoencoder"
+    }
+  },
+  "selected_latent_dimensions": {
+    "Broad history": {"Offensive": 16, "Defensive": 11, "Overall": 28},
+    "Modern detailed": {"Offensive": 16, "Defensive": 11, "Overall": 34}
+  },
+  "selected_action_weights": {
+    "Broad history": {"Offensive": null, "Defensive": null, "Overall": null},
+    "Modern detailed": {"Offensive": 0.5, "Defensive": null, "Overall": 0.0}
+  },
+  "local_artifact_directory": "data/historical/model_registry/play_style/v1",
+  "artifact_sha256": {
+    "play_style_evaluation.json": "371e477479c61bd6635e0def978b5fe60adac40d6fa469a77d545961191769be",
+    "play_style_models.joblib": "538b1ca253824357033597a822229a069bfed3064dcc1a4823cc00b324191a06",
+    "player_style_embeddings.parquet": "fb0c0f80abfd5cf445f4f65ceefef7fc6ec57fb5d5ccf441a01ba9fd8b99c066",
+    "player_style_features.parquet": "58f7b0df6205c3bd336b4734c322d81c92d9909c4d3750dfdea37735e80ebf26"
+  }
+}

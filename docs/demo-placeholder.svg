@@ -1,0 +1,16 @@
+<svg width="1280" height="720" viewBox="0 0 1280 720" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#17253e"/><stop offset="0.65" stop-color="#0b1220"/><stop offset="1" stop-color="#342016"/>
+    </linearGradient>
+  </defs>
+  <rect width="1280" height="720" rx="24" fill="url(#bg)"/>
+  <circle cx="1045" cy="145" r="88" fill="#ff6b35" opacity=".95"/>
+  <path d="M970 145h150M1045 70c-38 38-38 112 0 150M1045 70c38 38 38 112 0 150" stroke="#131b29" stroke-width="8" fill="none"/>
+  <text x="90" y="250" fill="#ff996e" font-family="Arial" font-size="22" font-weight="700" letter-spacing="4">EVIDENCE-FIRST BASKETBALL INTELLIGENCE</text>
+  <text x="90" y="335" fill="#f4f7fb" font-family="Arial" font-size="70" font-weight="700">BallDNA</text>
+  <text x="90" y="395" fill="#b7c4d7" font-family="Arial" font-size="29">Structured data → inspectable scouting insight</text>
+  <rect x="90" y="470" width="1100" height="100" rx="18" fill="#121c2d" stroke="#344057"/>
+  <text x="125" y="530" fill="#f4f7fb" font-family="Arial" font-size="25">Demo GIF / product screenshots will replace this preview.</text>
+</svg>
+

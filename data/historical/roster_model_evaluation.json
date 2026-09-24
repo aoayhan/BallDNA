@@ -1,0 +1,135 @@
+{
+  "created_at": "2026-09-16T08:44:56+00:00",
+  "seasons": [
+    "2021-22",
+    "2022-23",
+    "2023-24",
+    "2024-25",
+    "2025-26"
+  ],
+  "season_selection": "Five most recent completed seasons with at least 28 teams in both the team outcomes and player-to-team minute archive.",
+  "excluded_recent_seasons": [
+    "2018-19",
+    "2019-20",
+    "2020-21"
+  ],
+  "selected_model": "Elastic net",
+  "selected_model_mae": 1.788657246871552,
+  "selected_model_rmse": 2.265032086552006,
+  "selected_model_rank_correlation": 0.885893595270901,
+  "minimum_detectable_change": 1.788657246871552,
+  "minimum_detectable_change_note": "Until roster-change deltas are validated directly, changes smaller than the held-out Net Rating MAE are reported as no detectable change.",
+  "error_interval": {
+    "type": "80th percentile absolute error from leave-one-season-out validation",
+    "net_rating_points": 2.7082035867002316
+  },
+  "win_calibration": {
+    "bounded_logistic_mae": 2.2537300698066756,
+    "linear_mae": 2.3405118433664573
+  },
+  "beats_season_mean_baseline": true,
+  "training_rows": 150,
+  "player_vector_rows": 2862,
+  "player_team_stint_rows": 3289,
+  "player_pool_policy": "All players with at least one recorded regular-season game and positive minutes are retained; small samples are shrunk and labeled by reliability.",
+  "player_traits": [
+    "scoring_volume",
+    "scoring_efficiency",
+    "perimeter_volume",
+    "perimeter_accuracy",
+    "rim_pressure",
+    "shot_creation",
+    "playmaking",
+    "ball_security",
+    "offensive_rebounding",
+    "defensive_rebounding",
+    "disruption",
+    "rim_protection",
+    "interior_scoring"
+  ],
+  "player_quality": "DARKO DPM is the primary player-impact rate and is transformed monotonically to the model's 0-1 quality scale. The documented box-score composite is retained only as a fallback when a player-season is absent from the public DARKO snapshot.",
+  "rotation_policy": "Historical and reference roles use each player's share of actual team minutes, so injuries, trades and bench appearances remain represented. The share is displayed as a 240-minute equivalent; no positive incumbent contribution is deleted.",
+  "talent_index": "65% minute-weighted rotation quality + 35% unweighted quality of the three best active players; a non-negative one-feature model makes merit-based additions monotonic.",
+  "model_features": [
+    "roster__scoring_volume",
+    "roster__scoring_efficiency",
+    "roster__perimeter_volume",
+    "roster__perimeter_accuracy",
+    "roster__rim_pressure",
+    "roster__shot_creation",
+    "roster__playmaking",
+    "roster__ball_security",
+    "roster__offensive_rebounding",
+    "roster__defensive_rebounding",
+    "roster__disruption",
+    "roster__rim_protection",
+    "roster__interior_scoring",
+    "rotation_quality",
+    "top_three_quality",
+    "effective_rotation_size",
+    "top_three_minute_share",
+    "guard_minute_share",
+    "center_minute_share",
+    "position_entropy",
+    "two_way_balance"
+  ],
+  "models": [
+    {
+      "model": "Elastic net",
+      "mae": 1.788657246871552,
+      "rmse": 2.265032086552006,
+      "rank_correlation": 0.885893595270901,
+      "residual_std": 2.270669112983887,
+      "absolute_error_p80": 2.7082035867002316,
+      "validation_rows": 150,
+      "validation_seasons": 5
+    },
+    {
+      "model": "Ridge regression",
+      "mae": 1.7977703026574978,
+      "rmse": 2.275549020351548,
+      "rank_correlation": 0.8842081870305347,
+      "residual_std": 2.281355213161931,
+      "absolute_error_p80": 2.659603656514754,
+      "validation_rows": 150,
+      "validation_seasons": 5
+    },
+    {
+      "model": "Random forest",
+      "mae": 2.275202250012861,
+      "rmse": 2.978186955661791,
+      "rank_correlation": 0.793210364905107,
+      "residual_std": 2.9881171653770777,
+      "absolute_error_p80": 3.934553255758329,
+      "validation_rows": 150,
+      "validation_seasons": 5
+    },
+    {
+      "model": "Gradient boosting",
+      "mae": 2.3078698634088903,
+      "rmse": 2.949161070197954,
+      "rank_correlation": 0.7944015289568426,
+      "residual_std": 2.958516392678269,
+      "absolute_error_p80": 3.702007538943983,
+      "validation_rows": 150,
+      "validation_seasons": 5
+    },
+    {
+      "model": "Season-mean baseline",
+      "mae": 4.306600264029245,
+      "rmse": 5.359551497560942,
+      "rank_correlation": -0.0316807713649598,
+      "residual_std": 5.377506494244835,
+      "absolute_error_p80": 7.610834978507751,
+      "validation_rows": 150,
+      "validation_seasons": 5
+    }
+  ],
+  "limitations": [
+    "Inputs use same-season player performance and are descriptive, not preseason forecasts.",
+    "A roster edit is a counterfactual association and does not estimate transaction causality.",
+    "Player defense is limited to rebounding, steals, blocks, and a small team-context plus-minus signal; lineup and matchup context are absent.",
+    "Historical team assignments represent minutes actually contributed; traded-player vectors use full-season rates.",
+    "Rotation minutes total 240 per team game and are capped at 48 per player."
+  ]
+}

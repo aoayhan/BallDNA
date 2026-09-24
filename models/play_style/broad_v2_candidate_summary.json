@@ -1,0 +1,226 @@
+{
+  "created_at": "2026-09-22T11:15:43+00:00",
+  "candidate_model_id": "broad-history-v2",
+  "champion_model_id": "play-style-v1",
+  "feature_policy": "Uses only box-score and shot-location fields consistently available since 1996-97; era-dependent move labels are excluded.",
+  "feature_sets": {
+    "stable_only": [
+      "rim_frequency",
+      "paint_frequency",
+      "midrange_frequency",
+      "three_point_frequency",
+      "average_shot_distance",
+      "field_goal_attempts_per_36",
+      "three_point_attempt_rate",
+      "free_throw_attempt_rate",
+      "assists_per_36",
+      "turnovers_per_36",
+      "assist_turnover_ratio",
+      "offensive_rebounds_per_36",
+      "estimated_used_possessions_per_36",
+      "distance_0_3_frequency",
+      "distance_4_7_frequency",
+      "distance_8_15_frequency",
+      "distance_16_22_frequency",
+      "distance_23_27_frequency",
+      "distance_28_39_frequency",
+      "distance_40_plus_frequency",
+      "restricted_area_frequency",
+      "non_restricted_paint_frequency",
+      "corner_three_frequency",
+      "above_break_three_frequency",
+      "left_side_frequency",
+      "center_channel_frequency",
+      "right_side_frequency",
+      "shot_distance_std",
+      "lateral_location_std"
+    ],
+    "champion_plus_location": [
+      "rim_frequency",
+      "paint_frequency",
+      "midrange_frequency",
+      "three_point_frequency",
+      "dunk_frequency",
+      "layup_frequency",
+      "floater_frequency",
+      "hook_frequency",
+      "pull_up_frequency",
+      "step_back_frequency",
+      "average_shot_distance",
+      "field_goal_attempts_per_36",
+      "three_point_attempt_rate",
+      "free_throw_attempt_rate",
+      "assists_per_36",
+      "turnovers_per_36",
+      "assist_turnover_ratio",
+      "offensive_rebounds_per_36",
+      "estimated_used_possessions_per_36",
+      "distance_0_3_frequency",
+      "distance_4_7_frequency",
+      "distance_8_15_frequency",
+      "distance_16_22_frequency",
+      "distance_23_27_frequency",
+      "distance_28_39_frequency",
+      "distance_40_plus_frequency",
+      "restricted_area_frequency",
+      "non_restricted_paint_frequency",
+      "corner_three_frequency",
+      "above_break_three_frequency",
+      "left_side_frequency",
+      "center_channel_frequency",
+      "right_side_frequency",
+      "shot_distance_std",
+      "lateral_location_std"
+    ]
+  },
+  "selected_candidate": {
+    "variant": "champion_plus_location_0.25",
+    "max_iter": 500,
+    "selection_folds": 8,
+    "selection_mean_reciprocal_rank": 0.613541179313684,
+    "selection_recall_at_5": 0.7452477961846686,
+    "final_test_fold": "2025-26 -> 2024-25",
+    "final_test_mean_reciprocal_rank": 0.6524783420639702,
+    "final_test_recall_at_5": 0.7857142857142857
+  },
+  "folds": [
+    {
+      "training_end": "1996-97",
+      "query_season": "1998-99",
+      "candidate_season": "1997-98"
+    },
+    {
+      "training_end": "2001-02",
+      "query_season": "2003-04",
+      "candidate_season": "2002-03"
+    },
+    {
+      "training_end": "2006-07",
+      "query_season": "2008-09",
+      "candidate_season": "2007-08"
+    },
+    {
+      "training_end": "2011-12",
+      "query_season": "2013-14",
+      "candidate_season": "2012-13"
+    },
+    {
+      "training_end": "2016-17",
+      "query_season": "2018-19",
+      "candidate_season": "2017-18"
+    },
+    {
+      "training_end": "2020-21",
+      "query_season": "2022-23",
+      "candidate_season": "2021-22"
+    },
+    {
+      "training_end": "2021-22",
+      "query_season": "2023-24",
+      "candidate_season": "2022-23"
+    },
+    {
+      "training_end": "2022-23",
+      "query_season": "2024-25",
+      "candidate_season": "2023-24"
+    },
+    {
+      "training_end": "2023-24",
+      "query_season": "2025-26",
+      "candidate_season": "2024-25"
+    }
+  ],
+  "summary": [
+    {
+      "variant": "champion_plus_location_0.25",
+      "max_iter": 500,
+      "recall_at_1": 0.5068818071085155,
+      "recall_at_3": 0.6813636599034143,
+      "recall_at_5": 0.7497440727990705,
+      "recall_at_10": 0.8379802919857952,
+      "mean_reciprocal_rank": 0.6178675307303825,
+      "median_rank": 1.4444444444444444,
+      "folds": 9,
+      "converged_folds": 9,
+      "mean_encoder_iterations": 135.66666666666666
+    },
+    {
+      "variant": "champion_plus_location_0.50",
+      "max_iter": 500,
+      "recall_at_1": 0.49873440498839017,
+      "recall_at_3": 0.672135016718496,
+      "recall_at_5": 0.7503296479921472,
+      "recall_at_10": 0.8259970039161932,
+      "mean_reciprocal_rank": 0.6129355170270103,
+      "median_rank": 1.4444444444444444,
+      "folds": 9,
+      "converged_folds": 8,
+      "mean_encoder_iterations": 150.11111111111111
+    },
+    {
+      "variant": "champion_plus_location_1.00",
+      "max_iter": 500,
+      "recall_at_1": 0.4921532229790805,
+      "recall_at_3": 0.6625491689775569,
+      "recall_at_5": 0.7316082179161024,
+      "recall_at_10": 0.8152775664311193,
+      "mean_reciprocal_rank": 0.6019229847714941,
+      "median_rank": 1.7222222222222223,
+      "folds": 9,
+      "converged_folds": 8,
+      "mean_encoder_iterations": 156.11111111111111
+    },
+    {
+      "variant": "stable_absolute",
+      "max_iter": 500,
+      "recall_at_1": 0.4128696656282617,
+      "recall_at_3": 0.5947695426554757,
+      "recall_at_5": 0.6722594964667268,
+      "recall_at_10": 0.7776904922413357,
+      "mean_reciprocal_rank": 0.534111515913335,
+      "median_rank": 2.2222222222222223,
+      "folds": 9,
+      "converged_folds": 9,
+      "mean_encoder_iterations": 157.33333333333334
+    },
+    {
+      "variant": "stable_absolute",
+      "max_iter": 1500,
+      "recall_at_1": 0.4128696656282617,
+      "recall_at_3": 0.5947695426554757,
+      "recall_at_5": 0.6722594964667268,
+      "recall_at_10": 0.7776904922413357,
+      "mean_reciprocal_rank": 0.534111515913335,
+      "median_rank": 2.2222222222222223,
+      "folds": 9,
+      "converged_folds": 9,
+      "mean_encoder_iterations": 157.33333333333334
+    },
+    {
+      "variant": "stable_era_relative",
+      "max_iter": 500,
+      "recall_at_1": 0.37235947621983617,
+      "recall_at_3": 0.5502535228970102,
+      "recall_at_5": 0.6337462022725877,
+      "recall_at_10": 0.758436293613361,
+      "mean_reciprocal_rank": 0.4960663975990237,
+      "median_rank": 2.8333333333333335,
+      "folds": 9,
+      "converged_folds": 9,
+      "mean_encoder_iterations": 138.55555555555554
+    },
+    {
+      "variant": "stable_era_relative",
+      "max_iter": 1500,
+      "recall_at_1": 0.37235947621983617,
+      "recall_at_3": 0.5502535228970102,
+      "recall_at_5": 0.6337462022725877,
+      "recall_at_10": 0.758436293613361,
+      "mean_reciprocal_rank": 0.4960663975990237,
+      "median_rank": 2.8333333333333335,
+      "folds": 9,
+      "converged_folds": 9,
+      "mean_encoder_iterations": 138.55555555555554
+    }
+  ]
+}
