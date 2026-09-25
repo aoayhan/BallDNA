@@ -58,7 +58,7 @@ def add_game_metrics(games: pd.DataFrame) -> pd.DataFrame:
 
 
 def summarize_games(games: pd.DataFrame) -> dict[str, float | int]:
-    """Create a compact aggregate used by both UI and AI grounding."""
+    """Create a compact aggregate used by both UI and evidence summaries."""
 
     enriched = add_game_metrics(games)
     if enriched.empty:
@@ -82,4 +82,3 @@ def summarize_games(games: pd.DataFrame) -> dict[str, float | int]:
             float(enriched["assist_turnover_ratio"].mean()), 2
         ),
     }
-

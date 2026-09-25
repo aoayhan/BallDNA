@@ -1,4 +1,4 @@
-"""Grounded natural-language question answering page."""
+"""Experimental rule-based question routing page."""
 
 from __future__ import annotations
 
@@ -17,11 +17,9 @@ from components.ui import (  # noqa: E402
     player_selector,
     render_build_trace,
     render_evidence,
-    render_generation_status,
 )
 from ball_ai.ai.grounding import build_player_evidence  # noqa: E402
 from ball_ai.ai.report_generator import answer_question  # noqa: E402
-from ball_ai.config import settings  # noqa: E402
 from ball_ai.data.database import (  # noqa: E402
     get_data_status_text,
     get_player_profile,
@@ -37,7 +35,7 @@ initialize_app()
 st.title("Ask the Data")
 st.warning("🚧 Under construction — this supporting workflow is not part of the current finished demo.")
 st.caption(
-    "Ask in natural language; grounded AI answers from a compact evidence packet and refuses unsupported causes."
+    "A deterministic keyword router answers a limited set of questions from a compact evidence packet."
 )
 
 players = get_players()
@@ -65,16 +63,14 @@ question = st.text_area(
     value="" if choice == "Write my own question" else choice,
     placeholder="What does the data say about this player's recent production?",
 )
-prefer_llm = st.toggle("Use LLM when configured", value=bool(settings.openai_api_key))
 result_key = f"qa_result_{player_id}_{hash(question.strip())}"
 
 if st.button("Ask BallDNA", type="primary", disabled=not question.strip()):
     with st.spinner("Checking the evidence packet…"):
-        st.session_state[result_key] = answer_question(packet, question, prefer_llm=prefer_llm)
+        st.session_state[result_key] = answer_question(packet, question)
 
 if result_key in st.session_state:
     result = st.session_state[result_key]
-    render_generation_status(result.mode, result.warning)
     st.markdown(result.text)
 
 with st.expander("Inspect the evidence context", expanded=True):
@@ -83,8 +79,8 @@ with st.expander("Inspect the evidence context", expanded=True):
 render_build_trace(
     [
         ("Question context", "Resolve the selected player and retrieve only the relevant stored season and recent-game rows."),
-        ("Analytics layer", "Calculate compact efficiency, recent trends, and prior-season context before any prompt is created."),
-        ("Grounded prompt", "Send the question, approved evidence IDs, provenance, and limitations—not the raw database—to the model."),
-        ("Safe response", "Require cited claims and an explicit limitation; deterministic mode refuses questions the supplied data cannot answer."),
+        ("Analytics layer", "Calculate compact efficiency, recent trends, and prior-season context."),
+        ("Question routing", "Map supported question types to approved evidence fields and calculations."),
+        ("Safe response", "Return cited rule-based text and refuse questions the supplied data cannot answer."),
     ]
 )

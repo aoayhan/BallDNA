@@ -203,18 +203,6 @@ def render_evidence(packet: dict) -> None:
     render_copyable_table(frame)
 
 
-def render_generation_status(mode: str, warning: str | None) -> None:
-    if mode == "template":
-        st.info("Template mode · The app is fully functional without an API key.")
-    else:
-        st.success(f"Grounded LLM mode · {mode.removeprefix('openai:')}")
-    if warning and "not configured" not in warning:
-        st.caption(
-            "Remote generation was unavailable, so BallDNA used the safe "
-            f"fallback: {warning}"
-        )
-
-
 def render_build_trace(
     steps: list[tuple[str, str]],
     *,

@@ -1,2 +1,1 @@
-"""Grounded generation and quality checks."""
-
+"""Evidence packets, deterministic summaries, and quality checks."""

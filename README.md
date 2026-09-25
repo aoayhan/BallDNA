@@ -1,45 +1,43 @@
 # BallDNA
 
-> An AI-first, evidence-grounded scouting copilot that builds explainable player embeddings and turns structured basketball data into cited reports, comparisons, retrieval results, and natural-language answers.
+> An explainable, self-supervised NBA player-style retrieval product built from historical box scores, shot profiles, and learned Player DNA embeddings.
 
 ![BallDNA demo placeholder](docs/demo-placeholder.svg)
 
-BallDNA is a public portfolio project built to demonstrate practical AI and data engineering skills in one useful product. The AI pipeline is the product: feature engineering creates auditable player representations, deterministic vector retrieval finds role-aware neighbors, and an evidence-constrained language model explains results without being allowed to invent or reorder them.
+BallDNA is a public portfolio project built to demonstrate practical machine-learning and data-engineering skills in one useful product. The ML pipeline is the product: feature engineering creates auditable player representations, self-supervised encoders learn persistent playing tendencies, and deterministic retrieval searches NBA history for comparable player-seasons.
 
-> **Data note:** the default demo combines a checked-in derivative of [Eoin A Moore's NBA box-score dataset on Kaggle](https://www.kaggle.com/datasets/eoinamoore/historical-nba-data-and-player-box-scores), designated **CC0-1.0 / Public Domain** by its publisher, with engineered profiles from the [NBA Data Archive](https://huggingface.co/datasets/cdechoch/nba-data-archive), whose mirror declares **Apache-2.0**. A local, Git-ignored Parquet archive adds team games from 1946-47, player games from 1951-52, and 6.3 million shot events from 1996-97 onward. A dated [nbarapm DARKO history snapshot](https://nbarapm.com/datasets/MetricHistory) supplies DPM context from 1996-97 onward; BallDNA ignores its historical team labels and joins only by NBA player ID and season. Coverage and provenance are stored alongside the data so an unavailable historical statistic is never treated as zero.
+> **Data note:** the default demo combines a checked-in derivative of [Eoin A Moore's NBA box-score dataset on Kaggle](https://www.kaggle.com/datasets/eoinamoore/historical-nba-data-and-player-box-scores), designated **CC0-1.0 / Public Domain** by its publisher, with engineered profiles from the [NBA Data Archive](https://huggingface.co/datasets/cdechoch/nba-data-archive), whose mirror declares **Apache-2.0**. Checked-in compact inference assets plus a larger local, Git-ignored Parquet archive cover team games from 1946-47, player games from 1951-52, and 6.3 million shot events from 1996-97 onward. A dated [nbarapm DARKO history snapshot](https://nbarapm.com/datasets/MetricHistory) supplies DPM context from 1996-97 onward; BallDNA ignores its historical team labels and joins only by NBA player ID and season. Coverage and provenance are stored alongside the data so an unavailable historical statistic is never treated as zero.
 
 ## Why I built it
 
-AI, GenAI, data science, and data engineering roles increasingly ask for proof that a candidate can turn ambiguous requirements into a working, explainable product. BallDNA combines API-ready ingestion boundaries, SQL storage, analytics, similarity search, LLM prompting, quality checks, UI design, and graceful error handling in a recruiter-friendly prototype.
+AI, data science, and data engineering roles increasingly ask for proof that a candidate can turn ambiguous requirements into a working, explainable product. BallDNA combines API-ready ingestion boundaries, SQL storage, analytics, self-supervised representation learning, similarity search, evaluation, UI design, and graceful error handling in a recruiter-friendly prototype.
 
 ## What it demonstrates
 
-- **AI application engineering:** evidence-constrained generation, prompt versioning, fallback behavior, and a small evaluation harness.
+- **Machine learning:** denoising autoencoders, temporal metric learning, learned embeddings, chronological holdouts, and baseline comparison.
 - **Data engineering:** chunked CSV ingestion, season-partitioned Parquet, explicit coverage metadata, validation, idempotent SQLite loading, and indexed read paths.
-- **Data science:** self-supervised denoising autoencoders, held-out temporal retrieval, statistical baselines, efficiency metrics, trend analysis, and explainable vector search.
-- **Product engineering:** a multi-page Streamlit UI, interactive Plotly charts, clear limitations, report persistence, and Markdown export.
+- **Data science:** held-out temporal retrieval, statistical baselines, efficiency metrics, trend analysis, and explainable vector search.
+- **Product engineering:** a multi-page Streamlit UI, interactive Plotly charts, clear limitations, deterministic evidence summaries, and Markdown export.
 - **Software engineering:** a `src/` package layout, environment-based configuration, docstrings, unit/integration tests, and reproducible sample data.
 
 ## Product features
 
 | Area | What the user can do | Evidence-first behavior |
 |---|---|---|
-| Player Scout | Find a player by name or team, inspect a profile, and generate a structured report | Claims cite stable evidence IDs shown in a table |
+| Player Scout | Find a player by name or team, inspect a profile, and create a rule-based summary | The fixed template cites stable evidence IDs shown in a table |
 | Compare Players | Search or team-filter two players and compare their production profiles | Output explains fit for a stated need, not a universal winner |
 | Similar Players | Switch between Broad History (common cross-era inputs) and Modern Detailed (2020+ action context), then filter candidates by season, age, position, or impact | Separate self-supervised Player DNA encoders are tested against cosine and PCA baselines; identity, team, position, size, efficiency, and impact are excluded from their inputs |
-| Ask the Data | Find a player by name or team and ask about scoring, facilitation, spacing, or recent trends | Unsupported causes are refused when context is missing |
-| Team Needs Lab | Compare any team with a configurable top-5–10 benchmark and retrieve player examples for its largest gaps | Candidate robustness is measured across nine cohort/lookback definitions and capped by broad position before the LLM explains the fixed ranking |
-| Roster Construction Lab | Add/remove players or assemble a custom roster | DARKO DPM estimates impact, custom per-36/shot embeddings describe fit, and a held-out-season model estimates team quality before grounded AI explanation |
-| Quality checks | Inspect report structure and grounding heuristics | Sections, citations, numeric support, and fallback output are tested |
+| Ask the Data | Try an under-construction keyword-based question router for a selected player | Unsupported causes are refused when context is missing |
+| Team Needs Lab | Compare any team with a configurable top-5–10 benchmark and retrieve player examples for its largest gaps | Candidate robustness is measured across nine cohort/lookback definitions and capped by broad position |
+| Roster Construction Lab | Add/remove players or assemble a custom roster | DARKO DPM estimates impact, custom per-36/shot embeddings describe fit, and a held-out-season model estimates team quality |
+| Quality checks | Inspect model validation, data coverage, summary structure, citations, and numeric support | Tests verify the retrieval pipeline and deterministic summaries |
 | Export | Download a report as Markdown | Export preserves citations and limitations |
 
 Player discovery treats the selected team as a preference: if a name is not found on that team, BallDNA recommends matching players elsewhere and makes their team context explicit. Statistical cards, tables, chart series, and evidence follow the familiar relative order used by Basketball Reference; unavailable source fields are omitted and BallDNA-specific scores are placed last.
 
 ## Tech stack
 
-Python 3.10+ · Streamlit · pandas · NumPy · SQLite · Plotly · scikit-learn · PyArrow · Kaggle CLI · python-dotenv · pytest · optional OpenAI API
-
-The optional LLM adapter uses the official [OpenAI Responses API](https://developers.openai.com/api/reference/cli/resources/responses/methods/create). No key is required for the deterministic template mode.
+Python 3.10+ · Streamlit · pandas · NumPy · SQLite · Plotly · scikit-learn · PyArrow · Kaggle CLI · python-dotenv · pytest
 
 ## Architecture
 
@@ -71,12 +69,8 @@ flowchart LR
     D --> F[Percentile embedding + role weights]
     F --> R[Weighted vector retrieval + contributions]
     E --> G[Compact evidence packet]
-    G --> H{Generation mode}
-    R --> H
-    H --> I[Deterministic fallback]
-    H --> J[OpenAI Responses API]
-    I --> K[Streamlit report + evidence table]
-    J --> K
+    G --> K[Rule-based summary + evidence table]
+    R --> K
     K --> L[Quality checks and Markdown export]
 ```
 
@@ -84,11 +78,11 @@ flowchart LR
 app/                       Streamlit entry point, pages, and reusable UI components
 src/ball_ai/data/          SQLite schema, read models, ingestion contract, sample loader
 src/ball_ai/analytics/     Metrics, trends, role-aware retrieval, and shot-profile feature engineering
-src/ball_ai/ai/            Evidence packets, prompts, LLM adapter, fallback, quality checks
+src/ball_ai/ai/            Evidence packets, deterministic summaries, quality checks
 data/nba_snapshot/         Checked-in normalized CC0 snapshot and metadata
-data/historical/           Local Git-ignored Parquet archive and coverage manifest
+data/historical/           Checked-in inference assets plus a larger Git-ignored research archive
 data/sample/               Illustrative second fallback and provenance note
-scripts/                   Data generation, DB initialization, and report evaluation
+scripts/                   Data ingestion, feature building, model training, and evaluation
 tests/                     Unit and integration tests
 ```
 
@@ -100,14 +94,15 @@ tests/                     Unit and integration tests
 4. The merged shot-detail Parquet file preserves 6.3 million raw shot events from 1996-97 onward and produces 14,511 player-season shot fingerprints.
 5. `coverage.parquet` records the availability of player box scores, team box scores, and shot detail independently for every season and season type.
 6. Early-era null fields stay null. The pipeline distinguishes all-zero DNP records from played games whose minutes are unavailable and handles the 2023 In-Season Tournament as regular-season data.
-7. A separate compact snapshot keeps the interview demo fast and completely offline; SQLite still serves current scouting, comparison, retrieval, and AI grounding requests.
+7. A separate compact snapshot keeps the interview demo fast and completely offline; SQLite still serves current scouting and comparison requests.
 8. SQL and Parquet read models retrieve only the player and date windows each feature needs.
 9. pandas functions add eFG%, true shooting, assist-to-turnover ratio, recent trend splits, and shot-style features.
 10. Player DNA has two independently trained depths: Broad History excludes possession-action fields for consistent cross-era comparison, while Modern Detailed requires 2020+ action coverage. Offensive candidates span shot-detail history from 1996-97; matchup-based defense begins in 2017-18. Models train only through 2022-23, while later seasons remain validation and test data.
 
 The current Player DNA model is frozen as `play-style-v1`: its parameters and
-artifact hashes live in `models/play_style/v1/champion_manifest.json`, while the
-large local artifacts remain under the Git-ignored historical archive. A rolling
+artifact hashes live in `models/play_style/v1/champion_manifest.json`. Compact
+deployed artifacts are checked in, while raw partitions and training-only assets
+remain in the Git-ignored historical archive. A rolling
 backtest refits that fixed architecture before every adjacent-season retrieval
 pair. Broad offense includes folds beginning in 1996-97, 2001-02, 2006-07,
 2011-12, and 2016-17 in addition to the four recent folds; matchup-dependent
@@ -190,7 +185,7 @@ results live in `models/play_style/broad_v2_robustness_summary.json`.
 11. Validation and untouched future-season tests ask whether a player retrieves their own adjacent season; cosine and PCA implementations provide non-neural baselines.
 12. Style Twin ranks behavioral proximity alone. Comparable Player applies a lens-specific DARKO DPM band after retrieval, without leaking impact into the embedding.
 13. Standardized input gaps explain why each neighbor was retrieved, while efficiency and impact differences remain visible as non-ranking context.
-14. The AI grounding layer selects a compact, serializable evidence packet with source status and limitations.
+14. The evidence layer selects a compact, serializable packet with source status and limitations for auditable UI summaries.
 
 ### Team Needs Lab
 
@@ -260,7 +255,7 @@ still displays experimental expected wins, team identity, a rotation/top-three
 talent index, and clearly labeled historical analogues.
 This distinction matters because the archive contains real rosters, not examples
 where many primary creators all retain their previous usage simultaneously. The
-LLM receives the support decision and may not reconstruct or mention withheld
+UI respects the support decision and never reconstructs or displays withheld
 estimates.
 
 The page leads edited rosters with **experimental expected wins** and supporting
@@ -269,8 +264,8 @@ Net Rating. A non-negative talent-only model maps a fixed 65% rotation-quality a
 team's real record, then a bounded logistic calibration converts Net Rating to wins.
 That calibration achieved **2.25-win leave-one-season-out MAE**, versus **2.35**
 for the old linear mapping, and introduces diminishing returns near elite records.
-The UI and grounded language layer state that historical transactions have not yet
-calibrated this output as a real forecast. The lower-error
+The UI states that historical transactions have not yet calibrated this output as
+a real forecast. The lower-error
 same-season association model remains available as a diagnostic rather than being
 misrepresented as the causal effect of a player addition.
 
@@ -341,11 +336,11 @@ without another download using `python scripts/rebuild_current_snapshot_from_arc
 Both paths retain one-game players; downstream reliability and sample shrinkage,
 not silent ingestion filters, control how strongly their statistics are interpreted.
 
-The historical command builds `data/historical/` with Snappy-compressed Parquet and removes temporary CSV downloads after successful conversion. Re-running it is resumable at the download stage; `--raw-dir` and `--shots-parquet` accept existing source files, while `--keep-downloads` retains downloaded originals for debugging. The directory is intentionally excluded from Git. The checked-in compact snapshot still runs without network access.
+The historical command builds `data/historical/` with Snappy-compressed Parquet and removes temporary CSV downloads after successful conversion. Re-running it is resumable at the download stage; `--raw-dir` and `--shots-parquet` accept existing source files, while `--keep-downloads` retains downloaded originals for debugging. Raw event partitions and training-only artifacts remain excluded from Git; compact inference artifacts are checked in so the app still runs without network access.
 
-## How the LLM is grounded
+## How deterministic summaries stay evidence-linked
 
-The LLM does **not** query the database directly and does not receive raw unfiltered rows. `build_player_evidence` produces:
+`build_player_evidence` produces:
 
 - player and season metadata;
 - selected season metrics;
@@ -355,9 +350,9 @@ The LLM does **not** query the database directly and does not receive raw unfilt
 - evidence IDs and provenance;
 - explicit product limitations.
 
-The prompt requires each basketball claim to cite those IDs, forbids outside knowledge, and asks for uncertainty when context or sample size is limited. The UI renders the same packet as an evidence table. If the API key is missing or the request fails, BallDNA automatically returns a deterministic, cited report.
+The rule-based renderer reads only this packet, fills fixed report sections, cites stable evidence IDs, and refuses unsupported question types. It does not browse, infer hidden context, or alter model rankings. The UI renders the same packet as a copyable evidence table.
 
-For Team Needs Lab, the language model receives the already-computed elite commonalities, team-gap ranking, archetype translation, player-fit ranking, validation results, and limitations. It may explain those results but cannot recalculate, add, or reorder candidates.
+For Team Needs Lab and Roster Construction Lab, fixed numeric models complete all rankings and estimates before the template runs. The template only formats commonalities, gaps, candidates, validation results, and limitations.
 
 ### Example output
 
@@ -384,7 +379,7 @@ python scripts/init_db.py
 streamlit run app/main.py
 ```
 
-Open the local URL Streamlit prints. Leave `OPENAI_API_KEY` empty to use template mode. To enable grounded remote generation, add a key to `.env`; never commit that file.
+Open the local URL Streamlit prints. `.env` is optional and only overrides local data and database paths; the app runs locally without external model services.
 
 ## Tests and product quality checks
 
@@ -393,7 +388,7 @@ pytest
 python scripts/evaluate_reports.py
 ```
 
-The suite covers metric calculations, zero denominators, Player DNA eligibility, shortcut exclusion, temporal self-retrieval, impact-banded comparison, historical team/opponent pairing, possession-adjusted ratings, player-fit retrieval, SQL loading, evidence citations, numeric grounding, and no-key fallback generation.
+The suite covers metric calculations, zero denominators, Player DNA eligibility, shortcut exclusion, temporal self-retrieval, impact-banded comparison, historical team/opponent pairing, possession-adjusted ratings, player-fit retrieval, SQL loading, evidence citations, numeric support, and deterministic summary behavior.
 
 ## Limitations
 
@@ -410,21 +405,20 @@ The suite covers metric calculations, zero denominators, Player DNA eligibility,
 - Shot detail captures selection and action labels but omits direct defender distance, ball/player tracking, lineup combinations, opponent strength, injuries, contracts, and defensive assignments.
 - Player DNA describes proximity within observable public statistics, not an objectively correct scouting comparison. Defensive retrieval remains lower-confidence because public events do not fully observe scheme, positioning, communication, or off-ball decisions.
 - Citation and numeric checks are useful heuristics, not full semantic factuality verification.
-- LLM output can still require human review even when the prompt is grounded.
 
-**This project is not intended to predict the future or replace expert scouting. It demonstrates how structured data, analytics, and LLMs can be combined to create grounded, explainable decision support.**
+**This project is not intended to predict the future or replace expert scouting. It demonstrates how structured data, self-supervised learning, retrieval, and transparent evaluation can be combined to create explainable decision support.**
 
 ## Future improvements
 
 1. Scheduled Kaggle snapshot refresh with integrity checks and freshness alerts.
 2. Evaluate retrieval quality with expert-labeled comparison pairs and learn optional feature weights.
-3. RAG over licensed scouting reports and news with source-level citations.
+3. Train and compare stronger temporal and contrastive encoders with additional behavior features.
 4. Shot chart and play-type data when a suitable source is available.
 5. Team-fit recommendations using lineup/on-off impact, projected availability, nonlinear player interactions, and roster constraints.
-6. Better evaluation of generated outputs, including claim-level entailment.
+6. Calibrate similarity bands and reliability against expert-reviewed comparison sets.
 7. Docker packaging and a lightweight deployment pipeline.
-8. Authentication and saved user reports.
+8. Automated model-registry promotion and reproducible scheduled retraining.
 
 ## Recruiter-relevant keywords
 
-Python, SQL, SQLite, pandas, NumPy, Streamlit, Plotly, scikit-learn, ETL, data validation, feature engineering, vector embeddings, similarity search, distance metrics, LLM applications, OpenAI API, prompt engineering, retrieval and grounding, evidence-based generation, explainable AI, evaluation, pytest, Git, environment variables, error handling, analytics, visualization, product thinking, software architecture.
+Python, SQL, SQLite, pandas, NumPy, Streamlit, Plotly, scikit-learn, ETL, data validation, feature engineering, self-supervised learning, denoising autoencoders, metric learning, vector embeddings, cosine similarity, nearest-neighbor retrieval, chronological holdouts, MRR, Recall@K, explainable AI, model evaluation, pytest, Git, Parquet, environment variables, error handling, analytics, visualization, product thinking, software architecture.

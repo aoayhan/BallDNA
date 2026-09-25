@@ -1,4 +1,4 @@
-"""Prepare compact, auditable evidence packets for generation."""
+"""Prepare compact, auditable evidence packets for deterministic explanations."""
 
 from __future__ import annotations
 
@@ -191,7 +191,7 @@ def build_player_evidence(
         if shot_profile
         else "Shot location and action-type data are not available.",
         "Statistical output does not include film, injuries, lineup context, tracking, or defensive scheme.",
-        "Three-point percentage is withheld from generation below 25 attempts or five makes.",
+        "Three-point percentage is withheld from the summary below 25 attempts or five makes.",
     ]
     if career_context:
         limitations.append(
@@ -316,7 +316,7 @@ def build_similarity_evidence(
             "position_aware": bool(position_aware),
             "minimum_games": int(minimum_games),
             "minimum_shots": int(minimum_shots),
-            "llm_role": "explanation only; the LLM does not rank or alter matches",
+            "explanation_role": "rule-based summary only; retrieval fixes the ranking",
         },
         "matches": matches,
         "limitations": limitations,
@@ -418,7 +418,7 @@ def build_team_needs_evidence(
             "The classifier recognizes elite statistical profiles; it does not prove which traits caused wins.",
             "Candidate fit is a transparent trait-alignment score, not a trade, contract, availability, or chemistry model.",
             "Individual defense uses box-score activity and rebounding proxies because player tracking and assignments are unavailable.",
-            "The language model may explain the fixed gaps and rankings but may not alter them.",
+            "The rule-based summary reports fixed gaps and rankings without altering them.",
         ],
     }
 
@@ -612,7 +612,7 @@ def build_roster_simulation_evidence(
             "validation_method": "leave-one-season-out",
             "training_rows": model_evaluation.get("training_rows"),
             "seasons": model_evaluation.get("seasons", []),
-            "llm_role": "explanation only; the LLM cannot change the simulation",
+            "explanation_role": "rule-based summary only; it cannot change the simulation",
         },
         "change_detection": {
             "raw_net_rating_change": (

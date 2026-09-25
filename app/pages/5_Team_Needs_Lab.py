@@ -19,7 +19,6 @@ from components.styles import apply_styles  # noqa: E402
 from components.ui import (  # noqa: E402
     render_build_trace,
     render_copyable_table,
-    render_generation_status,
 )
 from ball_ai.ai.grounding import build_team_needs_evidence  # noqa: E402
 from ball_ai.ai.report_generator import generate_team_needs_report  # noqa: E402
@@ -31,7 +30,6 @@ from ball_ai.analytics.team_needs import (  # noqa: E402
     recommend_consensus_players,
 )
 from ball_ai.config import settings  # noqa: E402
-from ball_ai.data.database import save_report  # noqa: E402
 
 
 st.set_page_config(page_title="Team Needs Lab · BallDNA", page_icon="🧪", layout="wide")
@@ -90,7 +88,7 @@ st.title("Team Needs Lab")
 st.warning("🚧 Under construction — treat this experimental workflow and its recommendations as provisional.")
 st.caption(
     "An AI-first roster-gap system: historical team fingerprints identify measurable needs, "
-    "vector-style trait retrieval finds player examples, and the LLM only explains fixed results."
+    "and vector-style trait retrieval finds player examples with auditable scoring."
 )
 
 features = load_team_features()
@@ -159,7 +157,7 @@ st.caption(
 )
 
 overview_tab, archetype_tab, candidates_tab, ai_tab, method_tab = st.tabs(
-    ["Team gaps", "Needed archetype", "Player examples", "AI explanation", "Model evidence"]
+    ["Team gaps", "Needed archetype", "Player examples", "Rule-based summary", "Model evidence"]
 )
 
 with overview_tab:
@@ -224,7 +222,7 @@ with archetype_tab:
         st.subheader(headline)
         st.write(
             "The archetype is assembled from the team features with the largest model-weighted "
-            "gaps. It is a multi-trait target—not a position label or an LLM guess."
+            "gaps. It is a multi-trait target—not a position label or a subjective guess."
         )
         render_copyable_table(
             pd.DataFrame(
@@ -253,24 +251,16 @@ with candidates_tab:
 
 with ai_tab:
     st.write(
-        "The model receives the fixed commonalities, gap ranking, archetype mapping, candidate "
-        "ranking, validation scores, and limitations. It cannot add or reorder players."
-    )
-    prefer_llm = st.toggle(
-        "Use LLM when configured",
-        value=bool(settings.openai_api_key),
-        help="The cited deterministic report is used when no key is configured.",
-        key="team_needs_llm",
+        "A deterministic template summarizes the fixed commonalities, gap ranking, archetype mapping, "
+        "candidate ranking, validation scores, and limitations. It cannot add or reorder players."
     )
     state_key = f"team_needs_report_{season}_{team['team_id']}_{top_n}_{lookback}"
     if st.button("Generate team-needs report", type="primary"):
         with st.spinner("Explaining the fixed model results…"):
-            result = generate_team_needs_report(packet, prefer_llm=prefer_llm)
+            result = generate_team_needs_report(packet)
             st.session_state[state_key] = result
-            save_report(None, settings.prompt_version, result.mode, result.text)
     if state_key in st.session_state:
         result = st.session_state[state_key]
-        render_generation_status(result.mode, result.warning)
         st.markdown(result.text)
         st.download_button(
             "Download report as Markdown",
@@ -301,7 +291,7 @@ with method_tab:
             f"Selected: {evaluation.get('selected_model')} using rolling validation on "
             f"{', '.join(evaluation.get('validation_seasons', []))}."
         )
-    st.subheader("Evidence packet sent to the language layer")
+    st.subheader("Evidence packet used by the summary")
     st.json(packet, expanded=False)
 
 render_build_trace(
@@ -310,6 +300,6 @@ render_build_trace(
         ("Model selection", "Compare logistic regression, random forest, and gradient boosting on future-season validation; keep the best top-cohort retrieval model."),
         ("Gap analysis", "Compare the selected team with top-N medians and weight standardized gaps by explainable logistic coefficients."),
         ("Player retrieval", "Map priority gaps to transparent player traits and rank candidates by percentile alignment and sample reliability."),
-        ("Grounded generation", "Give the LLM only fixed evidence IDs, rankings, validation results, and limitations; deterministic mode remains available."),
+        ("Rule-based summary", "Translate fixed evidence IDs, rankings, validation results, and limitations into a cited template."),
     ]
 )

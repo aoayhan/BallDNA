@@ -25,7 +25,6 @@ from components.ui import (  # noqa: E402
     player_selector,
     render_build_trace,
     render_copyable_table,
-    render_generation_status,
 )
 from ball_ai.ai.grounding import build_similarity_evidence  # noqa: E402
 from ball_ai.ai.report_generator import generate_similarity_explanation  # noqa: E402
@@ -792,7 +791,7 @@ packet = build_similarity_evidence(
 )
 
 matches_tab, why_tab, ai_tab, trace_tab = st.tabs(
-    ["Matches", "Why players are similar", "AI explanation", "How this was built"]
+    ["Matches", "Why players are similar", "Rule-based summary", "How this was built"]
 )
 
 with matches_tab:
@@ -882,26 +881,17 @@ with why_tab:
 
 with ai_tab:
     st.write(
-        "The retrieval model has already fixed the ranking. The optional LLM receives only "
-        "the match scores, feature gaps, contribution values, provenance, and limitations, "
-        "then translates them into a cited explanation."
-    )
-    prefer_llm = st.toggle(
-        "Use LLM when configured",
-        value=bool(settings.openai_api_key),
-        key="similarity_use_llm",
+        "The retrieval model fixes the ranking. This deterministic template summarizes only "
+        "the displayed match scores, feature gaps, contribution values, and limitations."
     )
     result_key = (
         f"similarity_result_{player_id}_{preset}_{top_n}_{position_aware}_{int(minimum_games)}_{int(minimum_shots)}"
     )
     if st.button("Explain these matches", type="primary"):
         with st.spinner("Explaining the fixed retrieval result…"):
-            st.session_state[result_key] = generate_similarity_explanation(
-                packet, prefer_llm=prefer_llm
-            )
+            st.session_state[result_key] = generate_similarity_explanation(packet)
     if result_key in st.session_state:
         result = st.session_state[result_key]
-        render_generation_status(result.mode, result.warning)
         st.markdown(result.text)
 
 with trace_tab:
@@ -912,7 +902,7 @@ with trace_tab:
             ("Player embedding", "Convert every feature to a 0–1 percentile so unlike units can share one vector space."),
             ("Role weighting", f"Apply the transparent {preset} weight configuration."),
             ("Vector retrieval", "Calculate weighted Euclidean distance and return the nearest player embeddings."),
-            ("Grounded generation", "Give the fixed matches and feature contributions to the LLM for explanation only; deterministic fallback remains available."),
+            ("Rule-based summary", "Translate the fixed matches and feature contributions into a cited deterministic explanation."),
         ],
         expanded=True,
     )

@@ -1,14 +1,20 @@
-"""Lightweight product-quality checks for generated scouting reports."""
+"""Lightweight product-quality checks for deterministic scouting summaries."""
 
 from __future__ import annotations
 
 import json
 import re
 
-from ball_ai.ai.prompts import REPORT_SECTIONS
-
-
 NUMBER_PATTERN = re.compile(r"(?<![A-Za-z])[-+]?\d+(?:\.\d+)?%?")
+REPORT_SECTIONS = [
+    "Summary",
+    "Strengths",
+    "Weaknesses or risks",
+    "Recent trend",
+    "Best role fit",
+    "Evidence used",
+    "Confidence and limitations",
+]
 
 
 def required_sections_present(report_text: str) -> tuple[bool, list[str]]:

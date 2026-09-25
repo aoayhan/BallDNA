@@ -32,7 +32,7 @@ def main() -> int:
             get_recent_games(int(row.player_id)),
             get_data_status_text(),
         )
-        report = generate_scouting_report(packet, prefer_llm=False).text
+        report = generate_scouting_report(packet).text
         results[row.player_name] = evaluate_report(report, packet)
 
     print(json.dumps(results, indent=2))

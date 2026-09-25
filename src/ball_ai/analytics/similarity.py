@@ -2,7 +2,7 @@
 
 The feature vector is intentionally deterministic: pandas creates percentile
 embeddings, a role preset supplies feature weights, and weighted Euclidean
-distance retrieves the nearest profiles. An LLM may explain the result later,
+distance retrieves the nearest profiles. A deterministic summary may explain the result,
 but it never chooses or changes the neighbors.
 """
 

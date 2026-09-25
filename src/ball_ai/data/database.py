@@ -86,16 +86,6 @@ CREATE TABLE IF NOT EXISTS player_shot_profiles (
     FOREIGN KEY (player_id) REFERENCES players(player_id)
 );
 
-CREATE TABLE IF NOT EXISTS reports (
-    report_id INTEGER PRIMARY KEY AUTOINCREMENT,
-    player_id INTEGER,
-    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    prompt_version TEXT NOT NULL,
-    generation_mode TEXT NOT NULL,
-    report_text TEXT NOT NULL,
-    FOREIGN KEY (player_id) REFERENCES players(player_id)
-);
-
 CREATE TABLE IF NOT EXISTS data_metadata (
     key TEXT PRIMARY KEY,
     value TEXT NOT NULL
@@ -182,7 +172,6 @@ def replace_dataset(
 
     initialize_database(database_path)
     with database_session(database_path) as connection:
-        connection.execute("DELETE FROM reports")
         connection.execute("DELETE FROM player_game_stats")
         connection.execute("DELETE FROM player_shot_profiles")
         connection.execute("DELETE FROM player_season_stats")
@@ -385,23 +374,3 @@ def get_recent_games(
         ) ORDER BY game_date ASC
     """
     return _read_sql(query, (int(player_id), int(limit)), database_path)
-
-
-def save_report(
-    player_id: int | None,
-    prompt_version: str,
-    generation_mode: str,
-    report_text: str,
-    database_path: Path | str | None = None,
-) -> int:
-    """Persist a generated report and return its identifier."""
-
-    with database_session(database_path) as connection:
-        cursor = connection.execute(
-            """
-            INSERT INTO reports(player_id, prompt_version, generation_mode, report_text)
-            VALUES (?, ?, ?, ?)
-            """,
-            (player_id, prompt_version, generation_mode, report_text),
-        )
-        return int(cursor.lastrowid)

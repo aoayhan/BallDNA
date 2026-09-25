@@ -1,27 +1,16 @@
-"""Grounded reports, comparisons, and answers with a no-key fallback."""
+"""Deterministic reports, comparisons, and evidence-based answers."""
 
 from __future__ import annotations
 
 from dataclasses import dataclass
 
-from ball_ai.ai.llm_client import LLMUnavailableError, generate_text
-from ball_ai.ai.prompts import (
-    SYSTEM_INSTRUCTIONS,
-    comparison_prompt,
-    question_prompt,
-    scouting_prompt,
-    similarity_prompt,
-    roster_simulation_prompt,
-    team_needs_prompt,
-)
 from ball_ai.analytics.trends import trend_sentence
 
 
 @dataclass(frozen=True)
-class GenerationResult:
+class SummaryResult:
     text: str
     mode: str
-    warning: str | None = None
 
 
 def _format_value(item: dict) -> str:
@@ -44,8 +33,8 @@ def _reliable_three_point_sample(stats: dict) -> bool:
     return attempts >= 25 and makes >= 5
 
 
-def fallback_scouting_report(packet: dict) -> str:
-    """Create a deterministic, citation-rich report without an API call."""
+def rule_based_scouting_report(packet: dict) -> str:
+    """Create a deterministic, citation-rich scouting summary."""
 
     player = packet["player"]
     stats = packet["season_stats"]
@@ -183,7 +172,7 @@ Confidence is moderate for describing the supplied statistical profile and low f
 """.strip()
 
 
-def fallback_comparison(packet: dict) -> str:
+def rule_based_comparison(packet: dict) -> str:
     """Create a deterministic two-player comparison from supplied values."""
 
     first, second = packet["players"]
@@ -257,7 +246,7 @@ Confidence is moderate for the numerical comparison and low for team-fit conclus
 """.strip()
 
 
-def fallback_answer(packet: dict, question: str) -> str:
+def rule_based_answer(packet: dict, question: str) -> str:
     """Answer common product questions using transparent deterministic rules."""
 
     name = packet["player"]["player_name"]
@@ -339,7 +328,7 @@ def fallback_answer(packet: dict, question: str) -> str:
     return (
         f"The current evidence packet cannot answer that question reliably for {name}. "
         "Try asking about scoring, facilitation, spacing, or recent statistical trends.\n\n"
-        "Limitation: the fallback mode intentionally refuses claims outside the supplied fields."
+        "Limitation: the rule-based mode intentionally refuses claims outside the supplied fields."
     )
 
 
@@ -353,8 +342,8 @@ def _similarity_value(item: dict, key: str) -> str:
     return f"{value:.1%}" if percentage_feature else f"{value:.1f}"
 
 
-def fallback_similarity_explanation(packet: dict) -> str:
-    """Explain deterministic similarity retrieval without an API key."""
+def rule_based_similarity_explanation(packet: dict) -> str:
+    """Explain deterministic similarity retrieval from supplied evidence."""
 
     reference = packet["reference_player"]["player_name"]
     matches = packet.get("matches", [])[:3]
@@ -387,7 +376,7 @@ def fallback_similarity_explanation(packet: dict) -> str:
     limitations = " ".join(packet["limitations"])
     method = packet["retrieval_method"]
     return f"""## Retrieval result
-The deterministic {method['preset']} embedding retrieved the closest supplied profiles to {reference}. The language layer did not choose or reorder these players.
+The deterministic {method['preset']} embedding retrieved the closest supplied profiles to {reference}. The rule-based explanation did not choose or reorder these players.
 
 ## Why the matches are similar
 {chr(10).join(summaries)}
@@ -409,8 +398,8 @@ def _team_need_value(feature: str, value: float) -> str:
     return f"{float(value):.1f}"
 
 
-def fallback_team_needs_report(packet: dict) -> str:
-    """Explain fixed team gaps and candidates without an API key."""
+def rule_based_team_needs_report(packet: dict) -> str:
+    """Explain fixed team gaps and candidates from supplied evidence."""
 
     team = packet["team"]
     common = packet.get("elite_commonalities", [])[:3]
@@ -470,8 +459,8 @@ Confidence is moderate for describing the team profile and ranking candidates in
 """.strip()
 
 
-def fallback_roster_simulation_report(packet: dict) -> str:
-    """Explain a fixed roster counterfactual without an API key."""
+def rule_based_roster_simulation_report(packet: dict) -> str:
+    """Explain a fixed roster counterfactual from supplied evidence."""
 
     estimates = {item["evidence_id"]: item for item in packet["quality_estimates"]}
     support = packet.get("model_support", {"is_supported": True})
@@ -606,83 +595,35 @@ The strongest simulated identities are:
 {need_lines}
 
 ## Confidence and limitations
-Confidence is moderate for comparing profiles inside this structured feature space and low for causal transaction outcomes. The language layer did not calculate or alter the result. {limitations}
+Confidence is moderate for comparing profiles inside this structured feature space and low for causal transaction outcomes. The rule-based explanation did not calculate or alter the result. {limitations}
 """.strip()
 
 
-def generate_scouting_report(packet: dict, prefer_llm: bool = True) -> GenerationResult:
-    if prefer_llm:
-        try:
-            response = generate_text(scouting_prompt(packet), SYSTEM_INSTRUCTIONS)
-            return GenerationResult(response.text, f"openai:{response.model}")
-        except LLMUnavailableError as exc:
-            return GenerationResult(fallback_scouting_report(packet), "template", str(exc))
-    return GenerationResult(fallback_scouting_report(packet), "template")
+def generate_scouting_report(packet: dict) -> SummaryResult:
+    return SummaryResult(rule_based_scouting_report(packet), "rule-based")
 
 
-def generate_comparison(packet: dict, prefer_llm: bool = True) -> GenerationResult:
-    if prefer_llm:
-        try:
-            response = generate_text(comparison_prompt(packet), SYSTEM_INSTRUCTIONS)
-            return GenerationResult(response.text, f"openai:{response.model}")
-        except LLMUnavailableError as exc:
-            return GenerationResult(fallback_comparison(packet), "template", str(exc))
-    return GenerationResult(fallback_comparison(packet), "template")
+def generate_comparison(packet: dict) -> SummaryResult:
+    return SummaryResult(rule_based_comparison(packet), "rule-based")
 
 
-def answer_question(packet: dict, question: str, prefer_llm: bool = True) -> GenerationResult:
-    if prefer_llm:
-        try:
-            response = generate_text(question_prompt(packet, question), SYSTEM_INSTRUCTIONS)
-            return GenerationResult(response.text, f"openai:{response.model}")
-        except LLMUnavailableError as exc:
-            return GenerationResult(fallback_answer(packet, question), "template", str(exc))
-    return GenerationResult(fallback_answer(packet, question), "template")
+def answer_question(packet: dict, question: str) -> SummaryResult:
+    return SummaryResult(rule_based_answer(packet, question), "rule-based")
 
 
-def generate_similarity_explanation(
-    packet: dict, prefer_llm: bool = True
-) -> GenerationResult:
-    """Explain a fixed retrieval result with grounded generation or fallback."""
+def generate_similarity_explanation(packet: dict) -> SummaryResult:
+    """Explain a fixed retrieval result with deterministic evidence rules."""
 
-    if prefer_llm:
-        try:
-            response = generate_text(similarity_prompt(packet), SYSTEM_INSTRUCTIONS)
-            return GenerationResult(response.text, f"openai:{response.model}")
-        except LLMUnavailableError as exc:
-            return GenerationResult(
-                fallback_similarity_explanation(packet), "template", str(exc)
-            )
-    return GenerationResult(fallback_similarity_explanation(packet), "template")
+    return SummaryResult(rule_based_similarity_explanation(packet), "rule-based")
 
 
-def generate_team_needs_report(
-    packet: dict, prefer_llm: bool = True
-) -> GenerationResult:
-    """Explain fixed team-needs results with grounded generation or fallback."""
+def generate_team_needs_report(packet: dict) -> SummaryResult:
+    """Explain fixed team-needs results with deterministic evidence rules."""
 
-    if prefer_llm:
-        try:
-            response = generate_text(team_needs_prompt(packet), SYSTEM_INSTRUCTIONS)
-            return GenerationResult(response.text, f"openai:{response.model}")
-        except LLMUnavailableError as exc:
-            return GenerationResult(
-                fallback_team_needs_report(packet), "template", str(exc)
-            )
-    return GenerationResult(fallback_team_needs_report(packet), "template")
+    return SummaryResult(rule_based_team_needs_report(packet), "rule-based")
 
 
-def generate_roster_simulation_report(
-    packet: dict, prefer_llm: bool = True
-) -> GenerationResult:
-    """Explain fixed roster-simulation results with grounded generation or fallback."""
+def generate_roster_simulation_report(packet: dict) -> SummaryResult:
+    """Explain fixed roster-simulation results with deterministic evidence rules."""
 
-    if prefer_llm:
-        try:
-            response = generate_text(roster_simulation_prompt(packet), SYSTEM_INSTRUCTIONS)
-            return GenerationResult(response.text, f"openai:{response.model}")
-        except LLMUnavailableError as exc:
-            return GenerationResult(
-                fallback_roster_simulation_report(packet), "template", str(exc)
-            )
-    return GenerationResult(fallback_roster_simulation_report(packet), "template")
+    return SummaryResult(rule_based_roster_simulation_report(packet), "rule-based")

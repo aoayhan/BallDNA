@@ -34,9 +34,6 @@ class Settings:
     database_path: Path = _path_from_env(
         "HOOPLENS_DB_PATH", ROOT_DIR / "data" / "hooplens.db"
     )
-    openai_api_key: str | None = os.getenv("OPENAI_API_KEY") or None
-    openai_model: str = os.getenv("OPENAI_MODEL", "gpt-5.4-mini")
-    prompt_version: str = os.getenv("HOOPLENS_PROMPT_VERSION", "v1.0")
     nba_season: str = os.getenv("HOOPLENS_NBA_SEASON", "2025-26")
     minimum_games: int = int(os.getenv("HOOPLENS_MIN_GAMES", "1"))
     recent_games: int = int(os.getenv("HOOPLENS_RECENT_GAMES", "10"))

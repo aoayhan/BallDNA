@@ -19,7 +19,6 @@ from components.ui import (  # noqa: E402
     render_build_trace,
     render_copyable_table,
     render_evidence,
-    render_generation_status,
     render_profile_metrics,
 )
 from ball_ai.analytics.tables import (  # noqa: E402
@@ -30,14 +29,12 @@ from ball_ai.analytics.tables import (  # noqa: E402
 from ball_ai.ai.grounding import build_player_evidence  # noqa: E402
 from ball_ai.ai.quality import evaluate_report  # noqa: E402
 from ball_ai.ai.report_generator import generate_scouting_report  # noqa: E402
-from ball_ai.config import settings  # noqa: E402
 from ball_ai.data.database import (  # noqa: E402
     get_data_status_text,
     get_player_profile,
     get_player_shot_profile,
     get_players,
     get_recent_games,
-    save_report,
 )
 from ball_ai.data.historical_store import get_player_season_history  # noqa: E402
 
@@ -48,7 +45,7 @@ initialize_app()
 
 st.title("Player Scout")
 st.caption(
-    "Generate an AI scouting report from a compact, inspectable evidence packet—not hidden context."
+    "Create a rule-based scouting summary from a compact, inspectable evidence packet."
 )
 
 players = get_players()
@@ -109,29 +106,22 @@ packet = build_player_evidence(
 st.divider()
 controls, note = st.columns([1, 2])
 with controls:
-    prefer_llm = st.toggle(
-        "Use LLM when configured",
-        value=bool(settings.openai_api_key),
-        help="Without OPENAI_API_KEY, the deterministic evidence-based template is used.",
-    )
-    generate = st.button("Generate scouting report", type="primary", width="stretch")
+    generate = st.button("Create scouting summary", type="primary", width="stretch")
 with note:
     st.markdown(
-        "<div class='callout'><strong>Grounding contract</strong><br/>The generator receives only "
-        "the evidence displayed below—not raw data, browsing results, or hidden player context.</div>",
+        "<div class='callout'><strong>Evidence contract</strong><br/>The deterministic template uses only "
+        "the evidence displayed below—not browsing results or hidden player context.</div>",
         unsafe_allow_html=True,
     )
 
 state_key = f"scout_report_{player_id}"
 if generate:
-    with st.spinner("Preparing evidence-linked report…"):
-        result = generate_scouting_report(packet, prefer_llm=prefer_llm)
+    with st.spinner("Preparing evidence-linked summary…"):
+        result = generate_scouting_report(packet)
         st.session_state[state_key] = result
-        save_report(player_id, settings.prompt_version, result.mode, result.text)
 
 if state_key in st.session_state:
     result = st.session_state[state_key]
-    render_generation_status(result.mode, result.warning)
     st.markdown(result.text)
     st.download_button(
         "Download report as Markdown",
@@ -146,14 +136,14 @@ if state_key in st.session_state:
             detail = f" · {check['details']}" if check["details"] else ""
             st.write(f"{icon} {name.replace('_', ' ').title()}{detail}")
 
-st.subheader("Evidence available to the generator")
+st.subheader("Evidence used by the summary")
 render_evidence(packet)
 render_build_trace(
     [
         ("SQL retrieval", "Load one season profile and the player's latest stored game window."),
         ("Feature engineering", "Calculate shooting efficiency, recent aggregates, and recent-versus-prior trend deltas."),
-        ("Grounding", "Serialize only approved current, recent, and prior-season statistics, provenance, evidence IDs, and explicit limitations."),
-        ("AI generation", "Require the language model to cite evidence IDs for basketball claims; use a cited deterministic template when no key is available."),
+        ("Evidence selection", "Serialize only approved current, recent, and prior-season statistics, provenance, evidence IDs, and explicit limitations."),
+        ("Rule-based summary", "Fill a fixed cited template without outside knowledge or hidden context."),
         ("Quality checks", "Check required sections, evidence coverage, unsupported numbers, and non-empty output."),
     ]
 )

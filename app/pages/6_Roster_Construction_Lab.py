@@ -21,7 +21,6 @@ from components.ui import (  # noqa: E402
     TEAM_NAMES,
     render_build_trace,
     render_copyable_table,
-    render_generation_status,
 )
 from ball_ai.ai.grounding import build_roster_simulation_evidence  # noqa: E402
 from ball_ai.ai.report_generator import generate_roster_simulation_report  # noqa: E402
@@ -183,7 +182,7 @@ st.title("Roster Construction Lab")
 st.warning("🚧 Under construction — treat roster simulations as experimental, not validated forecasts.")
 st.caption(
     "Build a counterfactual NBA roster in player-embedding space. A validated ML model "
-    "estimates the team profile; the optional LLM explains fixed results and never creates the estimate."
+    "estimates the team profile; deterministic summaries report fixed results without changing them."
 )
 st.info(
     "DARKO DPM supplies the player-impact estimate; BallDNA's per-36 and shot-profile traits "
@@ -829,7 +828,7 @@ else:
         "chemistry, health, and diminishing returns are not modeled."
     )
 profile_tab, change_tab, neighbour_tab, ai_tab, evidence_tab = st.tabs(
-    ["Team identity", "Embedding changes", "Historical neighbours", "AI explanation", "Model evidence"]
+    ["Team identity", "Embedding changes", "Historical neighbours", "Rule-based summary", "Model evidence"]
 )
 with profile_tab:
     profile_long = profile_comparison.melt(
@@ -913,12 +912,7 @@ with neighbour_tab:
 with ai_tab:
     st.write(
         "The numeric model, roster changes, profile scores and historical neighbours are already fixed. "
-        "The optional LLM receives only this evidence packet and translates it into cited analysis."
-    )
-    prefer_llm = st.toggle(
-        "Use LLM when configured",
-        value=bool(settings.openai_api_key),
-        key="roster_simulation_llm",
+        "A deterministic template translates this evidence packet into cited analysis."
     )
     report_key = (
         f"roster_report_{season}_{team}_{start_mode}_"
@@ -926,12 +920,9 @@ with ai_tab:
     )
     if st.button("Explain this roster", type="primary"):
         with st.spinner("Explaining the fixed simulation…"):
-            st.session_state[report_key] = generate_roster_simulation_report(
-                packet, prefer_llm=prefer_llm
-            )
+            st.session_state[report_key] = generate_roster_simulation_report(packet)
     if report_key in st.session_state:
         result = st.session_state[report_key]
-        render_generation_status(result.mode, result.warning)
         st.markdown(result.text)
         st.download_button(
             "Download simulation as Markdown",
@@ -1026,7 +1017,7 @@ with evidence_tab:
                 }
             ),
         )
-    st.subheader("Evidence packet sent to the language layer")
+    st.subheader("Evidence packet used by the summary")
     st.json(packet, expanded=False)
 
 render_build_trace(
@@ -1040,7 +1031,7 @@ render_build_trace(
         ("Counterfactual", "Start from the observed 240-minute rotation. Source-team MPG is only a ceiling: additions earn minutes from lower-impact incumbents at overlapping positions, strongest additions are allocated first, and removals open minutes for redistribution."),
         ("Expected wins", "Fit a separate non-negative talent model, anchor its change to the real team baseline, then use a bounded logistic Net Rating-to-wins calibration so elite-team gains saturate instead of growing linearly."),
         ("Retrieval", "Find the nearest historical team-seasons in standardized roster-embedding space."),
-        ("Grounded generation", "Give fixed estimates, changes and neighbours to the LLM for cited explanation only; deterministic fallback remains available."),
+        ("Rule-based summary", "Translate fixed estimates, changes and neighbours into a cited deterministic explanation."),
     ]
 )
 st.warning(

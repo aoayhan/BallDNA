@@ -112,8 +112,8 @@ def test_gap_model_and_retrieval_are_fixed_before_generation() -> None:
     assert candidates.iloc[0]["player_name"] == "Player 1"
 
     packet = build_team_needs_evidence(analysis, candidates, candidates)
-    report = generate_team_needs_report(packet, prefer_llm=False)
-    assert report.mode == "template"
+    report = generate_team_needs_report(packet)
+    assert report.mode == "rule-based"
     assert "## Priority gaps" in report.text
     assert "[G1]" in report.text
     assert "[P1]" in report.text

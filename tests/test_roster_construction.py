@@ -353,7 +353,7 @@ def test_bounded_win_calibration_has_diminishing_returns_at_elite_ratings() -> N
     assert set(scores) == {"bounded_logistic_mae", "linear_mae"}
 
 
-def test_model_comparison_and_grounded_fallback() -> None:
+def test_model_comparison_and_rule_based_summary() -> None:
     rng = np.random.default_rng(42)
     rows = []
     for season_index, season in enumerate(("2021-22", "2022-23", "2023-24")):
@@ -419,8 +419,8 @@ def test_model_comparison_and_grounded_fallback() -> None:
             "training_rows": 150, "seasons": ["2020-21"], "limitations": [],
         },
     )
-    report = generate_roster_simulation_report(packet, prefer_llm=False)
-    assert report.mode == "template"
+    report = generate_roster_simulation_report(packet)
+    assert report.mode == "rule-based"
     assert "## Simulation read" in report.text
     assert "[V1]" in report.text
     assert "[C1]" in report.text
@@ -494,7 +494,7 @@ def test_out_of_distribution_roster_withholds_quality_estimate() -> None:
         talent=talent,
     )
     assert packet["quality_estimates"] == []
-    report = generate_roster_simulation_report(packet, prefer_llm=False)
+    report = generate_roster_simulation_report(packet)
     assert "does not receive a validated expected Net Rating or win change" in report.text
     assert "-9.0" not in report.text
     assert "[S1]" in report.text
