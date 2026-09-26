@@ -148,6 +148,23 @@ compact, reviewable summary to
 `models/play_style/temporal_contrastive_v1_summary.json`, including per-fold
 results and both deployment and rollback weights.
 
+A later offline challenger round tested three plausible improvements without
+changing production: attempt-aware rate shrinkage, controlled behavioral-group
+budgets, and a temporal cross-view autoencoder that partially reconstructs an
+adjacent season without declaring other players negative examples. In all three
+experiments, the frozen configuration retained the best development MRR, so the
+new component or preprocessing weight selected was zero. The rejected results are
+kept in `models/play_style/*_v1_summary.json` and can be reproduced with:
+
+```bash
+python scripts/evaluate_reliability_smoothing.py
+python scripts/evaluate_grouped_behavior.py
+python scripts/train_multiview_temporal_challenger.py
+```
+
+This no-promotion result is intentional: BallDNA changes the live model only when
+a challenger wins predeclared development criteria before holdout inspection.
+
 The first Broad History v2 challenger adds stable 1996+ distance bands, corner
 and above-the-break three frequency, paint zones, lateral location mix, and shot
 dispersion. Detailed move labels are excluded from its stable-only variant because

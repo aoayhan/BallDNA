@@ -1,0 +1,222 @@
+{
+  "created_at": "2026-09-26T18:20:22+00:00",
+  "model_id": "reliability-smoothing-v1",
+  "status": "offline_challenger",
+  "production_changed": false,
+  "selected_prior_attempts": 0.0,
+  "smoothed_features": [
+    "rim_frequency",
+    "paint_frequency",
+    "midrange_frequency",
+    "three_point_frequency",
+    "dunk_frequency",
+    "layup_frequency",
+    "floater_frequency",
+    "hook_frequency",
+    "pull_up_frequency",
+    "step_back_frequency",
+    "three_point_attempt_rate",
+    "free_throw_attempt_rate"
+  ],
+  "development_summary": [
+    {
+      "prior_attempts": 0,
+      "mean_reciprocal_rank": 0.6377697435743063,
+      "recall_at_1": 0.5226244009541043,
+      "recall_at_5": 0.7751095766357372
+    },
+    {
+      "prior_attempts": 25,
+      "mean_reciprocal_rank": 0.633469464336356,
+      "recall_at_1": 0.5191680609446067,
+      "recall_at_5": 0.7767266102245215
+    },
+    {
+      "prior_attempts": 50,
+      "mean_reciprocal_rank": 0.6308989901844957,
+      "recall_at_1": 0.5126693695008336,
+      "recall_at_5": 0.7733045404850566
+    },
+    {
+      "prior_attempts": 100,
+      "mean_reciprocal_rank": 0.6263966379168072,
+      "recall_at_1": 0.5074958723244042,
+      "recall_at_5": 0.7709053974438126
+    },
+    {
+      "prior_attempts": 200,
+      "mean_reciprocal_rank": 0.6161985851649002,
+      "recall_at_1": 0.49702726395931407,
+      "recall_at_5": 0.7549990446839632
+    }
+  ],
+  "all_19_holdouts": {
+    "mean_reciprocal_rank": 0.6118119592203659,
+    "recall_at_1": 0.4912482047303004,
+    "recall_at_5": 0.7593772638268563
+  },
+  "frozen_v1_all_19_holdouts": {
+    "mean_reciprocal_rank": 0.611811959220366,
+    "recall_at_1": 0.4912482047303004,
+    "recall_at_5": 0.7593772638268564
+  },
+  "latest_test": {
+    "mean_reciprocal_rank": 0.6833711772154766,
+    "recall_at_1": 0.5892857142857143,
+    "recall_at_5": 0.8
+  },
+  "holdout_evaluations": [
+    {
+      "set": "all_19_holdouts",
+      "fold": "1999-00 -> 1998-99",
+      "eligible_queries": 223,
+      "mean_reciprocal_rank": 0.6537044316132617,
+      "recall_at_1": 0.5426008968609866,
+      "recall_at_5": 0.7847533632286996
+    },
+    {
+      "set": "all_19_holdouts",
+      "fold": "2005-06 -> 2004-05",
+      "eligible_queries": 256,
+      "mean_reciprocal_rank": 0.5796834900402548,
+      "recall_at_1": 0.45703125,
+      "recall_at_5": 0.71875
+    },
+    {
+      "set": "all_19_holdouts",
+      "fold": "2011-12 -> 2010-11",
+      "eligible_queries": 257,
+      "mean_reciprocal_rank": 0.6122154054828975,
+      "recall_at_1": 0.47470817120622566,
+      "recall_at_5": 0.7859922178988327
+    },
+    {
+      "set": "all_19_holdouts",
+      "fold": "2017-18 -> 2016-17",
+      "eligible_queries": 274,
+      "mean_reciprocal_rank": 0.578967831904133,
+      "recall_at_1": 0.46715328467153283,
+      "recall_at_5": 0.7226277372262774
+    },
+    {
+      "set": "all_19_holdouts",
+      "fold": "2021-22 -> 2020-21",
+      "eligible_queries": 300,
+      "mean_reciprocal_rank": 0.6622046413902151,
+      "recall_at_1": 0.54,
+      "recall_at_5": 0.8266666666666667
+    },
+    {
+      "set": "all_19_holdouts",
+      "fold": "2000-01 -> 1999-00",
+      "eligible_queries": 248,
+      "mean_reciprocal_rank": 0.6270080627226509,
+      "recall_at_1": 0.5040322580645161,
+      "recall_at_5": 0.7862903225806451
+    },
+    {
+      "set": "all_19_holdouts",
+      "fold": "2001-02 -> 2000-01",
+      "eligible_queries": 248,
+      "mean_reciprocal_rank": 0.5936036209222074,
+      "recall_at_1": 0.4717741935483871,
+      "recall_at_5": 0.7258064516129032
+    },
+    {
+      "set": "all_19_holdouts",
+      "fold": "2002-03 -> 2001-02",
+      "eligible_queries": 245,
+      "mean_reciprocal_rank": 0.6411814894860506,
+      "recall_at_1": 0.4897959183673469,
+      "recall_at_5": 0.8285714285714286
+    },
+    {
+      "set": "all_19_holdouts",
+      "fold": "2004-05 -> 2003-04",
+      "eligible_queries": 257,
+      "mean_reciprocal_rank": 0.5975744628094455,
+      "recall_at_1": 0.4591439688715953,
+      "recall_at_5": 0.7821011673151751
+    },
+    {
+      "set": "all_19_holdouts",
+      "fold": "2006-07 -> 2005-06",
+      "eligible_queries": 263,
+      "mean_reciprocal_rank": 0.6326328065747245,
+      "recall_at_1": 0.5095057034220533,
+      "recall_at_5": 0.779467680608365
+    },
+    {
+      "set": "all_19_holdouts",
+      "fold": "2007-08 -> 2006-07",
+      "eligible_queries": 264,
+      "mean_reciprocal_rank": 0.6085874463656364,
+      "recall_at_1": 0.48863636363636365,
+      "recall_at_5": 0.7424242424242424
+    },
+    {
+      "set": "all_19_holdouts",
+      "fold": "2009-10 -> 2008-09",
+      "eligible_queries": 254,
+      "mean_reciprocal_rank": 0.5792433067100841,
+      "recall_at_1": 0.452755905511811,
+      "recall_at_5": 0.7440944881889764
+    },
+    {
+      "set": "all_19_holdouts",
+      "fold": "2010-11 -> 2009-10",
+      "eligible_queries": 274,
+      "mean_reciprocal_rank": 0.6047620232140171,
+      "recall_at_1": 0.5036496350364964,
+      "recall_at_5": 0.7226277372262774
+    },
+    {
+      "set": "all_19_holdouts",
+      "fold": "2012-13 -> 2011-12",
+      "eligible_queries": 252,
+      "mean_reciprocal_rank": 0.6238925692987536,
+      "recall_at_1": 0.5158730158730159,
+      "recall_at_5": 0.7619047619047619
+    },
+    {
+      "set": "all_19_holdouts",
+      "fold": "2014-15 -> 2013-14",
+      "eligible_queries": 281,
+      "mean_reciprocal_rank": 0.660956773110457,
+      "recall_at_1": 0.5587188612099644,
+      "recall_at_5": 0.7864768683274022
+    },
+    {
+      "set": "all_19_holdouts",
+      "fold": "2015-16 -> 2014-15",
+      "eligible_queries": 288,
+      "mean_reciprocal_rank": 0.47340927241987124,
+      "recall_at_1": 0.3541666666666667,
+      "recall_at_5": 0.5972222222222222
+    },
+    {
+      "set": "all_19_holdouts",
+      "fold": "2016-17 -> 2015-16",
+      "eligible_queries": 285,
+      "mean_reciprocal_rank": 0.6194515252691332,
+      "recall_at_1": 0.5087719298245614,
+      "recall_at_5": 0.7614035087719299
+    },
+    {
+      "set": "all_19_holdouts",
+      "fold": "2019-20 -> 2018-19",
+      "eligible_queries": 265,
+      "mean_reciprocal_rank": 0.6382326808047636,
+      "recall_at_1": 0.5245283018867924,
+      "recall_at_5": 0.7811320754716982
+    },
+    {
+      "set": "all_19_holdouts",
+      "fold": "2020-21 -> 2019-20",
+      "eligible_queries": 276,
+      "mean_reciprocal_rank": 0.6371153850483969,
+      "recall_at_1": 0.5108695652173914,
+      "recall_at_5": 0.7898550724637681
+    }
+  ]
+}

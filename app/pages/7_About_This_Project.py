@@ -148,6 +148,11 @@ if all(temporal.get(key) for _, key in evaluation_groups):
         "temporal consistency without requiring subjective similarity labels. Cosine and PCA are "
         "retained as simpler baselines."
     )
+    st.caption(
+        "Three later offline challengers—attempt-aware smoothing, behavioral-group weights, and "
+        "a temporal cross-view autoencoder—failed to beat the frozen development MRR, so none was "
+        "promoted. The deployed model and rollback artifacts remain unchanged."
+    )
 
 metadata = get_data_metadata()
 coverage = get_historical_coverage()
