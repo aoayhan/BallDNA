@@ -2,6 +2,8 @@
   "model_id": "play-style-v1",
   "status": "champion",
   "frozen_at": "2026-09-22T10:33:01Z",
+  "deployment_frozen_at": "2026-09-26T18:12:24Z",
+  "deployed_revision": "3a2156d2277893e31159c82083966a7ec15fefe3",
   "training_end": "2022-23",
   "selection_pair": "2024-25 -> 2023-24",
   "untouched_test_pair": "2025-26 -> 2024-25",
@@ -25,11 +27,24 @@
     "Broad history": {"Offensive": null, "Defensive": null, "Overall": null},
     "Modern detailed": {"Offensive": 0.5, "Defensive": null, "Overall": 0.0}
   },
+  "broad_offensive_deployment": {
+    "denoising_player_dna": 0.42,
+    "temporal_metric": 0.3,
+    "positive_behavior_overlap": 0.266,
+    "information_weighted_shared_absence": 0.014,
+    "all_19_holdouts": {
+      "mean_reciprocal_rank": 0.611811959220366,
+      "recall_at_1": 0.4912482047303004,
+      "recall_at_5": 0.7593772638268564
+    }
+  },
   "local_artifact_directory": "data/historical/model_registry/play_style/v1",
   "artifact_sha256": {
     "play_style_evaluation.json": "371e477479c61bd6635e0def978b5fe60adac40d6fa469a77d545961191769be",
     "play_style_models.joblib": "538b1ca253824357033597a822229a069bfed3064dcc1a4823cc00b324191a06",
     "player_style_embeddings.parquet": "fb0c0f80abfd5cf445f4f65ceefef7fc6ec57fb5d5ccf441a01ba9fd8b99c066",
-    "player_style_features.parquet": "58f7b0df6205c3bd336b4734c322d81c92d9909c4d3750dfdea37735e80ebf26"
+    "player_style_features.parquet": "58f7b0df6205c3bd336b4734c322d81c92d9909c4d3750dfdea37735e80ebf26",
+    "temporal_contrastive_v1/model.joblib": "47987b447fe2f2a61779f2b5c1061d0654b06a020961e42824cdfd00953991cf",
+    "temporal_contrastive_v1/evaluation.json": "3dd7ee3a0180773dde9215f984c3786d819b25c4ca4a4b86f257dfee9185393f"
   }
 }
