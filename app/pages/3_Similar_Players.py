@@ -458,22 +458,26 @@ if model_mode == "Trained Player DNA":
         and siamese_embeddings is not None
     )
     if siamese_active:
-        retrieval_note = "coverage-aware Siamese Player DNA: stable cross-era + detailed 2007-08+"
+        model_note = "Coverage-aware Siamese Player DNA (validated winner)"
+        retrieval_note = "stable cross-era + detailed 2007-08+"
     elif temporal_active:
+        model_note = f"{method} ({validation_note})"
         retrieval_note = (
             "validated temporal ensemble: 42% denoising Player DNA + 30% temporal metric "
             "learning + 26.6% positive behavior + 1.4% shared absence"
         )
     elif lens == "Offensive":
+        model_note = f"{method} ({validation_note})"
         retrieval_note = (
             "hybrid retrieval: 60% learned Player DNA + 38% positive behavior + "
             "2% information-weighted shared absence"
         )
     else:
+        model_note = f"{method} ({validation_note})"
         retrieval_note = "encoder retrieval"
     st.caption(
         f"{profile} · {lens} · {available_seasons[0]}–{available_seasons[-1]} · "
-        f"{method} ({validation_note}) · {retrieval_note}."
+        f"{model_note} · {retrieval_note}."
     )
     method_test = next(
         row for row in model_evaluation["evaluations"]
