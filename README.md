@@ -14,7 +14,7 @@ AI, data science, and data engineering roles increasingly ask for proof that a c
 
 ## What it demonstrates
 
-- **Machine learning:** denoising autoencoders, temporal metric learning, learned embeddings, chronological holdouts, and baseline comparison.
+- **Machine learning:** denoising autoencoders, temporal metric learning, a Siamese contrastive MLP, learned embeddings, chronological holdouts, and baseline comparison.
 - **Data engineering:** chunked CSV ingestion, season-partitioned Parquet, explicit coverage metadata, validation, idempotent SQLite loading, and indexed read paths.
 - **Data science:** held-out temporal retrieval, statistical baselines, efficiency metrics, trend analysis, and explainable vector search.
 - **Product engineering:** a multi-page Streamlit UI, interactive Plotly charts, clear limitations, deterministic evidence summaries, and Markdown export.
@@ -37,7 +37,7 @@ Player discovery treats the selected team as a preference: if a name is not foun
 
 ## Tech stack
 
-Python 3.10+ · Streamlit · pandas · NumPy · SQLite · Plotly · scikit-learn · PyArrow · Kaggle CLI · python-dotenv · pytest
+Python 3.10+ · Streamlit · pandas · NumPy · SQLite · Plotly · scikit-learn · PyArrow · PyTorch (training only) · Kaggle CLI · python-dotenv · pytest
 
 ## Architecture
 
@@ -99,7 +99,7 @@ tests/                     Unit and integration tests
 9. pandas functions add eFG%, true shooting, assist-to-turnover ratio, recent trend splits, and shot-style features.
 10. Player DNA has two independently trained depths: Broad History excludes possession-action fields for consistent cross-era comparison, while Modern Detailed requires 2020+ action coverage. Offensive candidates span shot-detail history from 1996-97; matchup-based defense begins in 2017-18. Models train only through 2022-23, while later seasons remain validation and test data.
 
-The current Player DNA model is frozen as `play-style-v1`: its parameters and
+The base Player DNA model is frozen as `play-style-v1`: its parameters and
 artifact hashes live in `models/play_style/v1/champion_manifest.json`. Compact
 deployed artifacts are checked in, while raw partitions and training-only assets
 remain in the Git-ignored historical archive. A rolling
@@ -138,12 +138,29 @@ experiment with:
 python scripts/train_temporal_contrastive_encoder.py
 ```
 
-The deployed Broad History offensive score is 42% denoising Player DNA, 30%
+The frozen v1 Broad History offensive score is 42% denoising Player DNA, 30%
 temporal metric similarity, 26.6% positive-behavior overlap, and 1.4%
-information-weighted shared absence. The original 60% / 38% / 2% hybrid and its
-artifact hashes remain frozen as the rollback configuration.
+information-weighted shared absence.
 
-The command writes the complete local evidence beside the frozen artifacts and a
+The promoted v2 layer is a true Siamese tabular encoder: both player-seasons pass
+through the same 19 → 64 → 32 → 32 MLP, then a multi-positive contrastive InfoNCE
+objective pulls adjacent same-player seasons together and pushes other players
+apart. Player identity defines training pairs but never enters the feature vector.
+Seven development folds selected a 40% Siamese blend with the frozen v1 score.
+Across 19 chronological holdouts, MRR improved from **0.612 to 0.652**, Top-1 from
+**49.1% to 53.3%**, and Top-5 from **75.9% to 79.8%**; it won 18 of 19 folds on
+each metric. Split-season MRR reached **0.741**, and held-out behavior prediction
+improved MAE on four of five targets. PyTorch is training-only: the deployed app
+reads compact precomputed embeddings and retains the v1 tag as its rollback.
+
+Reproduce the neural challenger and its robustness checks with:
+
+```bash
+python scripts/train_siamese_style_encoder.py
+python scripts/evaluate_siamese_robustness.py
+```
+
+The temporal command writes the complete local evidence beside the frozen artifacts and a
 compact, reviewable summary to
 `models/play_style/temporal_contrastive_v1_summary.json`, including per-fold
 results and both deployment and rollback weights.
@@ -178,8 +195,8 @@ python scripts/train_broad_v2_candidate.py --rebuild-features
 The winning candidate keeps the champion features and adds the new location group
 at 0.25 weight. Across nine folds it improves Recall@5 from 71.2% to 75.0% and MRR
 from 0.580 to 0.618. The weight is selected on the first eight folds; the untouched
-2025-26 → 2024-25 fold improves from 75.0% to 78.6% Recall@5. The live app remains
-on v1 until qualitative player comparisons and human review also pass.
+2025-26 → 2024-25 fold improves from 75.0% to 78.6% Recall@5. This location-only
+challenger remains unpromoted because qualitative review has not cleared its gate.
 
 The challenger also has a separate robustness harness:
 

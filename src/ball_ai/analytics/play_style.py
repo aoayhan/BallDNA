@@ -50,6 +50,7 @@ OFFENSIVE_PRESENCE_WEIGHT = 0.4
 SHARED_ABSENCE_SHARE = 0.05
 ABSENCE_THRESHOLD = 0.01
 TEMPORAL_ENSEMBLE_WEIGHT = 0.3
+SIAMESE_ENSEMBLE_WEIGHT = 0.4
 
 DEFENSIVE_FEATURES = [
     "defensive_rebounds_per_36",
@@ -1022,6 +1023,8 @@ def find_style_neighbors(
     presence_weight: float = 0.0,
     temporal_artifact: dict | None = None,
     temporal_weight: float = 0.0,
+    siamese_embeddings: pd.DataFrame | None = None,
+    siamese_weight: float = 0.0,
     unique_players: bool = False,
     candidate_player_id: int | None = None,
 ) -> pd.DataFrame:
@@ -1175,6 +1178,41 @@ def find_style_neighbors(
         candidates["similarity_score"] = (
             (1 - temporal_weight) * candidates["similarity_score"]
             + temporal_weight * candidates["temporal_similarity"]
+        )
+    candidates["siamese_similarity"] = np.nan
+    if siamese_weight:
+        if not 0 <= siamese_weight <= 1:
+            raise ValueError("Siamese weight must be between 0 and 1.")
+        if siamese_embeddings is None:
+            raise ValueError("Siamese retrieval requires precomputed embeddings.")
+        columns = [
+            column for column in siamese_embeddings
+            if column.startswith("siamese_embedding_")
+        ]
+        indexed = siamese_embeddings.drop_duplicates(
+            ["player_id", "season"], keep="last"
+        ).copy()
+        indexed["player_id"] = indexed["player_id"].astype(int)
+        indexed = indexed.set_index(["player_id", "season"])
+        reference_key = (int(player_id), season)
+        candidate_keys = pd.MultiIndex.from_frame(
+            candidates[["player_id", "season"]].assign(
+                player_id=lambda frame: frame["player_id"].astype(int)
+            )
+        )
+        if (
+            not columns
+            or reference_key not in indexed.index
+            or not candidate_keys.isin(indexed.index).all()
+        ):
+            raise ValueError("Siamese retrieval is missing player-season embeddings.")
+        reference_vector = indexed.loc[reference_key, columns].to_numpy(dtype=float)
+        candidate_vectors = indexed.reindex(candidate_keys)[columns].to_numpy(dtype=float)
+        cosine = np.clip(candidate_vectors @ reference_vector, -1, 1)
+        candidates["siamese_similarity"] = 1 - np.arccos(cosine) / np.pi
+        candidates["similarity_score"] = (
+            (1 - siamese_weight) * candidates["similarity_score"]
+            + siamese_weight * candidates["siamese_similarity"]
         )
     candidates["dpm_difference"] = candidates["dpm"] - reference["dpm"]
     candidates["o_dpm_difference"] = candidates["o_dpm"] - reference["o_dpm"]

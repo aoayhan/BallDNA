@@ -72,8 +72,8 @@ st.code(
        1996-97 onward          richer recent actions
              └───────────┬───────────┘
                          ▼
-       denoising autoencoder Player DNA
-          + temporal metric-learning signal
+       denoising + temporal Player DNA
+          + Siamese contrastive encoder
                          ▼
         cosine retrieval in learned space
                          ▼
@@ -112,36 +112,28 @@ with right:
 temporal = _read_json(
     settings.root_dir / "models/play_style/temporal_contrastive_v1_summary.json"
 )
+siamese = _read_json(
+    settings.root_dir / "models/play_style/siamese_tabular_v1_summary.json"
+)
 deployment = temporal.get("deployment", {})
 weights = deployment.get("weights", {})
-if weights:
+if weights and siamese:
     st.subheader("Deployed Broad History offensive ensemble")
-    weight_columns = st.columns(4)
-    weight_columns[0].metric("Denoising Player DNA", f"{weights['denoising_player_dna']:.0%}")
-    weight_columns[1].metric("Temporal metric learning", f"{weights['temporal_metric']:.0%}")
-    weight_columns[2].metric("Positive behavior overlap", f"{weights['positive_behavior_overlap']:.1%}")
-    weight_columns[3].metric("Shared absence", f"{weights['information_weighted_shared_absence']:.1%}")
+    weight_columns = st.columns(2)
+    weight_columns[0].metric("Siamese Player DNA", "40%")
+    weight_columns[1].metric("Frozen v1 ensemble", "60%")
     st.caption(
-        "The learned representation remains primary. Positive actions receive stronger evidence than "
-        "shared zeros, while the temporal component rewards behavior that persists across seasons."
+        "The shared MLP learns from adjacent same-player seasons with contrastive loss. The frozen v1 "
+        "ensemble remains intact inside the remaining 60%, so rollback is immediate."
     )
 
-evaluation_groups = [
-    ("14 new untouched folds", "additional_holdout_summary"),
-    ("All 19 holdouts", "combined_holdout_summary"),
-    ("8 established rolling folds", "established_rolling_summary"),
-]
-if all(temporal.get(key) for _, key in evaluation_groups):
-    summaries = {
-        key: {row["model"]: row for row in temporal[key]}
-        for _, key in evaluation_groups
-    }
-    best = summaries["established_rolling_summary"]["Temporal ensemble"]
+if siamese.get("all_19_holdouts"):
+    best = siamese["all_19_holdouts"]["siamese_ensemble"]
     st.subheader("How it was evaluated")
     metrics = st.columns(3)
-    metrics[0].metric("Best validated MRR", f"{best['mean_reciprocal_rank']:.3f}")
-    metrics[1].metric("Best previous-season Top-1", f"{best['recall_at_1']:.1%}")
-    metrics[2].metric("Best previous-season Top-5", f"{best['recall_at_5']:.1%}")
+    metrics[0].metric("19-fold holdout MRR", f"{best['mean_reciprocal_rank']:.3f}")
+    metrics[1].metric("Previous-season Top-1", f"{best['recall_at_1']:.1%}")
+    metrics[2].metric("Previous-season Top-5", f"{best['recall_at_5']:.1%}")
     st.write(
         "Evaluation uses chronological holdouts: a player-season queries an earlier season pool, "
         "and success means retrieving that same player's adjacent season near the top. This tests "
@@ -149,9 +141,9 @@ if all(temporal.get(key) for _, key in evaluation_groups):
         "retained as simpler baselines."
     )
     st.caption(
-        "Three later offline challengers—attempt-aware smoothing, behavioral-group weights, and "
-        "a temporal cross-view autoencoder—failed to beat the frozen development MRR, so none was "
-        "promoted. The deployed model and rollback artifacts remain unchanged."
+        "The Siamese ensemble improved the frozen v1 holdout MRR from 0.612 to 0.652 and won 18 "
+        "of 19 folds. Split-season, bootstrap-stability, held-out-behavior, and qualitative checks "
+        "were run before promotion."
     )
 
 metadata = get_data_metadata()
@@ -189,7 +181,7 @@ left, right = st.columns(2)
 with left:
     st.subheader("What this demonstrates")
     st.markdown(
-        "- **Machine learning:** denoising autoencoders and temporal metric learning\n"
+        "- **Machine learning:** denoising autoencoders, temporal metric learning, and a Siamese contrastive MLP\n"
         "- **Evaluation:** chronological holdouts, MRR, Recall@1/5, bootstrap stability, and baselines\n"
         "- **Data engineering:** multi-source ingestion, Parquet partitioning, SQLite, validation, and provenance\n"
         "- **Explainability:** observed feature gaps \n"

@@ -37,6 +37,7 @@ from ball_ai.analytics.similarity import (  # noqa: E402
 )
 from ball_ai.analytics.play_style import (  # noqa: E402
     OFFENSIVE_PRESENCE_WEIGHT,
+    SIAMESE_ENSEMBLE_WEIGHT,
     TEMPORAL_ENSEMBLE_WEIGHT,
     find_style_neighbors,
     historical_self_similarities,
@@ -112,6 +113,18 @@ def _load_temporal_evaluation(root: str) -> dict | None:
 
 
 @st.cache_data(show_spinner=False)
+def _load_siamese_embeddings(root: str) -> pd.DataFrame | None:
+    path = Path(root) / "siamese_offensive_embeddings.parquet"
+    return pd.read_parquet(path) if path.exists() else None
+
+
+@st.cache_data(show_spinner=False)
+def _load_siamese_evaluation(root: str) -> dict | None:
+    path = settings.root_dir / "models/play_style/siamese_tabular_v1_summary.json"
+    return json.loads(path.read_text(encoding="utf-8")) if path.exists() else None
+
+
+@st.cache_data(show_spinner=False)
 def _load_latest_player_teams(root: str) -> pd.DataFrame:
     return get_latest_historical_player_teams(Path(root))
 
@@ -170,6 +183,8 @@ if model_mode == "Trained Player DNA":
     artifacts = _load_style_models(str(style_root))
     temporal_artifact = _load_temporal_component(str(style_root))
     temporal_evaluation = _load_temporal_evaluation(str(style_root))
+    siamese_embeddings = _load_siamese_embeddings(str(style_root))
+    siamese_evaluation = _load_siamese_evaluation(str(style_root))
     profile = st.session_state["similar_profile_depth"]
     method_options = ["Denoising autoencoder", "Cosine baseline", "PCA baseline"]
     lens_options = ["Offensive", "Overall", "Defensive"]
@@ -382,7 +397,10 @@ if model_mode == "Trained Player DNA":
         and method == "Denoising autoencoder"
         and temporal_artifact is not None
     )
-    if temporal_active:
+    siamese_active = temporal_active and siamese_embeddings is not None
+    if siamese_active:
+        retrieval_note = "validated ensemble: 40% Siamese Player DNA + 60% frozen v1"
+    elif temporal_active:
         retrieval_note = (
             "validated temporal ensemble: 42% denoising Player DNA + 30% temporal metric "
             "learning + 26.6% positive behavior + 1.4% shared absence"
@@ -430,6 +448,8 @@ if model_mode == "Trained Player DNA":
             presence_weight=OFFENSIVE_PRESENCE_WEIGHT if lens == "Offensive" else 0.0,
             temporal_artifact=temporal_artifact if temporal_active else None,
             temporal_weight=TEMPORAL_ENSEMBLE_WEIGHT if temporal_active else 0.0,
+            siamese_embeddings=siamese_embeddings if siamese_active else None,
+            siamese_weight=SIAMESE_ENSEMBLE_WEIGHT if siamese_active else 0.0,
             unique_players=unique_players,
         )
     except ValueError as exc:
@@ -706,6 +726,13 @@ if model_mode == "Trained Player DNA":
             ], ignore_index=True)
             st.markdown("**Promoted temporal component · retrieval evidence**")
             render_copyable_table(promoted_evidence)
+        if siamese_active and siamese_evaluation:
+            siamese_evidence = pd.DataFrame([
+                {"evaluation_set": "19 chronological holdouts", **values}
+                for model, values in siamese_evaluation["all_19_holdouts"].items()
+            ]).assign(model=["Frozen v1", "Siamese ensemble"])
+            st.markdown("**Promoted Siamese component · retrieval evidence**")
+            render_copyable_table(siamese_evidence)
         st.markdown(
             "These rows evaluate the encoder before the offensive presence-aware reranker. "
             "The model uses eligible history through 2022–23; later seasons are reserved for validation and test."
@@ -718,7 +745,8 @@ if model_mode == "Trained Player DNA":
             ("Action data", "Excluded from Broad History; Modern Detailed uses assisted makes, fast breaks, second chances, and turnover-created shots."),
             ("Vector retrieval", "L2-normalize Player DNA and calculate cosine similarity."),
             ("Temporal metric learning", "Learn persistent behavior from repeated seasons: same-player seasons define positive classes and other player-seasons define negatives; identity never enters the input vector."),
-            ("Deployed offensive ensemble", "Blend 42% denoising Player DNA, 30% temporal metric similarity, 26.6% positive behavior, and 1.4% shared absence."),
+            ("Siamese metric learning", "Send both player-seasons through the same MLP and use contrastive loss to pull adjacent same-player seasons together while pushing other players apart."),
+            ("Deployed offensive ensemble", "Blend 40% Siamese Player DNA with 60% of the frozen v1 temporal ensemble."),
             ("Reranker status", "The overlap is deterministic, not AI. It is capped below 50% so the learned encoder remains primary."),
             ("Impact separation", "Attach DPM, O-DPM, and D-DPM after retrieval; they never enter the style encoder."),
             ("Model selection", "Choose latent size and model family on validation MRR. Chronological validation selected a 40% reranker with 5% of that allowance reserved for shared absence."),

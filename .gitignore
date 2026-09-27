@@ -34,6 +34,7 @@ data/historical/player_game_stats/*
 !data/historical/player_shot_profiles.parquet
 !data/historical/player_style_embeddings.parquet
 !data/historical/player_style_features.parquet
+!data/historical/siamese_offensive_embeddings.parquet
 !data/historical/players.parquet
 !data/historical/roster_model_evaluation.json
 !data/historical/roster_player_team_vectors.parquet

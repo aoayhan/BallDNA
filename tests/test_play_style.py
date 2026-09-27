@@ -92,6 +92,29 @@ def test_unique_player_retrieval_keeps_only_best_season() -> None:
     assert result.iloc[0]["season"] == "2024-25"
 
 
+def test_precomputed_siamese_component_changes_retrieval_order() -> None:
+    embeddings = pd.DataFrame({
+        "player_id": [1, 2, 3], "player_name": ["Reference", "Base", "Siamese"],
+        "season": ["2025-26"] * 3, "position": ["G"] * 3,
+        "dpm": [0.0] * 3, "o_dpm": [0.0] * 3, "d_dpm": [0.0] * 3,
+        "eligible": [True] * 3, "lens": ["Offensive"] * 3,
+        "method": ["Denoising autoencoder"] * 3,
+        "embedding_00": [1.0, 1.0, 0.0], "embedding_01": [0.0, 0.0, 1.0],
+    })
+    siamese = pd.DataFrame({
+        "player_id": [1, 2, 3], "season": ["2025-26"] * 3,
+        "siamese_embedding_00": [1.0, 0.0, 1.0],
+        "siamese_embedding_01": [0.0, 1.0, 0.0],
+    })
+
+    result = find_style_neighbors(
+        embeddings, 1, lens="Offensive", method="Denoising autoencoder",
+        season="2025-26", siamese_embeddings=siamese, siamese_weight=.6,
+    )
+
+    assert result.iloc[0]["player_name"] == "Siamese"
+
+
 def test_direct_style_comparison_targets_requested_player_season() -> None:
     embeddings = pd.DataFrame({
         "player_id": [1, 2, 2, 3],

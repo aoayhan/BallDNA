@@ -27,6 +27,7 @@ from ball_ai.analytics.tables import (  # noqa: E402
 )
 from ball_ai.analytics.play_style import (  # noqa: E402
     OFFENSIVE_PRESENCE_WEIGHT,
+    SIAMESE_ENSEMBLE_WEIGHT,
     TEMPORAL_ENSEMBLE_WEIGHT,
     find_style_neighbors,
     input_feature_comparison,
@@ -65,6 +66,12 @@ def _load_style_models(root: str) -> dict:
 def _load_temporal_model(root: str) -> dict | None:
     path = Path(root) / "model_registry/play_style/candidates/temporal_contrastive_v1/model.joblib"
     return joblib.load(path) if path.exists() else None
+
+
+@st.cache_data(show_spinner=False)
+def _load_siamese_embeddings(root: str) -> pd.DataFrame | None:
+    path = Path(root) / "siamese_offensive_embeddings.parquet"
+    return pd.read_parquet(path) if path.exists() else None
 
 
 @st.cache_data(show_spinner=False)
@@ -110,6 +117,7 @@ def _render_style_matchup(
     embeddings, features = _load_style_tables(str(root))
     models = _load_style_models(str(root))
     temporal_model = _load_temporal_model(str(root))
+    siamese_embeddings = _load_siamese_embeddings(str(root))
     control_columns = st.columns(2)
     profile = control_columns[0].selectbox(
         "Profile depth", ["Broad history", "Modern detailed"], key="compare_style_profile"
@@ -149,6 +157,7 @@ def _render_style_matchup(
         f"{second_name} season", second_seasons, key=f"compare_style_b_{second_id}_{profile}_{lens}"
     )
     temporal_active = profile == "Broad history" and lens == "Offensive" and temporal_model is not None
+    siamese_active = temporal_active and siamese_embeddings is not None
     try:
         match = find_style_neighbors(
             embeddings,
@@ -166,6 +175,8 @@ def _render_style_matchup(
             presence_weight=OFFENSIVE_PRESENCE_WEIGHT if lens == "Offensive" else 0.0,
             temporal_artifact=temporal_model if temporal_active else None,
             temporal_weight=TEMPORAL_ENSEMBLE_WEIGHT if temporal_active else 0.0,
+            siamese_embeddings=siamese_embeddings if siamese_active else None,
+            siamese_weight=SIAMESE_ENSEMBLE_WEIGHT if siamese_active else 0.0,
         ).iloc[0]
     except ValueError as exc:
         st.info(str(exc))
@@ -235,7 +246,9 @@ def _render_style_matchup(
         render_copyable_table(display)
 
     formula = (
-        "42% denoising Player DNA + 30% temporal metric learning + 26.6% positive behavior + 1.4% shared absence"
+        "40% Siamese Player DNA + 60% frozen v1 temporal ensemble"
+        if siamese_active
+        else "42% denoising Player DNA + 30% temporal metric learning + 26.6% positive behavior + 1.4% shared absence"
         if temporal_active
         else "60% denoising Player DNA + 38% positive behavior + 2% shared absence"
         if lens == "Offensive"

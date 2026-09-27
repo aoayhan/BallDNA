@@ -1,0 +1,52 @@
+{
+  "model_id": "play-style-broad-offense-v2",
+  "status": "champion",
+  "promoted_at": "2026-09-27T14:23:00+02:00",
+  "base_revision": "80d709b149423d8560a8406e4207af2a2a805ca9",
+  "scope": "Broad History Offensive only",
+  "rollback_tag": "model-broad-offense-v1",
+  "ensemble": {
+    "siamese_tabular_encoder": 0.4,
+    "frozen_v1_ensemble": 0.6
+  },
+  "siamese": {
+    "architecture": "19 -> 64 -> 32 -> 32-dimensional L2-normalized embedding",
+    "objective": "Multi-positive supervised contrastive InfoNCE",
+    "temperature": 0.07,
+    "positive_pairs": "Adjacent eligible seasons from the same player",
+    "input_exclusions": [
+      "player identity",
+      "player name",
+      "team",
+      "position",
+      "height",
+      "weight",
+      "shooting efficiency",
+      "DARKO impact"
+    ]
+  },
+  "all_19_chronological_holdouts": {
+    "mean_reciprocal_rank": 0.6521677890377442,
+    "recall_at_1": 0.5327385883733907,
+    "recall_at_5": 0.7983637990869921
+  },
+  "frozen_v1_comparison": {
+    "mean_reciprocal_rank": 0.6118119592203659,
+    "recall_at_1": 0.4912482047303004,
+    "recall_at_5": 0.7593772638268563
+  },
+  "promotion_checks": {
+    "fold_wins": "18 of 19 on MRR, Recall@1, and Recall@5",
+    "split_season_mean_reciprocal_rank": 0.740563,
+    "held_out_behavior_mae_wins": "4 of 5",
+    "streamlit_pages_with_exceptions": 0,
+    "tests_passed": 93
+  },
+  "artifact_sha256": {
+    "siamese_offensive_embeddings.parquet": "f2de8928846f7c053c27303f877c844bebac622d4a9f258e45740e6ed27c2f28",
+    "siamese_tabular_v1_summary.json": "3156f85bc44e616f75e657b5e646ad5010a5da540f295ad1705aedf1b77f6f3e",
+    "siamese_tabular_v1_robustness.json": "faa02fbb7b1bea7be287503c1178eee7bbc396c8eacdeb3f452602f7ef517d00",
+    "player_style_embeddings.parquet": "fb0c0f80abfd5cf445f4f65ceefef7fc6ec57fb5d5ccf441a01ba9fd8b99c066",
+    "temporal_contrastive_v1/model.joblib": "47987b447fe2f2a61779f2b5c1061d0654b06a020961e42824cdfd00953991cf"
+  }
+}
