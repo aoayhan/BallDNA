@@ -40,6 +40,11 @@ from ball_ai.data.database import (  # noqa: E402
     get_player_shot_profile,
     get_players,
 )
+from ball_ai.data.historical_store import (  # noqa: E402
+    get_latest_historical_player_teams,
+    get_player_season_history,
+    get_player_shot_history,
+)
 
 
 @st.cache_data(show_spinner=False)
@@ -82,6 +87,63 @@ def _load_impact(root: str) -> pd.DataFrame:
         Path(root) / "darko_dpm.parquet",
         columns=["player_id", "season", "dpm", "o_dpm"],
     ).drop_duplicates(["player_id", "season"], keep="last")
+
+
+@st.cache_data(show_spinner=False)
+def _comparison_players(root: str) -> pd.DataFrame:
+    path = Path(root) / "player_style_embeddings.parquet"
+    if not path.exists():
+        return get_players()
+    history = pd.read_parquet(path, columns=[
+        "player_id", "player_name", "season", "position", "profile", "lens",
+        "method", "eligible",
+    ])
+    history = history.loc[
+        history["profile"].eq("Broad history")
+        & history["lens"].eq("Offensive")
+        & history["method"].eq("Denoising autoencoder")
+        & history["eligible"].astype("boolean").fillna(False)
+    ]
+    players = history.sort_values("season").drop_duplicates("player_id", keep="last")[[
+        "player_id", "player_name", "position",
+    ]]
+    latest_teams = get_latest_historical_player_teams(Path(root))
+    players = players.merge(latest_teams, on="player_id", how="left", validate="one_to_one")
+    current_teams = get_players().set_index("player_id")["team"]
+    players["display_team"] = players["player_id"].map(current_teams)
+    recent_seasons = sorted(history["season"].dropna().unique())[-2:]
+    players["display_team"] = players["display_team"].fillna(
+        players["team"].where(players["latest_season"].isin(recent_seasons))
+    )
+    return players.sort_values("player_name").reset_index(drop=True)
+
+
+def _comparison_profile(player_id: int, players: pd.DataFrame) -> dict | None:
+    profile = get_player_profile(player_id)
+    if profile is not None:
+        return profile
+    history = get_player_season_history(player_id)
+    if history.empty:
+        return None
+    profile = history.iloc[-1].to_dict()
+    games = float(profile.get("games_played") or 0)
+    profile["two_points_made_per_game"] = (
+        float(profile.get("two_points_made_total") or 0) / games if games else float("nan")
+    )
+    profile["two_point_attempts_per_game"] = (
+        float(profile.get("two_point_attempts_total") or 0) / games if games else float("nan")
+    )
+    metadata = players.loc[players["player_id"].astype(int).eq(int(player_id))].iloc[0]
+    profile.update({"team": metadata.get("team", "N/A"), "position": metadata["position"]})
+    return profile
+
+
+def _comparison_shot_profile(player_id: int) -> dict | None:
+    profile = get_player_shot_profile(player_id)
+    if profile is not None:
+        return profile
+    history = get_player_shot_history(player_id)
+    return None if history.empty else history.iloc[-1].to_dict()
 
 
 def _signed(value: object) -> str:
@@ -278,7 +340,7 @@ st.caption(
     "Compare two structured profiles, learned Player DNA, and separate impact context."
 )
 
-players = get_players()
+players = _comparison_players(str(settings.historical_data_dir))
 left, right = st.columns(2)
 with left:
     first_id = player_selector(
@@ -303,10 +365,13 @@ if first_id == second_id:
     st.warning("Choose two different players to build a comparison.")
     st.stop()
 
-first = get_player_profile(first_id)
-second = get_player_profile(second_id)
-first_shots = get_player_shot_profile(first_id)
-second_shots = get_player_shot_profile(second_id)
+first = _comparison_profile(first_id, players)
+second = _comparison_profile(second_id, players)
+if first is None or second is None:
+    st.error("Season statistics are unavailable for one of the selected players.")
+    st.stop()
+first_shots = _comparison_shot_profile(first_id)
+second_shots = _comparison_shot_profile(second_id)
 impact = _load_impact(str(settings.historical_data_dir)).set_index(["player_id", "season"])
 for profile in (first, second):
     key = (int(profile["player_id"]), str(profile["season"]))
