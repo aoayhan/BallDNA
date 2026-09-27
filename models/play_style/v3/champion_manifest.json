@@ -1,0 +1,63 @@
+{
+  "model_id": "play-style-broad-offense-v3",
+  "status": "champion",
+  "promoted_at": "2026-09-27T15:38:00+02:00",
+  "base_revision": "e5eda47",
+  "scope": "Broad History Offensive only",
+  "rollback_tag": "model-broad-offense-v2",
+  "architecture": {
+    "stable_encoder": "16 -> 64 -> 32 -> 32-dimensional L2-normalized embedding",
+    "detailed_encoder": "19 -> 64 -> 32 -> 32-dimensional L2-normalized embedding",
+    "objective": "Multi-positive supervised contrastive InfoNCE",
+    "temperature": 0.07,
+    "detail_coverage_start": "2007-08",
+    "covered_pair_weights": {
+      "stable_siamese": 0.25,
+      "detailed_siamese": 0.75
+    },
+    "uncovered_pair_weights": {
+      "stable_siamese": 1.0,
+      "detailed_siamese": 0.0
+    }
+  },
+  "input_exclusions": [
+    "player identity",
+    "player name",
+    "team",
+    "position",
+    "height",
+    "weight",
+    "shooting efficiency",
+    "DARKO impact"
+  ],
+  "all_19_chronological_holdouts": {
+    "mean_reciprocal_rank": 0.6623505645804473,
+    "recall_at_1": 0.5371950511565212,
+    "recall_at_5": 0.8150279361264108
+  },
+  "latest_untouched_fold": {
+    "mean_reciprocal_rank": 0.7383077282882263,
+    "recall_at_1": 0.6428571428571429,
+    "recall_at_5": 0.8535714285714285
+  },
+  "robustness": {
+    "split_season_mean_reciprocal_rank": 0.740461,
+    "split_season_recall_at_5": 0.872040,
+    "metadata_perturbation_max_abs_delta": 0.0,
+    "forbidden_input_features": [],
+    "unseen_player_mean_reciprocal_rank": 0.6395868095777083,
+    "permuted_identity_null_mean_reciprocal_rank": 0.01826897903900139,
+    "era_limited_features_guarded": true,
+    "tests_passed": 97,
+    "streamlit_pages_with_exceptions": 0
+  },
+  "artifact_sha256": {
+    "siamese_offensive_embeddings.parquet": "d54d84e67d4e003c7f6258dabefd8e4aae0f063ee8b89e33ac6af540d2b82d80",
+    "siamese_tabular_v3_summary.json": "61f0ddc5b04b820f9273d9ef06ccacab5c1f4a64cd9bbc841b7df531d4fdda0a",
+    "siamese_tabular_v3_robustness.json": "822323cd4c131fd43f65d81a81695c7d3576cc402bc6dcd7078897a787cf14a7",
+    "train_siamese_style_encoder.py": "fde6654dd7d6d65f18da4fe485f58e6f8df898ad846e5dd3cbba7d2efb0fb64b",
+    "evaluate_siamese_robustness.py": "6ecdd846e07fc1e6fd4da9d3b8d7429c6f6b6610ae1f3941bd7c1a93c8f0e7f6",
+    "play_style.py": "479d191432cb13e0b151e34b2fd045694d10aff58a94f5828fb67999ede50419",
+    "test_play_style.py": "84fe33c506e414d594afa1feaf62fdf14ae216d8c493e5c1f75fc67a43065c47"
+  }
+}

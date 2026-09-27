@@ -8,6 +8,9 @@ from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import StandardScaler
 
 from ball_ai.analytics.play_style import (
+    BROAD_OFFENSIVE_FEATURES,
+    MODERN_MOVE_FEATURES,
+    OFFENSIVE_FEATURES,
     STYLE_FEATURE_SETS,
     build_action_profiles,
     build_defensive_matchup_profiles,
@@ -20,6 +23,34 @@ from ball_ai.analytics.play_style import (
     temporal_self_match,
     transform_temporal_contrastive,
 )
+
+
+def test_broad_history_excludes_era_limited_move_labels() -> None:
+    assert not set(MODERN_MOVE_FEATURES) & set(BROAD_OFFENSIVE_FEATURES)
+    assert set(MODERN_MOVE_FEATURES) <= set(OFFENSIVE_FEATURES)
+
+
+def test_feature_comparison_can_hide_unavailable_era_features() -> None:
+    features = pd.DataFrame({
+        "player_id": [1, 2],
+        "season": ["2001-02"] * 2,
+        "rim_frequency": [.6, .5],
+        "floater_frequency": [0.0, 0.0],
+    })
+    values = features[["rim_frequency", "floater_frequency"]]
+    artifact = {
+        "feature_names": values.columns.tolist(),
+        "imputer": SimpleImputer().fit(values),
+        "scaler": StandardScaler().fit(values),
+        "feature_weights": np.ones(2),
+        "training_end": "2001-02",
+    }
+
+    comparison = input_feature_comparison(
+        features, artifact, 1, 2, "2001-02", feature_names=["rim_frequency"]
+    )
+
+    assert comparison["Feature"].tolist() == ["Rim shot frequency"]
 
 
 def test_presence_aware_retrieval_rewards_shared_actions_not_shared_zeros() -> None:
@@ -113,6 +144,38 @@ def test_precomputed_siamese_component_changes_retrieval_order() -> None:
     )
 
     assert result.iloc[0]["player_name"] == "Siamese"
+
+
+def test_detailed_siamese_requires_coverage_for_both_seasons() -> None:
+    embeddings = pd.DataFrame({
+        "player_id": [1, 2, 3], "player_name": ["Reference", "Stable", "Detailed"],
+        "season": ["2025-26", "2024-25", "2024-25"], "position": ["G"] * 3,
+        "dpm": [0.0] * 3, "o_dpm": [0.0] * 3, "d_dpm": [0.0] * 3,
+        "eligible": [True] * 3, "lens": ["Offensive"] * 3,
+        "method": ["Denoising autoencoder"] * 3,
+        "embedding_00": [1.0] * 3,
+    })
+    siamese = pd.DataFrame({
+        "player_id": [1, 2, 3], "season": embeddings["season"],
+        "siamese_embedding_00": [1.0, 1.0, 0.0],
+        "siamese_embedding_01": [0.0, 0.0, 1.0],
+        "detailed_siamese_embedding_00": [1.0, 0.0, 1.0],
+        "detailed_siamese_embedding_01": [0.0, 1.0, 0.0],
+    })
+
+    modern = find_style_neighbors(
+        embeddings, 1, lens="Offensive", method="Denoising autoencoder",
+        season="2025-26", siamese_embeddings=siamese, siamese_weight=1.0,
+    )
+    early_embeddings = embeddings.assign(season="2006-07")
+    early_siamese = siamese.assign(season="2006-07")
+    early = find_style_neighbors(
+        early_embeddings, 1, lens="Offensive", method="Denoising autoencoder",
+        season="2006-07", siamese_embeddings=early_siamese, siamese_weight=1.0,
+    )
+
+    assert modern.iloc[0]["player_name"] == "Detailed"
+    assert early.iloc[0]["player_name"] == "Stable"
 
 
 def test_direct_style_comparison_targets_requested_player_season() -> None:
@@ -281,6 +344,23 @@ def test_learned_retrieval_excludes_ineligible_candidates_and_keeps_impact_separ
     )
     assert result["player_name"].tolist() == ["Close"]
     assert result.iloc[0]["dpm_difference"] == -4.0
+
+
+def test_learned_retrieval_rejects_ineligible_reference() -> None:
+    frame = pd.DataFrame({
+        "player_id": [1, 2], "player_name": ["Reference", "Candidate"],
+        "season": ["2025-26"] * 2, "position": ["G"] * 2,
+        "dpm": [0.0] * 2, "o_dpm": [0.0] * 2, "d_dpm": [0.0] * 2,
+        "eligible": [False, True], "lens": ["Offensive"] * 2,
+        "method": ["Denoising autoencoder"] * 2,
+        "embedding_00": [1.0, .9], "embedding_01": [0.0, .1],
+    })
+
+    with np.testing.assert_raises_regex(ValueError, "reference player-season"):
+        find_style_neighbors(
+            frame, 1, lens="Offensive", method="Denoising autoencoder",
+            season="2025-26",
+        )
 
 
 def test_temporal_self_match_reports_rank_and_similarity() -> None:

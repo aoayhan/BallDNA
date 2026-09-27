@@ -24,13 +24,17 @@ for path in (ROOT, SRC, SCRIPTS):
     if str(path) not in sys.path:
         sys.path.insert(0, str(path))
 
-from ball_ai.analytics.play_style import BROAD_OFFENSIVE_FEATURES  # noqa: E402
+from ball_ai.analytics.play_style import (  # noqa: E402
+    BROAD_OFFENSIVE_FEATURES,
+    MODERN_MOVE_FEATURES,
+    SIAMESE_DETAIL_START,
+)
 from ball_ai.config import settings  # noqa: E402
 from scripts.evaluate_play_style_rolling import ROLLING_FOLDS  # noqa: E402
 from scripts.train_temporal_contrastive_encoder import (  # noqa: E402
     ADDITIONAL_HOLDOUT_FOLDS,
     HOLDOUT_FOLDS,
-    _fold_scores,
+    _cohorts,
     _metrics,
 )
 
@@ -39,8 +43,8 @@ DEVELOPMENT_FOLDS = ROLLING_FOLDS[1:-1]
 LATEST_TEST_FOLD = ROLLING_FOLDS[-1]
 EMBEDDING_DIMENSIONS = [16, 32]
 TEMPERATURES = [.07, .15]
-COMPONENT_WEIGHTS = [.10, .20, .30, .40]
-DEPLOYED_TEMPORAL_WEIGHT = .30
+DETAIL_WEIGHTS = [.25, .50, .75, 1.0]
+DETAILED_FEATURES = [*BROAD_OFFENSIVE_FEATURES, *MODERN_MOVE_FEATURES]
 EPOCHS = 60
 BATCH_SIZE = 256
 
@@ -111,6 +115,7 @@ def fit_siamese_encoder(
     embedding_dimensions: int,
     temperature: float,
     feature_names: list[str] | None = None,
+    training_start: str | None = None,
     epochs: int = EPOCHS,
     random_state: int = 42,
 ) -> dict:
@@ -123,6 +128,8 @@ def fit_siamese_encoder(
         features["offensive_eligible"].fillna(False)
         & features["season"].le(training_end)
     ].sort_values(["player_id", "season"]).reset_index(drop=True)
+    if training_start is not None:
+        training = training.loc[training["season"].ge(training_start)].reset_index(drop=True)
     imputer = SimpleImputer(strategy="median")
     scaler = StandardScaler()
     clean = scaler.fit_transform(imputer.fit_transform(training[columns]))
@@ -154,6 +161,7 @@ def fit_siamese_encoder(
         "model": "Siamese tabular encoder",
         "feature_names": columns,
         "training_end": training_end,
+        "training_start": training_start,
         "training_rows": len(training),
         "training_pairs": len(pairs),
         "embedding_dimensions": embedding_dimensions,
@@ -179,16 +187,25 @@ def transform_siamese(artifact: dict, frame: pd.DataFrame) -> np.ndarray:
         return model(torch.tensor(clean, dtype=torch.float32)).numpy()
 
 
-def build_siamese_embedding_frame(artifact: dict, features: pd.DataFrame) -> pd.DataFrame:
+def build_siamese_embedding_frame(
+    artifact: dict,
+    features: pd.DataFrame,
+    detailed_artifact: dict | None = None,
+) -> pd.DataFrame:
     """Export compact inference vectors so the deployed app does not need PyTorch."""
 
     eligible = features.loc[features["offensive_eligible"].fillna(False)].copy()
     vectors = transform_siamese(artifact, eligible)
     columns = [f"siamese_embedding_{index:02d}" for index in range(vectors.shape[1])]
-    return pd.concat([
+    output = pd.concat([
         eligible[["player_id", "season"]].reset_index(drop=True),
         pd.DataFrame(vectors, columns=columns),
     ], axis=1)
+    if detailed_artifact is not None:
+        detailed = transform_siamese(detailed_artifact, eligible)
+        for index in range(detailed.shape[1]):
+            output[f"detailed_siamese_embedding_{index:02d}"] = detailed[:, index]
+    return output
 
 
 def _siamese_scores(artifact: dict, query: pd.DataFrame, candidates: pd.DataFrame) -> np.ndarray:
@@ -200,8 +217,52 @@ def _siamese_scores(artifact: dict, query: pd.DataFrame, candidates: pd.DataFram
     return 1 - np.arccos(cosine) / np.pi
 
 
-def _deployed_scores(hybrid: np.ndarray, temporal: np.ndarray) -> np.ndarray:
-    return (1 - DEPLOYED_TEMPORAL_WEIGHT) * hybrid + DEPLOYED_TEMPORAL_WEIGHT * temporal
+def _fit_components(
+    features: pd.DataFrame,
+    training_end: str,
+    dimensions: int,
+    temperature: float,
+) -> tuple[dict, dict | None]:
+    stable = fit_siamese_encoder(
+        features,
+        training_end=training_end,
+        embedding_dimensions=dimensions,
+        temperature=temperature,
+    )
+    detailed = None
+    if training_end >= "2008-09":
+        detailed = fit_siamese_encoder(
+            features,
+            training_start=SIAMESE_DETAIL_START,
+            training_end=training_end,
+            embedding_dimensions=dimensions,
+            temperature=temperature,
+            feature_names=DETAILED_FEATURES,
+        )
+    return stable, detailed
+
+
+def _coverage_aware_scores(
+    stable: dict,
+    detailed: dict | None,
+    query: pd.DataFrame,
+    candidates: pd.DataFrame,
+    detail_weight: float,
+) -> tuple[np.ndarray, np.ndarray]:
+    stable_score = _siamese_scores(stable, query, candidates)
+    if detailed is None:
+        return stable_score, stable_score
+    detailed_score = _siamese_scores(detailed, query, candidates)
+    coverage = (
+        query["season"].ge(SIAMESE_DETAIL_START).to_numpy()[:, None]
+        & candidates["season"].ge(SIAMESE_DETAIL_START).to_numpy()[None, :]
+    )
+    combined = np.where(
+        coverage,
+        (1 - detail_weight) * stable_score + detail_weight * detailed_score,
+        stable_score,
+    )
+    return stable_score, combined
 
 
 def _summary(rows: pd.DataFrame, model: str) -> dict:
@@ -218,28 +279,20 @@ def _evaluate_selected(
     *,
     dimensions: int,
     temperature: float,
-    component_weight: float,
+    detail_weight: float,
     label: str,
 ) -> pd.DataFrame:
     rows = []
     for training_end, query_season, candidate_season in folds:
         print(f"{label}: {query_season} -> {candidate_season}", flush=True)
-        query, candidates, hybrid, temporal = _fold_scores(
-            features, training_end, query_season, candidate_season
+        query, candidates = _cohorts(features, query_season, candidate_season)
+        stable, detailed = _fit_components(
+            features, training_end, dimensions, temperature
         )
-        deployed = _deployed_scores(hybrid, temporal)
-        if component_weight:
-            artifact = fit_siamese_encoder(
-                features,
-                training_end=training_end,
-                embedding_dimensions=dimensions,
-                temperature=temperature,
-            )
-            siamese = _siamese_scores(artifact, query, candidates)
-            challenger = (1 - component_weight) * deployed + component_weight * siamese
-        else:
-            challenger = deployed
-        for model, scores in (("Frozen v1", deployed), ("Siamese ensemble", challenger)):
+        stable_scores, ensemble = _coverage_aware_scores(
+            stable, detailed, query, candidates, detail_weight
+        )
+        for model, scores in (("Stable Siamese", stable_scores), ("Coverage-aware ensemble", ensemble)):
             rows.append({
                 "set": label,
                 "fold": f"{query_season} -> {candidate_season}",
@@ -258,38 +311,27 @@ def main() -> int:
     development_rows = []
     for training_end, query_season, candidate_season in DEVELOPMENT_FOLDS:
         print(f"development: {query_season} -> {candidate_season}", flush=True)
-        query, candidates, hybrid, temporal = _fold_scores(
-            features, training_end, query_season, candidate_season
-        )
-        deployed = _deployed_scores(hybrid, temporal)
-        development_rows.append({
-            "fold": f"{query_season} -> {candidate_season}",
-            "embedding_dimensions": 0,
-            "temperature": 0,
-            "component_weight": 0,
-            **_metrics(deployed, query, candidates),
-        })
+        query, candidates = _cohorts(features, query_season, candidate_season)
         for dimensions in EMBEDDING_DIMENSIONS:
             for temperature in TEMPERATURES:
-                artifact = fit_siamese_encoder(
-                    features,
-                    training_end=training_end,
-                    embedding_dimensions=dimensions,
-                    temperature=temperature,
+                stable, detailed = _fit_components(
+                    features, training_end, dimensions, temperature
                 )
-                siamese = _siamese_scores(artifact, query, candidates)
-                for weight in COMPONENT_WEIGHTS:
+                for detail_weight in DETAIL_WEIGHTS:
+                    _, ensemble = _coverage_aware_scores(
+                        stable, detailed, query, candidates, detail_weight
+                    )
                     development_rows.append({
                         "fold": f"{query_season} -> {candidate_season}",
                         "embedding_dimensions": dimensions,
                         "temperature": temperature,
-                        "component_weight": weight,
-                        **_metrics((1 - weight) * deployed + weight * siamese, query, candidates),
+                        "detail_weight": detail_weight,
+                        **_metrics(ensemble, query, candidates),
                     })
     development = pd.DataFrame(development_rows)
     development_summary = (
         development.groupby(
-            ["embedding_dimensions", "temperature", "component_weight"], as_index=False
+            ["embedding_dimensions", "temperature", "detail_weight"], as_index=False
         )[["mean_reciprocal_rank", "recall_at_1", "recall_at_5"]]
         .mean()
         .sort_values("mean_reciprocal_rank", ascending=False)
@@ -297,70 +339,71 @@ def main() -> int:
     winner = development_summary.iloc[0]
     dimensions = int(winner["embedding_dimensions"])
     temperature = float(winner["temperature"])
-    weight = float(winner["component_weight"])
+    detail_weight = float(winner["detail_weight"])
     holdouts = _evaluate_selected(
         features,
         [*HOLDOUT_FOLDS, *ADDITIONAL_HOLDOUT_FOLDS],
-        dimensions=dimensions or EMBEDDING_DIMENSIONS[0],
-        temperature=temperature or TEMPERATURES[0],
-        component_weight=weight,
+        dimensions=dimensions,
+        temperature=temperature,
+        detail_weight=detail_weight,
         label="all_19_holdouts",
     )
     latest = _evaluate_selected(
         features,
         [LATEST_TEST_FOLD],
-        dimensions=dimensions or EMBEDDING_DIMENSIONS[0],
-        temperature=temperature or TEMPERATURES[0],
-        component_weight=weight,
+        dimensions=dimensions,
+        temperature=temperature,
+        detail_weight=detail_weight,
         label="latest_test",
     )
-    destination = (
-        settings.historical_data_dir
-        / "model_registry/play_style/candidates/siamese_v1"
-    )
+    destination = settings.historical_data_dir / "model_registry/play_style/v3"
     destination.mkdir(parents=True, exist_ok=True)
-    if weight:
-        artifact = fit_siamese_encoder(
-            features,
-            training_end="2023-24",
-            embedding_dimensions=dimensions,
-            temperature=temperature,
-        )
-        joblib.dump(artifact, destination / "model.joblib")
-        build_siamese_embedding_frame(artifact, features).to_parquet(
-            settings.historical_data_dir / "siamese_offensive_embeddings.parquet",
-            index=False,
-        )
+    stable_artifact, detailed_artifact = _fit_components(
+        features, "2023-24", dimensions, temperature
+    )
+    if detailed_artifact is None:
+        raise RuntimeError("Detailed Siamese training requires 2007-08+ history.")
+    joblib.dump(stable_artifact, destination / "siamese_model.joblib")
+    joblib.dump(detailed_artifact, destination / "detailed_siamese_model.joblib")
+    build_siamese_embedding_frame(
+        stable_artifact, features, detailed_artifact
+    ).to_parquet(
+        settings.historical_data_dir / "siamese_offensive_embeddings.parquet",
+        index=False,
+    )
     payload = {
         "created_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
-        "model_id": "siamese-tabular-v1",
+        "model_id": "siamese-tabular-v3-coverage-aware",
         "status": "promoted_broad_offense_component",
         "production_changed": True,
-        "architecture": "19 -> 64 -> 32 -> L2-normalized embedding",
+        "architecture": "shared 64 -> 32 MLPs with 32-dimensional L2-normalized embeddings",
         "objective": "Multi-positive supervised contrastive InfoNCE",
         "positive_pairs": "Adjacent eligible seasons and stochastic feature views",
+        "stable_feature_count": len(BROAD_OFFENSIVE_FEATURES),
+        "detailed_feature_count": len(DETAILED_FEATURES),
+        "detail_coverage_start": SIAMESE_DETAIL_START,
         "input_exclusions": [
             "player identity", "player name", "team", "position", "height", "weight",
             "shooting efficiency", "DARKO impact",
         ],
         "selected_embedding_dimensions": dimensions,
         "selected_temperature": temperature,
-        "selected_component_weight": weight,
+        "selected_detail_weight": detail_weight,
         "development_summary": development_summary.to_dict(orient="records"),
         "all_19_holdouts": {
-            "frozen_v1": _summary(holdouts, "Frozen v1"),
-            "siamese_ensemble": _summary(holdouts, "Siamese ensemble"),
+            "stable_siamese": _summary(holdouts, "Stable Siamese"),
+            "coverage_aware_ensemble": _summary(holdouts, "Coverage-aware ensemble"),
         },
         "latest_test": {
-            "frozen_v1": _summary(latest, "Frozen v1"),
-            "siamese_ensemble": _summary(latest, "Siamese ensemble"),
+            "stable_siamese": _summary(latest, "Stable Siamese"),
+            "coverage_aware_ensemble": _summary(latest, "Coverage-aware ensemble"),
         },
         "holdout_evaluations": holdouts.to_dict(orient="records"),
     }
     (destination / "evaluation.json").write_text(
         json.dumps(payload, indent=2), encoding="utf-8"
     )
-    tracked = ROOT / "models/play_style/siamese_tabular_v1_summary.json"
+    tracked = ROOT / "models/play_style/siamese_tabular_v3_summary.json"
     tracked.write_text(json.dumps(payload, indent=2), encoding="utf-8")
     print("\nDevelopment\n", development_summary.head(12).to_string(index=False))
     print("\nAll 19 holdouts\n", pd.DataFrame(payload["all_19_holdouts"]).to_string())

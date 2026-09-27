@@ -29,10 +29,7 @@ BROAD_OFFENSIVE_FEATURES = [
     "three_point_frequency",
     "dunk_frequency",
     "layup_frequency",
-    "floater_frequency",
     "hook_frequency",
-    "pull_up_frequency",
-    "step_back_frequency",
     "average_shot_distance",
     "field_goal_attempts_per_36",
     "three_point_attempt_rate",
@@ -44,13 +41,27 @@ BROAD_OFFENSIVE_FEATURES = [
     "estimated_used_possessions_per_36",
 ]
 
-OFFENSIVE_FEATURES = [*BROAD_OFFENSIVE_FEATURES, *OFFENSIVE_ACTION_FEATURES]
+# These labels are absent before 2007-08 in the source taxonomy, so using their
+# historical zeros would let Broad History infer era instead of playing style.
+MODERN_MOVE_FEATURES = [
+    "floater_frequency",
+    "pull_up_frequency",
+    "step_back_frequency",
+]
+
+OFFENSIVE_FEATURES = [
+    *BROAD_OFFENSIVE_FEATURES,
+    *MODERN_MOVE_FEATURES,
+    *OFFENSIVE_ACTION_FEATURES,
+]
 # Best chronological-validation weight under the product constraint that the learned encoder stays primary.
 OFFENSIVE_PRESENCE_WEIGHT = 0.4
 SHARED_ABSENCE_SHARE = 0.05
 ABSENCE_THRESHOLD = 0.01
 TEMPORAL_ENSEMBLE_WEIGHT = 0.3
-SIAMESE_ENSEMBLE_WEIGHT = 0.4
+SIAMESE_ENSEMBLE_WEIGHT = 1.0
+SIAMESE_DETAIL_WEIGHT = 0.75
+SIAMESE_DETAIL_START = "2007-08"
 
 DEFENSIVE_FEATURES = [
     "defensive_rebounds_per_36",
@@ -1025,6 +1036,7 @@ def find_style_neighbors(
     temporal_weight: float = 0.0,
     siamese_embeddings: pd.DataFrame | None = None,
     siamese_weight: float = 0.0,
+    siamese_detail_weight: float = SIAMESE_DETAIL_WEIGHT,
     unique_players: bool = False,
     candidate_player_id: int | None = None,
 ) -> pd.DataFrame:
@@ -1043,6 +1055,8 @@ def find_style_neighbors(
     if reference_rows.empty:
         raise ValueError(f"No {lens.lower()} embedding is available for this player and season.")
     reference = reference_rows.iloc[0]
+    if not bool(pd.Series([reference["eligible"]]).astype("boolean").fillna(False).iloc[0]):
+        raise ValueError("The reference player-season does not meet the eligibility rules.")
     candidates = cohort.loc[
         cohort["eligible"].astype("boolean").fillna(False).astype(bool)
     ].copy()
@@ -1180,9 +1194,12 @@ def find_style_neighbors(
             + temporal_weight * candidates["temporal_similarity"]
         )
     candidates["siamese_similarity"] = np.nan
+    candidates["detailed_siamese_similarity"] = np.nan
     if siamese_weight:
         if not 0 <= siamese_weight <= 1:
             raise ValueError("Siamese weight must be between 0 and 1.")
+        if not 0 <= siamese_detail_weight <= 1:
+            raise ValueError("Siamese detail weight must be between 0 and 1.")
         if siamese_embeddings is None:
             raise ValueError("Siamese retrieval requires precomputed embeddings.")
         columns = [
@@ -1209,7 +1226,27 @@ def find_style_neighbors(
         reference_vector = indexed.loc[reference_key, columns].to_numpy(dtype=float)
         candidate_vectors = indexed.reindex(candidate_keys)[columns].to_numpy(dtype=float)
         cosine = np.clip(candidate_vectors @ reference_vector, -1, 1)
-        candidates["siamese_similarity"] = 1 - np.arccos(cosine) / np.pi
+        stable_similarity = 1 - np.arccos(cosine) / np.pi
+        candidates["siamese_similarity"] = stable_similarity
+        detailed_columns = [
+            column for column in siamese_embeddings
+            if column.startswith("detailed_siamese_embedding_")
+        ]
+        if detailed_columns:
+            detailed_reference = indexed.loc[reference_key, detailed_columns].to_numpy(dtype=float)
+            detailed_candidates = indexed.reindex(candidate_keys)[detailed_columns].to_numpy(dtype=float)
+            detailed_cosine = np.clip(detailed_candidates @ detailed_reference, -1, 1)
+            detailed_similarity = 1 - np.arccos(detailed_cosine) / np.pi
+            candidates["detailed_siamese_similarity"] = detailed_similarity
+            detailed_coverage = (
+                season >= SIAMESE_DETAIL_START
+            ) & candidates["season"].ge(SIAMESE_DETAIL_START).to_numpy()
+            candidates["siamese_similarity"] = np.where(
+                detailed_coverage,
+                (1 - siamese_detail_weight) * stable_similarity
+                + siamese_detail_weight * detailed_similarity,
+                stable_similarity,
+            )
         candidates["similarity_score"] = (
             (1 - siamese_weight) * candidates["similarity_score"]
             + siamese_weight * candidates["siamese_similarity"]
@@ -1230,6 +1267,7 @@ def input_feature_comparison(
     candidate_id: int,
     season: str,
     candidate_season: str | None = None,
+    feature_names: Iterable[str] | None = None,
 ) -> pd.DataFrame:
     """Explain learned retrieval with standardized observed-input gaps."""
 
@@ -1243,19 +1281,34 @@ def input_feature_comparison(
     ]
     if reference.empty or candidate.empty:
         raise ValueError("Both players need style features in the selected season.")
-    columns = artifact["feature_names"]
+    artifact_columns = list(artifact["feature_names"])
+    allowed = set(feature_names) if feature_names is not None else None
+    columns = (
+        [column for column in artifact_columns if column in allowed]
+        if allowed is not None
+        else artifact_columns
+    )
+    if not columns:
+        raise ValueError("No model features are available for this comparison.")
+    indices = np.asarray([artifact_columns.index(column) for column in columns])
     raw = pd.concat([reference.iloc[[0]], candidate.iloc[[0]]])[columns]
-    scaled = artifact["scaler"].transform(artifact["imputer"].transform(raw))
+    values = raw.to_numpy(dtype=float)
+    imputation = np.asarray(artifact["imputer"].statistics_)[indices]
+    values = np.where(np.isnan(values), imputation, values)
+    center = np.asarray(artifact["scaler"].mean_)[indices]
+    scale = np.asarray(artifact["scaler"].scale_)[indices]
+    scale = np.where(scale == 0, 1, scale)
     weights = artifact.get("feature_weights", 1.0)
-    scaled *= weights
-    scale = np.where(artifact["scaler"].scale_ == 0, 1, artifact["scaler"].scale_)
-    shared_presence = np.minimum(raw.iloc[0], raw.iloc[1]).to_numpy(dtype=float)
+    if not np.isscalar(weights):
+        weights = np.asarray(weights)[indices]
+    scaled = (values - center) / scale * weights
+    shared_presence = np.minimum(values[0], values[1])
     shared_presence = np.clip(shared_presence / scale * weights, 0, None)
     gap = np.abs(scaled[0] - scaled[1])
-    absence_information = _absence_information(features, artifact)
+    absence_information = _absence_information(features, artifact)[indices]
     shared_absence = (
-        (raw.iloc[0].to_numpy(dtype=float) <= ABSENCE_THRESHOLD)
-        & (raw.iloc[1].to_numpy(dtype=float) <= ABSENCE_THRESHOLD)
+        (values[0] <= ABSENCE_THRESHOLD)
+        & (values[1] <= ABSENCE_THRESHOLD)
     ) * absence_information
     return pd.DataFrame({
         "Feature": [FEATURE_LABELS.get(column, column) for column in columns],

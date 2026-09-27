@@ -36,7 +36,9 @@ from ball_ai.analytics.similarity import (  # noqa: E402
     find_similar_players,
 )
 from ball_ai.analytics.play_style import (  # noqa: E402
+    BROAD_OFFENSIVE_FEATURES,
     OFFENSIVE_PRESENCE_WEIGHT,
+    SIAMESE_DETAIL_START,
     SIAMESE_ENSEMBLE_WEIGHT,
     TEMPORAL_ENSEMBLE_WEIGHT,
     find_style_neighbors,
@@ -120,7 +122,7 @@ def _load_siamese_embeddings(root: str) -> pd.DataFrame | None:
 
 @st.cache_data(show_spinner=False)
 def _load_siamese_evaluation(root: str) -> dict | None:
-    path = settings.root_dir / "models/play_style/siamese_tabular_v1_summary.json"
+    path = settings.root_dir / "models/play_style/siamese_tabular_v3_summary.json"
     return json.loads(path.read_text(encoding="utf-8")) if path.exists() else None
 
 
@@ -397,9 +399,14 @@ if model_mode == "Trained Player DNA":
         and method == "Denoising autoencoder"
         and temporal_artifact is not None
     )
-    siamese_active = temporal_active and siamese_embeddings is not None
+    siamese_active = (
+        profile == "Broad history"
+        and lens == "Offensive"
+        and method == "Denoising autoencoder"
+        and siamese_embeddings is not None
+    )
     if siamese_active:
-        retrieval_note = "validated ensemble: 40% Siamese Player DNA + 60% frozen v1"
+        retrieval_note = "coverage-aware Siamese Player DNA: stable cross-era + detailed 2007-08+"
     elif temporal_active:
         retrieval_note = (
             "validated temporal ensemble: 42% denoising Player DNA + 30% temporal metric "
@@ -445,9 +452,13 @@ if model_mode == "Trained Player DNA":
             maximum_age=candidate_ages[1],
             features=style_features,
             artifact=artifacts[profile][lens],
-            presence_weight=OFFENSIVE_PRESENCE_WEIGHT if lens == "Offensive" else 0.0,
-            temporal_artifact=temporal_artifact if temporal_active else None,
-            temporal_weight=TEMPORAL_ENSEMBLE_WEIGHT if temporal_active else 0.0,
+            presence_weight=(
+                OFFENSIVE_PRESENCE_WEIGHT if lens == "Offensive" and not siamese_active else 0.0
+            ),
+            temporal_artifact=temporal_artifact if temporal_active and not siamese_active else None,
+            temporal_weight=(
+                TEMPORAL_ENSEMBLE_WEIGHT if temporal_active and not siamese_active else 0.0
+            ),
             siamese_embeddings=siamese_embeddings if siamese_active else None,
             siamese_weight=SIAMESE_ENSEMBLE_WEIGHT if siamese_active else 0.0,
             unique_players=unique_players,
@@ -478,14 +489,41 @@ if model_mode == "Trained Player DNA":
     reference_impact = pd.to_numeric(
         pd.Series([reference_embedding[impact_column]]), errors="coerce"
     ).iloc[0]
-    self_history = historical_self_similarities(
-        embeddings,
-        player_id,
-        lens=lens,
-        method=method,
-        season=reference_season,
-        profile=profile,
-    )
+    if siamese_active:
+        try:
+            self_history = find_style_neighbors(
+                embeddings,
+                player_id,
+                lens=lens,
+                method=method,
+                season=reference_season,
+                profile=profile,
+                top_n=max(len(reference_seasons), 1),
+                candidate_player_id=player_id,
+                features=style_features,
+                artifact=artifacts[profile][lens],
+                presence_weight=0.0,
+                temporal_artifact=None,
+                temporal_weight=0.0,
+                siamese_embeddings=siamese_embeddings,
+                siamese_weight=SIAMESE_ENSEMBLE_WEIGHT,
+            )
+            self_history = (
+                self_history.loc[self_history["season"].lt(reference_season)]
+                .sort_values("season", ascending=False)
+                .head(3)
+            )
+        except ValueError:
+            self_history = pd.DataFrame()
+    else:
+        self_history = historical_self_similarities(
+            embeddings,
+            player_id,
+            lens=lens,
+            method=method,
+            season=reference_season,
+            profile=profile,
+        )
     matches_tab, why_tab, context_tab, evaluation_tab = st.tabs(
         ["Matches", "Why they are similar", "Context splits", "Model evaluation"]
     )
@@ -641,6 +679,12 @@ if model_mode == "Trained Player DNA":
             compared_id,
             reference_season,
             compared_season,
+            feature_names=(
+                BROAD_OFFENSIVE_FEATURES
+                if siamese_active
+                and min(reference_season, compared_season) < SIAMESE_DETAIL_START
+                else None
+            ),
         )
         close, different = st.columns(2)
         with close:
@@ -715,7 +759,7 @@ if model_mode == "Trained Player DNA":
             "recall_at_10", "mean_reciprocal_rank", "median_rank",
         ]]
         render_copyable_table(evaluation)
-        if temporal_active and temporal_evaluation:
+        if temporal_active and not siamese_active and temporal_evaluation:
             promoted_evidence = pd.concat([
                 pd.DataFrame(temporal_evaluation["combined_holdout_summary"]).assign(
                     evaluation_set="19 holdout folds"
@@ -730,7 +774,7 @@ if model_mode == "Trained Player DNA":
             siamese_evidence = pd.DataFrame([
                 {"evaluation_set": "19 chronological holdouts", **values}
                 for model, values in siamese_evaluation["all_19_holdouts"].items()
-            ]).assign(model=["Frozen v1", "Siamese ensemble"])
+            ]).assign(model=["Stable Siamese", "Coverage-aware ensemble"])
             st.markdown("**Promoted Siamese component · retrieval evidence**")
             render_copyable_table(siamese_evidence)
         st.markdown(
@@ -746,10 +790,10 @@ if model_mode == "Trained Player DNA":
             ("Vector retrieval", "L2-normalize Player DNA and calculate cosine similarity."),
             ("Temporal metric learning", "Learn persistent behavior from repeated seasons: same-player seasons define positive classes and other player-seasons define negatives; identity never enters the input vector."),
             ("Siamese metric learning", "Send both player-seasons through the same MLP and use contrastive loss to pull adjacent same-player seasons together while pushing other players apart."),
-            ("Deployed offensive ensemble", "Blend 40% Siamese Player DNA with 60% of the frozen v1 temporal ensemble."),
-            ("Reranker status", "The overlap is deterministic, not AI. It is capped below 50% so the learned encoder remains primary."),
+            ("Coverage guard", "Exclude floater, pull-up, and step-back labels from Broad History because the source does not encode them before 2007-08."),
+            ("Deployed offensive ensemble", "Use stable Siamese Player DNA for every pair; when both seasons are 2007-08 or later, blend 25% stable and 75% detailed Siamese similarity."),
             ("Impact separation", "Attach DPM, O-DPM, and D-DPM after retrieval; they never enter the style encoder."),
-            ("Model selection", "Choose latent size and model family on validation MRR. Chronological validation selected a 40% reranker with 5% of that allowance reserved for shared absence."),
+            ("Model selection", "Choose latent size, temperature, and the covered-pair blend on development folds, then report performance on separate chronological holdouts."),
         ], expanded=True)
     st.stop()
 

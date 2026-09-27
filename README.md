@@ -142,16 +142,23 @@ The frozen v1 Broad History offensive score is 42% denoising Player DNA, 30%
 temporal metric similarity, 26.6% positive-behavior overlap, and 1.4%
 information-weighted shared absence.
 
-The promoted v2 layer is a true Siamese tabular encoder: both player-seasons pass
-through the same 19 → 64 → 32 → 32 MLP, then a multi-positive contrastive InfoNCE
-objective pulls adjacent same-player seasons together and pushes other players
-apart. Player identity defines training pairs but never enters the feature vector.
-Seven development folds selected a 40% Siamese blend with the frozen v1 score.
-Across 19 chronological holdouts, MRR improved from **0.612 to 0.652**, Top-1 from
-**49.1% to 53.3%**, and Top-5 from **75.9% to 79.8%**; it won 18 of 19 folds on
-each metric. Split-season MRR reached **0.741**, and held-out behavior prediction
-improved MAE on four of five targets. PyTorch is training-only: the deployed app
-reads compact precomputed embeddings and retains the v1 tag as its rollback.
+The deployed v3 retrieval layer uses two true Siamese tabular encoders. Both sides
+pass through the same 64 → 32 MLP, while multi-positive contrastive InfoNCE pulls
+adjacent same-player seasons together and pushes other player-seasons apart. Player
+identity defines training pairs but never enters either feature vector. The stable
+encoder uses 16 consistently recorded behaviors across 1996-97 onward. A detailed
+encoder adds floater, pull-up, and step-back frequency, but is trained and applied
+only when both seasons have valid 2007-08+ source coverage. This prevents missing
+historical labels from acting as an era shortcut.
+
+Seven development folds selected **25% stable + 75% detailed** similarity when
+detailed coverage exists; earlier comparisons use 100% stable similarity. Across
+19 chronological holdouts, the coverage-aware model records **0.662 MRR**, **53.7%
+Top-1**, and **81.5% Top-5**. The latest untouched fold reaches **0.738 MRR**,
+**64.3% Top-1**, and **85.4% Top-5**. Split-season MRR is **0.740**. Metadata
+perturbation changes embeddings by exactly 0.0, unseen players retain 0.640 MRR,
+and independently permuting candidate identities drops MRR to 0.018. PyTorch is
+training-only; the app reads compact precomputed embeddings.
 
 Reproduce the neural challenger and its robustness checks with:
 

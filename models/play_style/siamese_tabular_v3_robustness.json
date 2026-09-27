@@ -1,0 +1,1027 @@
+{
+  "created_at": "2026-09-27T13:35:27+00:00",
+  "model_id": "siamese-tabular-v3-coverage-aware",
+  "production_changed": true,
+  "fold_deltas": [
+    {
+      "fold": "1999-00 -> 1998-99",
+      "mean_reciprocal_rank": 0.0,
+      "recall_at_1": 0.0,
+      "recall_at_5": 0.0
+    },
+    {
+      "fold": "2000-01 -> 1999-00",
+      "mean_reciprocal_rank": 0.0,
+      "recall_at_1": 0.0,
+      "recall_at_5": 0.0
+    },
+    {
+      "fold": "2001-02 -> 2000-01",
+      "mean_reciprocal_rank": 0.0,
+      "recall_at_1": 0.0,
+      "recall_at_5": 0.0
+    },
+    {
+      "fold": "2002-03 -> 2001-02",
+      "mean_reciprocal_rank": 0.0,
+      "recall_at_1": 0.0,
+      "recall_at_5": 0.0
+    },
+    {
+      "fold": "2004-05 -> 2003-04",
+      "mean_reciprocal_rank": 0.0,
+      "recall_at_1": 0.0,
+      "recall_at_5": 0.0
+    },
+    {
+      "fold": "2005-06 -> 2004-05",
+      "mean_reciprocal_rank": 0.0,
+      "recall_at_1": 0.0,
+      "recall_at_5": 0.0
+    },
+    {
+      "fold": "2006-07 -> 2005-06",
+      "mean_reciprocal_rank": 0.0,
+      "recall_at_1": 0.0,
+      "recall_at_5": 0.0
+    },
+    {
+      "fold": "2007-08 -> 2006-07",
+      "mean_reciprocal_rank": 0.0,
+      "recall_at_1": 0.0,
+      "recall_at_5": 0.0
+    },
+    {
+      "fold": "2009-10 -> 2008-09",
+      "mean_reciprocal_rank": 0.0,
+      "recall_at_1": 0.0,
+      "recall_at_5": 0.0
+    },
+    {
+      "fold": "2010-11 -> 2009-10",
+      "mean_reciprocal_rank": -0.0318515694702185,
+      "recall_at_1": -0.021897810218978075,
+      "recall_at_5": -0.058394160583941646
+    },
+    {
+      "fold": "2011-12 -> 2010-11",
+      "mean_reciprocal_rank": 0.007732127889754525,
+      "recall_at_1": 0.0077821011673151474,
+      "recall_at_5": 0.01945525291828798
+    },
+    {
+      "fold": "2012-13 -> 2011-12",
+      "mean_reciprocal_rank": 0.0036962562733375837,
+      "recall_at_1": -0.003968253968254065,
+      "recall_at_5": 0.02777777777777779
+    },
+    {
+      "fold": "2014-15 -> 2013-14",
+      "mean_reciprocal_rank": 0.036432440242072706,
+      "recall_at_1": 0.06405693950177938,
+      "recall_at_5": 0.007117437722420017
+    },
+    {
+      "fold": "2015-16 -> 2014-15",
+      "mean_reciprocal_rank": -0.016329485320569548,
+      "recall_at_1": -0.013888888888888895,
+      "recall_at_5": -0.00694444444444442
+    },
+    {
+      "fold": "2016-17 -> 2015-16",
+      "mean_reciprocal_rank": 0.031125641068246668,
+      "recall_at_1": 0.04561403508771933,
+      "recall_at_5": 0.010526315789473717
+    },
+    {
+      "fold": "2017-18 -> 2016-17",
+      "mean_reciprocal_rank": 0.038418038994127546,
+      "recall_at_1": 0.04014598540145986,
+      "recall_at_5": 0.014598540145985384
+    },
+    {
+      "fold": "2019-20 -> 2018-19",
+      "mean_reciprocal_rank": 0.0704197031657322,
+      "recall_at_1": 0.08679245283018866,
+      "recall_at_5": 0.060377358490566024
+    },
+    {
+      "fold": "2020-21 -> 2019-20",
+      "mean_reciprocal_rank": 0.07067927971226906,
+      "recall_at_1": 0.07246376811594202,
+      "recall_at_5": 0.08695652173913049
+    },
+    {
+      "fold": "2021-22 -> 2020-21",
+      "mean_reciprocal_rank": 0.055307645565568,
+      "recall_at_1": 0.06999999999999995,
+      "recall_at_5": 0.04999999999999993
+    }
+  ],
+  "fold_wins": {
+    "mean_reciprocal_rank": 8,
+    "recall_at_1": 7,
+    "recall_at_5": 8
+  },
+  "split_season": [
+    {
+      "season": "1997-98",
+      "model": "Denoising Player DNA",
+      "eligible_queries": 292,
+      "recall_at_1": 0.4726027397260274,
+      "recall_at_3": 0.7054794520547946,
+      "recall_at_5": 0.7876712328767124,
+      "recall_at_10": 0.8767123287671232,
+      "mean_reciprocal_rank": 0.6137867939227701,
+      "median_rank": 2.0,
+      "mean_self_cosine": 0.9052541068235547,
+      "mean_best_other_cosine": 0.916146869765469,
+      "mean_self_margin": -0.010892762941914307
+    },
+    {
+      "season": "1997-98",
+      "model": "Temporal NCA",
+      "eligible_queries": 292,
+      "recall_at_1": 0.4965753424657534,
+      "recall_at_3": 0.7157534246575342,
+      "recall_at_5": 0.8047945205479452,
+      "recall_at_10": 0.9041095890410958,
+      "mean_reciprocal_rank": 0.6310500849146854,
+      "median_rank": 2.0,
+      "mean_self_cosine": 0.9044369217248968,
+      "mean_best_other_cosine": 0.9141965724857544,
+      "mean_self_margin": -0.009759650760857934
+    },
+    {
+      "season": "1997-98",
+      "model": "Siamese encoder",
+      "eligible_queries": 292,
+      "recall_at_1": 0.6027397260273972,
+      "recall_at_3": 0.815068493150685,
+      "recall_at_5": 0.8664383561643836,
+      "recall_at_10": 0.9417808219178082,
+      "mean_reciprocal_rank": 0.7207843220483318,
+      "median_rank": 1.0,
+      "mean_self_cosine": 0.8561309087153983,
+      "mean_best_other_cosine": 0.8446849208988555,
+      "mean_self_margin": 0.011445987816542795
+    },
+    {
+      "season": "1997-98",
+      "model": "Coverage-aware Siamese",
+      "eligible_queries": 292,
+      "recall_at_1": 0.6027397260273972,
+      "recall_at_3": 0.815068493150685,
+      "recall_at_5": 0.8664383561643836,
+      "recall_at_10": 0.9417808219178082,
+      "mean_reciprocal_rank": 0.7207843220483318,
+      "median_rank": 1.0
+    },
+    {
+      "season": "2002-03",
+      "model": "Denoising Player DNA",
+      "eligible_queries": 294,
+      "recall_at_1": 0.5408163265306123,
+      "recall_at_3": 0.7142857142857143,
+      "recall_at_5": 0.8027210884353742,
+      "recall_at_10": 0.9047619047619048,
+      "mean_reciprocal_rank": 0.6571254951473847,
+      "median_rank": 1.0,
+      "mean_self_cosine": 0.9099925613991552,
+      "mean_best_other_cosine": 0.9159360577879802,
+      "mean_self_margin": -0.005943496388824935
+    },
+    {
+      "season": "2002-03",
+      "model": "Temporal NCA",
+      "eligible_queries": 294,
+      "recall_at_1": 0.5714285714285714,
+      "recall_at_3": 0.7891156462585034,
+      "recall_at_5": 0.8469387755102041,
+      "recall_at_10": 0.9251700680272109,
+      "mean_reciprocal_rank": 0.6984985620387069,
+      "median_rank": 1.0,
+      "mean_self_cosine": 0.9045863764203952,
+      "mean_best_other_cosine": 0.9073762880054318,
+      "mean_self_margin": -0.002789911585036644
+    },
+    {
+      "season": "2002-03",
+      "model": "Siamese encoder",
+      "eligible_queries": 294,
+      "recall_at_1": 0.6598639455782312,
+      "recall_at_3": 0.8197278911564626,
+      "recall_at_5": 0.9013605442176871,
+      "recall_at_10": 0.9489795918367347,
+      "mean_reciprocal_rank": 0.7589686407909745,
+      "median_rank": 1.0,
+      "mean_self_cosine": 0.8604997775587094,
+      "mean_best_other_cosine": 0.8378272906047146,
+      "mean_self_margin": 0.022672486953994854
+    },
+    {
+      "season": "2002-03",
+      "model": "Coverage-aware Siamese",
+      "eligible_queries": 294,
+      "recall_at_1": 0.6598639455782312,
+      "recall_at_3": 0.8197278911564626,
+      "recall_at_5": 0.9013605442176871,
+      "recall_at_10": 0.9489795918367347,
+      "mean_reciprocal_rank": 0.7589686407909745,
+      "median_rank": 1.0
+    },
+    {
+      "season": "2007-08",
+      "model": "Denoising Player DNA",
+      "eligible_queries": 300,
+      "recall_at_1": 0.5466666666666666,
+      "recall_at_3": 0.7133333333333334,
+      "recall_at_5": 0.79,
+      "recall_at_10": 0.8833333333333333,
+      "mean_reciprocal_rank": 0.6564303536722939,
+      "median_rank": 1.0,
+      "mean_self_cosine": 0.9007976473956117,
+      "mean_best_other_cosine": 0.909371721094659,
+      "mean_self_margin": -0.008574073699047021
+    },
+    {
+      "season": "2007-08",
+      "model": "Temporal NCA",
+      "eligible_queries": 300,
+      "recall_at_1": 0.5166666666666667,
+      "recall_at_3": 0.71,
+      "recall_at_5": 0.8,
+      "recall_at_10": 0.9066666666666666,
+      "mean_reciprocal_rank": 0.6442296309250918,
+      "median_rank": 1.0,
+      "mean_self_cosine": 0.8902959759055317,
+      "mean_best_other_cosine": 0.899372965531093,
+      "mean_self_margin": -0.009076989625561215
+    },
+    {
+      "season": "2007-08",
+      "model": "Siamese encoder",
+      "eligible_queries": 300,
+      "recall_at_1": 0.6066666666666667,
+      "recall_at_3": 0.82,
+      "recall_at_5": 0.8833333333333333,
+      "recall_at_10": 0.9666666666666667,
+      "mean_reciprocal_rank": 0.7303114399690487,
+      "median_rank": 1.0,
+      "mean_self_cosine": 0.857329244017601,
+      "mean_best_other_cosine": 0.8406450156370798,
+      "mean_self_margin": 0.016684228380521138
+    },
+    {
+      "season": "2007-08",
+      "model": "Coverage-aware Siamese",
+      "eligible_queries": 300,
+      "recall_at_1": 0.6166666666666667,
+      "recall_at_3": 0.8033333333333333,
+      "recall_at_5": 0.8866666666666667,
+      "recall_at_10": 0.96,
+      "mean_reciprocal_rank": 0.7333899711399712,
+      "median_rank": 1.0
+    },
+    {
+      "season": "2012-13",
+      "model": "Denoising Player DNA",
+      "eligible_queries": 315,
+      "recall_at_1": 0.5492063492063493,
+      "recall_at_3": 0.7523809523809524,
+      "recall_at_5": 0.8539682539682539,
+      "recall_at_10": 0.8920634920634921,
+      "mean_reciprocal_rank": 0.6717758757993112,
+      "median_rank": 1.0,
+      "mean_self_cosine": 0.8941175151123552,
+      "mean_best_other_cosine": 0.8933856970536941,
+      "mean_self_margin": 0.0007318180586610776
+    },
+    {
+      "season": "2012-13",
+      "model": "Temporal NCA",
+      "eligible_queries": 315,
+      "recall_at_1": 0.580952380952381,
+      "recall_at_3": 0.7746031746031746,
+      "recall_at_5": 0.834920634920635,
+      "recall_at_10": 0.9238095238095239,
+      "mean_reciprocal_rank": 0.7016510452525204,
+      "median_rank": 1.0,
+      "mean_self_cosine": 0.8814950530051894,
+      "mean_best_other_cosine": 0.8784691754877406,
+      "mean_self_margin": 0.0030258775174490347
+    },
+    {
+      "season": "2012-13",
+      "model": "Siamese encoder",
+      "eligible_queries": 315,
+      "recall_at_1": 0.6190476190476191,
+      "recall_at_3": 0.834920634920635,
+      "recall_at_5": 0.8857142857142857,
+      "recall_at_10": 0.9428571428571428,
+      "mean_reciprocal_rank": 0.7419029351584258,
+      "median_rank": 1.0,
+      "mean_self_cosine": 0.854897527846079,
+      "mean_best_other_cosine": 0.8333181907260229,
+      "mean_self_margin": 0.021579337120056153
+    },
+    {
+      "season": "2012-13",
+      "model": "Coverage-aware Siamese",
+      "eligible_queries": 315,
+      "recall_at_1": 0.6349206349206349,
+      "recall_at_3": 0.8507936507936508,
+      "recall_at_5": 0.8857142857142857,
+      "recall_at_10": 0.946031746031746,
+      "mean_reciprocal_rank": 0.7534935494402084,
+      "median_rank": 1.0
+    },
+    {
+      "season": "2017-18",
+      "model": "Denoising Player DNA",
+      "eligible_queries": 337,
+      "recall_at_1": 0.5400593471810089,
+      "recall_at_3": 0.7359050445103857,
+      "recall_at_5": 0.8011869436201781,
+      "recall_at_10": 0.8516320474777448,
+      "mean_reciprocal_rank": 0.6557768985752257,
+      "median_rank": 1.0,
+      "mean_self_cosine": 0.8750683210343736,
+      "mean_best_other_cosine": 0.8784403640293879,
+      "mean_self_margin": -0.0033720429950142455
+    },
+    {
+      "season": "2017-18",
+      "model": "Temporal NCA",
+      "eligible_queries": 337,
+      "recall_at_1": 0.5608308605341247,
+      "recall_at_3": 0.7863501483679525,
+      "recall_at_5": 0.8308605341246291,
+      "recall_at_10": 0.8813056379821959,
+      "mean_reciprocal_rank": 0.6854836727051329,
+      "median_rank": 1.0,
+      "mean_self_cosine": 0.8715602893782215,
+      "mean_best_other_cosine": 0.8707602963625721,
+      "mean_self_margin": 0.0007999930156493619
+    },
+    {
+      "season": "2017-18",
+      "model": "Siamese encoder",
+      "eligible_queries": 337,
+      "recall_at_1": 0.599406528189911,
+      "recall_at_3": 0.7744807121661721,
+      "recall_at_5": 0.8308605341246291,
+      "recall_at_10": 0.9050445103857567,
+      "mean_reciprocal_rank": 0.7067900132070979,
+      "median_rank": 1.0,
+      "mean_self_cosine": 0.8491563933185724,
+      "mean_best_other_cosine": 0.8388466942911685,
+      "mean_self_margin": 0.01030969902740388
+    },
+    {
+      "season": "2017-18",
+      "model": "Coverage-aware Siamese",
+      "eligible_queries": 337,
+      "recall_at_1": 0.658753709198813,
+      "recall_at_3": 0.8308605341246291,
+      "recall_at_5": 0.8694362017804155,
+      "recall_at_10": 0.9347181008902077,
+      "mean_reciprocal_rank": 0.7588480838650515,
+      "median_rank": 1.0
+    },
+    {
+      "season": "2022-23",
+      "model": "Denoising Player DNA",
+      "eligible_queries": 345,
+      "recall_at_1": 0.553623188405797,
+      "recall_at_3": 0.736231884057971,
+      "recall_at_5": 0.7942028985507247,
+      "recall_at_10": 0.855072463768116,
+      "mean_reciprocal_rank": 0.6665655745995691,
+      "median_rank": 1.0,
+      "mean_self_cosine": 0.8977351911023809,
+      "mean_best_other_cosine": 0.9002547212684341,
+      "mean_self_margin": -0.0025195301660533554
+    },
+    {
+      "season": "2022-23",
+      "model": "Temporal NCA",
+      "eligible_queries": 345,
+      "recall_at_1": 0.5826086956521739,
+      "recall_at_3": 0.7681159420289855,
+      "recall_at_5": 0.8405797101449275,
+      "recall_at_10": 0.8985507246376812,
+      "mean_reciprocal_rank": 0.6948715788948879,
+      "median_rank": 1.0,
+      "mean_self_cosine": 0.8984443131430984,
+      "mean_best_other_cosine": 0.897454656396373,
+      "mean_self_margin": 0.0009896567467252036
+    },
+    {
+      "season": "2022-23",
+      "model": "Siamese encoder",
+      "eligible_queries": 345,
+      "recall_at_1": 0.591304347826087,
+      "recall_at_3": 0.7565217391304347,
+      "recall_at_5": 0.8,
+      "recall_at_10": 0.8753623188405797,
+      "mean_reciprocal_rank": 0.6885087722811467,
+      "median_rank": 1.0,
+      "mean_self_cosine": 0.867795058955317,
+      "mean_best_other_cosine": 0.8671567023664281,
+      "mean_self_margin": 0.0006383565888888594
+    },
+    {
+      "season": "2022-23",
+      "model": "Coverage-aware Siamese",
+      "eligible_queries": 345,
+      "recall_at_1": 0.6782608695652174,
+      "recall_at_3": 0.8115942028985508,
+      "recall_at_5": 0.8608695652173913,
+      "recall_at_10": 0.9159420289855073,
+      "mean_reciprocal_rank": 0.7598213691565441,
+      "median_rank": 1.0
+    },
+    {
+      "season": "2024-25",
+      "model": "Denoising Player DNA",
+      "eligible_queries": 342,
+      "recall_at_1": 0.49415204678362573,
+      "recall_at_3": 0.7076023391812866,
+      "recall_at_5": 0.783625730994152,
+      "recall_at_10": 0.8567251461988304,
+      "mean_reciprocal_rank": 0.6231649810028098,
+      "median_rank": 2.0,
+      "mean_self_cosine": 0.8991081784398974,
+      "mean_best_other_cosine": 0.906204840246248,
+      "mean_self_margin": -0.007096661806350426
+    },
+    {
+      "season": "2024-25",
+      "model": "Temporal NCA",
+      "eligible_queries": 342,
+      "recall_at_1": 0.5584795321637427,
+      "recall_at_3": 0.7514619883040936,
+      "recall_at_5": 0.8216374269005848,
+      "recall_at_10": 0.8918128654970761,
+      "mean_reciprocal_rank": 0.677843060358286,
+      "median_rank": 1.0,
+      "mean_self_cosine": 0.9008810847841981,
+      "mean_best_other_cosine": 0.9046852689556996,
+      "mean_self_margin": -0.003804184171501469
+    },
+    {
+      "season": "2024-25",
+      "model": "Siamese encoder",
+      "eligible_queries": 342,
+      "recall_at_1": 0.52046783625731,
+      "recall_at_3": 0.7543859649122807,
+      "recall_at_5": 0.8128654970760234,
+      "recall_at_10": 0.8976608187134503,
+      "mean_reciprocal_rank": 0.6532723607611849,
+      "median_rank": 1.0,
+      "mean_self_cosine": 0.8715025216166736,
+      "mean_best_other_cosine": 0.879335244670946,
+      "mean_self_margin": -0.00783272305427239
+    },
+    {
+      "season": "2024-25",
+      "model": "Coverage-aware Siamese",
+      "eligible_queries": 342,
+      "recall_at_1": 0.5935672514619883,
+      "recall_at_3": 0.804093567251462,
+      "recall_at_5": 0.8654970760233918,
+      "recall_at_10": 0.9298245614035088,
+      "mean_reciprocal_rank": 0.7161188071274613,
+      "median_rank": 1.0
+    },
+    {
+      "season": "2025-26",
+      "model": "Denoising Player DNA",
+      "eligible_queries": 357,
+      "recall_at_1": 0.5042016806722689,
+      "recall_at_3": 0.6862745098039216,
+      "recall_at_5": 0.7647058823529411,
+      "recall_at_10": 0.8263305322128851,
+      "mean_reciprocal_rank": 0.6209910364039964,
+      "median_rank": 1.0,
+      "mean_self_cosine": 0.8886149868632021,
+      "mean_best_other_cosine": 0.901740459155126,
+      "mean_self_margin": -0.013125472291923963
+    },
+    {
+      "season": "2025-26",
+      "model": "Temporal NCA",
+      "eligible_queries": 357,
+      "recall_at_1": 0.5378151260504201,
+      "recall_at_3": 0.7338935574229691,
+      "recall_at_5": 0.7983193277310925,
+      "recall_at_10": 0.8543417366946778,
+      "mean_reciprocal_rank": 0.6515550529968653,
+      "median_rank": 1.0,
+      "mean_self_cosine": 0.88442538800882,
+      "mean_best_other_cosine": 0.895065106006379,
+      "mean_self_margin": -0.010639717997559152
+    },
+    {
+      "season": "2025-26",
+      "model": "Siamese encoder",
+      "eligible_queries": 357,
+      "recall_at_1": 0.5350140056022409,
+      "recall_at_3": 0.742296918767507,
+      "recall_at_5": 0.7983193277310925,
+      "recall_at_10": 0.8627450980392157,
+      "mean_reciprocal_rank": 0.6522677752528812,
+      "median_rank": 1.0,
+      "mean_self_cosine": 0.8620625351991306,
+      "mean_best_other_cosine": 0.8766269982695913,
+      "mean_self_margin": -0.014564463070460729
+    },
+    {
+      "season": "2025-26",
+      "model": "Coverage-aware Siamese",
+      "eligible_queries": 357,
+      "recall_at_1": 0.6302521008403361,
+      "recall_at_3": 0.7787114845938375,
+      "recall_at_5": 0.8403361344537815,
+      "recall_at_10": 0.8907563025210085,
+      "mean_reciprocal_rank": 0.7222603119626037,
+      "median_rank": 1.0
+    }
+  ],
+  "bootstrap": [
+    {
+      "model": "Coverage-aware Siamese",
+      "mean_embedding_cosine": 0.9726800955254928,
+      "p10_embedding_cosine": 0.9445490285061093,
+      "mean_top_10_neighbor_jaccard": 0.5156234185669385,
+      "p10_top_10_neighbor_jaccard": 0.3333333333333333
+    },
+    {
+      "model": "Denoising Player DNA",
+      "mean_embedding_cosine": 0.9804793366970175,
+      "p10_embedding_cosine": 0.958336644080377,
+      "mean_top_10_neighbor_jaccard": 0.516306898936499,
+      "p10_top_10_neighbor_jaccard": 0.3333333333333333
+    },
+    {
+      "model": "Siamese encoder",
+      "mean_embedding_cosine": 0.9751086158848691,
+      "p10_embedding_cosine": 0.9495319128036499,
+      "mean_top_10_neighbor_jaccard": 0.5044964762538393,
+      "p10_top_10_neighbor_jaccard": 0.3333333333333333
+    },
+    {
+      "model": "Temporal NCA",
+      "mean_embedding_cosine": 0.9807858514775512,
+      "p10_embedding_cosine": 0.9593299467460655,
+      "mean_top_10_neighbor_jaccard": 0.52985891680114,
+      "p10_top_10_neighbor_jaccard": 0.3333333333333333
+    }
+  ],
+  "held_out_behavior": [
+    {
+      "target": "rim_frequency",
+      "model": "Denoising Player DNA",
+      "eligible_rows": 361,
+      "mae": 0.043257163161406736,
+      "normalized_mae": 0.23567949426662368,
+      "r2": 0.9019833719728676,
+      "mean_baseline_mae": 0.14349046960213246
+    },
+    {
+      "target": "rim_frequency",
+      "model": "Siamese encoder",
+      "eligible_rows": 361,
+      "mae": 0.03431909359924632,
+      "normalized_mae": 0.18698190154031036,
+      "r2": 0.9389262112615856,
+      "mean_baseline_mae": 0.14349046960213246
+    },
+    {
+      "target": "rim_frequency",
+      "model": "Coverage-aware Siamese",
+      "eligible_rows": 361,
+      "mae": 0.03700521718617903,
+      "normalized_mae": 0.2016168013404609,
+      "r2": 0.9273628539469573,
+      "mean_baseline_mae": 0.14349046960213246
+    },
+    {
+      "target": "free_throw_attempt_rate",
+      "model": "Denoising Player DNA",
+      "eligible_rows": 361,
+      "mae": 0.0599701950072924,
+      "normalized_mae": 0.5637008142627582,
+      "r2": 0.4681192715060537,
+      "mean_baseline_mae": 0.08476225200407737
+    },
+    {
+      "target": "free_throw_attempt_rate",
+      "model": "Siamese encoder",
+      "eligible_rows": 361,
+      "mae": 0.060831050314940745,
+      "normalized_mae": 0.5717925811450366,
+      "r2": 0.45616937531611734,
+      "mean_baseline_mae": 0.08476225200407737
+    },
+    {
+      "target": "free_throw_attempt_rate",
+      "model": "Coverage-aware Siamese",
+      "eligible_rows": 361,
+      "mae": 0.06214064771746016,
+      "normalized_mae": 0.5841023814060966,
+      "r2": 0.44947419439201175,
+      "mean_baseline_mae": 0.08476225200407737
+    },
+    {
+      "target": "assists_per_36",
+      "model": "Denoising Player DNA",
+      "eligible_rows": 361,
+      "mae": 1.060775479981602,
+      "normalized_mae": 0.5438081356104381,
+      "r2": 0.4684183682435076,
+      "mean_baseline_mae": 1.5679509212550045
+    },
+    {
+      "target": "assists_per_36",
+      "model": "Siamese encoder",
+      "eligible_rows": 361,
+      "mae": 0.9600149807409776,
+      "normalized_mae": 0.49215311504362474,
+      "r2": 0.5519614317781342,
+      "mean_baseline_mae": 1.5679509212550045
+    },
+    {
+      "target": "assists_per_36",
+      "model": "Coverage-aware Siamese",
+      "eligible_rows": 361,
+      "mae": 0.9579007176301788,
+      "normalized_mae": 0.4910692348991729,
+      "r2": 0.5502168393710639,
+      "mean_baseline_mae": 1.5679509212550045
+    },
+    {
+      "target": "offensive_rebounds_per_36",
+      "model": "Denoising Player DNA",
+      "eligible_rows": 361,
+      "mae": 0.5051750731098944,
+      "normalized_mae": 0.40361151070105006,
+      "r2": 0.6889733529132833,
+      "mean_baseline_mae": 0.9614935467503395
+    },
+    {
+      "target": "offensive_rebounds_per_36",
+      "model": "Siamese encoder",
+      "eligible_rows": 361,
+      "mae": 0.4689770756438668,
+      "normalized_mae": 0.37469098548258195,
+      "r2": 0.7242401907361624,
+      "mean_baseline_mae": 0.9614935467503395
+    },
+    {
+      "target": "offensive_rebounds_per_36",
+      "model": "Coverage-aware Siamese",
+      "eligible_rows": 361,
+      "mae": 0.46097112338187834,
+      "normalized_mae": 0.3682946000331385,
+      "r2": 0.728862305373805,
+      "mean_baseline_mae": 0.9614935467503395
+    },
+    {
+      "target": "average_shot_distance",
+      "model": "Denoising Player DNA",
+      "eligible_rows": 361,
+      "mae": 1.1757477223760564,
+      "normalized_mae": 0.25094694963413755,
+      "r2": 0.8984518347860609,
+      "mean_baseline_mae": 3.674953759722432
+    },
+    {
+      "target": "average_shot_distance",
+      "model": "Siamese encoder",
+      "eligible_rows": 361,
+      "mae": 0.9068183553505642,
+      "normalized_mae": 0.1935477278132329,
+      "r2": 0.9379962397889008,
+      "mean_baseline_mae": 3.674953759722432
+    },
+    {
+      "target": "average_shot_distance",
+      "model": "Coverage-aware Siamese",
+      "eligible_rows": 361,
+      "mae": 0.8956464392997028,
+      "normalized_mae": 0.19116323818065536,
+      "r2": 0.9446795922798751,
+      "mean_baseline_mae": 3.674953759722432
+    }
+  ],
+  "shortcut_audit": {
+    "forbidden_input_features": [],
+    "metadata_perturbation_max_abs_delta": 0.0,
+    "era_limited_features_excluded": true,
+    "latest_test_by_training_exposure": {
+      "seen": {
+        "eligible_queries": 233,
+        "mean_reciprocal_rank": 0.7582213900023651,
+        "recall_at_1": 0.6566523605150214,
+        "recall_at_5": 0.8884120171673819
+      },
+      "unseen": {
+        "eligible_queries": 47,
+        "mean_reciprocal_rank": 0.6395868095777083,
+        "recall_at_1": 0.574468085106383,
+        "recall_at_5": 0.6808510638297872
+      }
+    },
+    "permuted_identity_null_mrr_mean": 0.01826897903900139,
+    "permuted_identity_null_mrr_p95": 0.025582949842573425
+  },
+  "representative_player_checks": {
+    "Shai Gilgeous-Alexander": {
+      "season": "2025-26",
+      "stable_siamese": [
+        {
+          "player_name": "Lou Williams",
+          "season": "2018-19",
+          "similarity_score": 0.8678147126879302
+        },
+        {
+          "player_name": "De'Aaron Fox",
+          "season": "2020-21",
+          "similarity_score": 0.8395785554395556
+        },
+        {
+          "player_name": "DeMar DeRozan",
+          "season": "2017-18",
+          "similarity_score": 0.8356350336305503
+        },
+        {
+          "player_name": "Allen Iverson",
+          "season": "2007-08",
+          "similarity_score": 0.825198370517124
+        },
+        {
+          "player_name": "Devin Booker",
+          "season": "2023-24",
+          "similarity_score": 0.7992995277822471
+        }
+      ],
+      "coverage_aware": [
+        {
+          "player_name": "Allen Iverson",
+          "season": "2005-06",
+          "similarity_score": 0.8181864245848804
+        },
+        {
+          "player_name": "De'Aaron Fox",
+          "season": "2020-21",
+          "similarity_score": 0.8094716449674514
+        },
+        {
+          "player_name": "Stephon Marbury",
+          "season": "2000-01",
+          "similarity_score": 0.7796745177130194
+        },
+        {
+          "player_name": "Chris Paul",
+          "season": "2006-07",
+          "similarity_score": 0.7711203666709019
+        },
+        {
+          "player_name": "DeMar DeRozan",
+          "season": "2023-24",
+          "similarity_score": 0.7708182533868417
+        }
+      ]
+    },
+    "Stephen Curry": {
+      "season": "2025-26",
+      "stable_siamese": [
+        {
+          "player_name": "Jordan Poole",
+          "season": "2024-25",
+          "similarity_score": 0.9059707059693459
+        },
+        {
+          "player_name": "Kemba Walker",
+          "season": "2019-20",
+          "similarity_score": 0.8630800972670604
+        },
+        {
+          "player_name": "Coby White",
+          "season": "2025-26",
+          "similarity_score": 0.8590809335648613
+        },
+        {
+          "player_name": "Damian Lillard",
+          "season": "2020-21",
+          "similarity_score": 0.8565904009354925
+        },
+        {
+          "player_name": "Bones Hyland",
+          "season": "2021-22",
+          "similarity_score": 0.8547019951908783
+        }
+      ],
+      "coverage_aware": [
+        {
+          "player_name": "Jordan Poole",
+          "season": "2024-25",
+          "similarity_score": 0.8940938293390988
+        },
+        {
+          "player_name": "Damian Lillard",
+          "season": "2020-21",
+          "similarity_score": 0.8495796186228977
+        },
+        {
+          "player_name": "Bones Hyland",
+          "season": "2021-22",
+          "similarity_score": 0.8416148954203309
+        },
+        {
+          "player_name": "Paul George",
+          "season": "2019-20",
+          "similarity_score": 0.840844585040057
+        },
+        {
+          "player_name": "Coby White",
+          "season": "2025-26",
+          "similarity_score": 0.8362070481469344
+        }
+      ]
+    },
+    "Nikola Jokic": {
+      "season": "2025-26",
+      "stable_siamese": [
+        {
+          "player_name": "Cade Cunningham",
+          "season": "2025-26",
+          "similarity_score": 0.8643303556052666
+        },
+        {
+          "player_name": "Josh Giddey",
+          "season": "2025-26",
+          "similarity_score": 0.8493959936200968
+        },
+        {
+          "player_name": "Luka Doncic",
+          "season": "2019-20",
+          "similarity_score": 0.8263918302036521
+        },
+        {
+          "player_name": "Alperen Sengun",
+          "season": "2025-26",
+          "similarity_score": 0.8158082341983779
+        },
+        {
+          "player_name": "James Harden",
+          "season": "2020-21",
+          "similarity_score": 0.8123372594276543
+        }
+      ],
+      "coverage_aware": [
+        {
+          "player_name": "Alperen Sengun",
+          "season": "2024-25",
+          "similarity_score": 0.8216320340210576
+        },
+        {
+          "player_name": "Josh Giddey",
+          "season": "2024-25",
+          "similarity_score": 0.7778820723823736
+        },
+        {
+          "player_name": "Jonas Valanciunas",
+          "season": "2025-26",
+          "similarity_score": 0.7646150382807004
+        },
+        {
+          "player_name": "Jusuf Nurkic",
+          "season": "2025-26",
+          "similarity_score": 0.7625336250203714
+        },
+        {
+          "player_name": "Cade Cunningham",
+          "season": "2025-26",
+          "similarity_score": 0.7425949733763257
+        }
+      ]
+    },
+    "LeBron James": {
+      "season": "2018-19",
+      "stable_siamese": [
+        {
+          "player_name": "Russell Westbrook",
+          "season": "2015-16",
+          "similarity_score": 0.869712732819049
+        },
+        {
+          "player_name": "Giannis Antetokounmpo",
+          "season": "2020-21",
+          "similarity_score": 0.8385604695083041
+        },
+        {
+          "player_name": "John Wall",
+          "season": "2016-17",
+          "similarity_score": 0.818842358792271
+        },
+        {
+          "player_name": "Bradley Beal",
+          "season": "2019-20",
+          "similarity_score": 0.8179340503006698
+        },
+        {
+          "player_name": "Derrick Rose",
+          "season": "2010-11",
+          "similarity_score": 0.8087406774408112
+        }
+      ],
+      "coverage_aware": [
+        {
+          "player_name": "Giannis Antetokounmpo",
+          "season": "2019-20",
+          "similarity_score": 0.7983190919398455
+        },
+        {
+          "player_name": "Allen Iverson",
+          "season": "1996-97",
+          "similarity_score": 0.7966650387207479
+        },
+        {
+          "player_name": "Dwyane Wade",
+          "season": "2009-10",
+          "similarity_score": 0.7920263377066236
+        },
+        {
+          "player_name": "Russell Westbrook",
+          "season": "2015-16",
+          "similarity_score": 0.7870446733502687
+        },
+        {
+          "player_name": "Baron Davis",
+          "season": "2006-07",
+          "similarity_score": 0.7856887352195621
+        }
+      ]
+    },
+    "Shaquille O'Neal": {
+      "season": "2001-02",
+      "stable_siamese": [
+        {
+          "player_name": "Jarrett Allen",
+          "season": "2025-26",
+          "similarity_score": 0.8357936910054005
+        },
+        {
+          "player_name": "Bam Adebayo",
+          "season": "2021-22",
+          "similarity_score": 0.8103837339849589
+        },
+        {
+          "player_name": "Pau Gasol",
+          "season": "2003-04",
+          "similarity_score": 0.8102163949519222
+        },
+        {
+          "player_name": "Anthony Davis",
+          "season": "2022-23",
+          "similarity_score": 0.8097273421209195
+        },
+        {
+          "player_name": "Montrezl Harrell",
+          "season": "2018-19",
+          "similarity_score": 0.8094587946721715
+        }
+      ],
+      "coverage_aware": [
+        {
+          "player_name": "Jarrett Allen",
+          "season": "2025-26",
+          "similarity_score": 0.8357936910054005
+        },
+        {
+          "player_name": "Bam Adebayo",
+          "season": "2021-22",
+          "similarity_score": 0.8103837339849589
+        },
+        {
+          "player_name": "Pau Gasol",
+          "season": "2003-04",
+          "similarity_score": 0.8102163949519222
+        },
+        {
+          "player_name": "Anthony Davis",
+          "season": "2022-23",
+          "similarity_score": 0.8097273421209195
+        },
+        {
+          "player_name": "Montrezl Harrell",
+          "season": "2018-19",
+          "similarity_score": 0.8094587946721715
+        }
+      ]
+    }
+  }
+}

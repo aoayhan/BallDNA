@@ -109,26 +109,23 @@ with right:
         "remain visible as context, but playing alike does not mean being equally good."
     )
 
-temporal = _read_json(
-    settings.root_dir / "models/play_style/temporal_contrastive_v1_summary.json"
-)
 siamese = _read_json(
-    settings.root_dir / "models/play_style/siamese_tabular_v1_summary.json"
+    settings.root_dir / "models/play_style/siamese_tabular_v3_summary.json"
 )
-deployment = temporal.get("deployment", {})
-weights = deployment.get("weights", {})
-if weights and siamese:
+if siamese:
+    detail_weight = siamese.get("selected_detail_weight", 0.75)
     st.subheader("Deployed Broad History offensive ensemble")
     weight_columns = st.columns(2)
-    weight_columns[0].metric("Siamese Player DNA", "40%")
-    weight_columns[1].metric("Frozen v1 ensemble", "60%")
+    weight_columns[0].metric("Stable Siamese", f"{1 - detail_weight:.0%}")
+    weight_columns[1].metric("Detailed Siamese", f"{detail_weight:.0%}")
     st.caption(
-        "The shared MLP learns from adjacent same-player seasons with contrastive loss. The frozen v1 "
-        "ensemble remains intact inside the remaining 60%, so rollback is immediate."
+        "Both shared MLPs learn from adjacent same-player seasons with contrastive loss. Detailed "
+        "similarity is used only when both seasons have 2007-08+ move-label coverage; otherwise the "
+        "score is 100% stable Siamese."
     )
 
 if siamese.get("all_19_holdouts"):
-    best = siamese["all_19_holdouts"]["siamese_ensemble"]
+    best = siamese["all_19_holdouts"]["coverage_aware_ensemble"]
     st.subheader("How it was evaluated")
     metrics = st.columns(3)
     metrics[0].metric("19-fold holdout MRR", f"{best['mean_reciprocal_rank']:.3f}")
@@ -141,9 +138,10 @@ if siamese.get("all_19_holdouts"):
         "retained as simpler baselines."
     )
     st.caption(
-        "The Siamese ensemble improved the frozen v1 holdout MRR from 0.612 to 0.652 and won 18 "
-        "of 19 folds. Split-season, bootstrap-stability, held-out-behavior, and qualitative checks "
-        "were run before promotion."
+        f"The stable encoder achieved {siamese['all_19_holdouts']['stable_siamese']['mean_reciprocal_rank']:.3f} "
+        f"MRR before coverage-aware detail improved it to {best['mean_reciprocal_rank']:.3f}. "
+        "Split-season, bootstrap-stability, unseen-player, metadata-invariance, and permutation-null "
+        "checks were run before promotion."
     )
 
 metadata = get_data_metadata()

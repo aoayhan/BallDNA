@@ -26,7 +26,9 @@ from ball_ai.analytics.tables import (  # noqa: E402
     shot_profile_comparison_table,
 )
 from ball_ai.analytics.play_style import (  # noqa: E402
+    BROAD_OFFENSIVE_FEATURES,
     OFFENSIVE_PRESENCE_WEIGHT,
+    SIAMESE_DETAIL_START,
     SIAMESE_ENSEMBLE_WEIGHT,
     TEMPORAL_ENSEMBLE_WEIGHT,
     find_style_neighbors,
@@ -157,7 +159,9 @@ def _render_style_matchup(
         f"{second_name} season", second_seasons, key=f"compare_style_b_{second_id}_{profile}_{lens}"
     )
     temporal_active = profile == "Broad history" and lens == "Offensive" and temporal_model is not None
-    siamese_active = temporal_active and siamese_embeddings is not None
+    siamese_active = (
+        profile == "Broad history" and lens == "Offensive" and siamese_embeddings is not None
+    )
     try:
         match = find_style_neighbors(
             embeddings,
@@ -172,9 +176,13 @@ def _render_style_matchup(
             candidate_season_end=second_season,
             features=features,
             artifact=models[profile][lens],
-            presence_weight=OFFENSIVE_PRESENCE_WEIGHT if lens == "Offensive" else 0.0,
-            temporal_artifact=temporal_model if temporal_active else None,
-            temporal_weight=TEMPORAL_ENSEMBLE_WEIGHT if temporal_active else 0.0,
+            presence_weight=(
+                OFFENSIVE_PRESENCE_WEIGHT if lens == "Offensive" and not siamese_active else 0.0
+            ),
+            temporal_artifact=temporal_model if temporal_active and not siamese_active else None,
+            temporal_weight=(
+                TEMPORAL_ENSEMBLE_WEIGHT if temporal_active and not siamese_active else 0.0
+            ),
             siamese_embeddings=siamese_embeddings if siamese_active else None,
             siamese_weight=SIAMESE_ENSEMBLE_WEIGHT if siamese_active else 0.0,
         ).iloc[0]
@@ -196,6 +204,11 @@ def _render_style_matchup(
         second_id,
         first_season,
         second_season,
+        feature_names=(
+            BROAD_OFFENSIVE_FEATURES
+            if siamese_active and min(first_season, second_season) < SIAMESE_DETAIL_START
+            else None
+        ),
     )
     shared_tab, differences_tab, context_tab = st.tabs(
         ["Shared tendencies", "Largest differences", "Impact and efficiency"]
@@ -246,7 +259,7 @@ def _render_style_matchup(
         render_copyable_table(display)
 
     formula = (
-        "40% Siamese Player DNA + 60% frozen v1 temporal ensemble"
+        "coverage-aware Siamese Player DNA: 25% stable + 75% detailed when both seasons have 2007-08+ move coverage"
         if siamese_active
         else "42% denoising Player DNA + 30% temporal metric learning + 26.6% positive behavior + 1.4% shared absence"
         if temporal_active
