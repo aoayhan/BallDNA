@@ -26,7 +26,6 @@ BROAD_OFFENSIVE_FEATURES = [
     "rim_frequency",
     "paint_frequency",
     "midrange_frequency",
-    "three_point_frequency",
     "dunk_frequency",
     "layup_frequency",
     "hook_frequency",
@@ -60,7 +59,7 @@ SHARED_ABSENCE_SHARE = 0.05
 ABSENCE_THRESHOLD = 0.01
 TEMPORAL_ENSEMBLE_WEIGHT = 0.3
 SIAMESE_ENSEMBLE_WEIGHT = 1.0
-SIAMESE_DETAIL_WEIGHT = 0.75
+SIAMESE_DETAIL_WEIGHT = 0.50
 SIAMESE_DETAIL_START = "2007-08"
 
 DEFENSIVE_FEATURES = [
@@ -1266,6 +1265,7 @@ def top_siamese_style_pairs(
     *,
     top_n: int = 100,
     candidate_pool: int = 250,
+    detail_weight: float = SIAMESE_DETAIL_WEIGHT,
 ) -> pd.DataFrame:
     """Return the highest-scoring different-player season pairs from deployed vectors."""
 
@@ -1323,8 +1323,8 @@ def top_siamese_style_pairs(
                 )
             ) / np.pi
             scores[covered] = (
-                (1 - SIAMESE_DETAIL_WEIGHT) * stable_similarity[covered]
-                + SIAMESE_DETAIL_WEIGHT * detailed_similarity
+                (1 - detail_weight) * stable_similarity[covered]
+                + detail_weight * detailed_similarity
             )
         for candidate, score in zip(candidate_indices, scores):
             key = tuple(sorted((reference, int(candidate))))

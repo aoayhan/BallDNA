@@ -1,0 +1,252 @@
+[
+  {
+    "player":"P.J. Washington",
+    "top1_same":true,
+    "top5_overlap":0.8
+  },
+  {
+    "player":"Tyler Kolek",
+    "top1_same":true,
+    "top5_overlap":0.6
+  },
+  {
+    "player":"Mitchell Robinson",
+    "top1_same":false,
+    "top5_overlap":0.8
+  },
+  {
+    "player":"Jamison Battle",
+    "top1_same":true,
+    "top5_overlap":0.6
+  },
+  {
+    "player":"Jalen Green",
+    "top1_same":false,
+    "top5_overlap":0.4
+  },
+  {
+    "player":"Dominick Barlow",
+    "top1_same":true,
+    "top5_overlap":0.8
+  },
+  {
+    "player":"Ja Morant",
+    "top1_same":true,
+    "top5_overlap":0.8
+  },
+  {
+    "player":"Cody Williams",
+    "top1_same":false,
+    "top5_overlap":0.8
+  },
+  {
+    "player":"De'Anthony Melton",
+    "top1_same":true,
+    "top5_overlap":0.8
+  },
+  {
+    "player":"Victor Wembanyama",
+    "top1_same":true,
+    "top5_overlap":0.4
+  },
+  {
+    "player":"Klay Thompson",
+    "top1_same":true,
+    "top5_overlap":0.4
+  },
+  {
+    "player":"Steven Adams",
+    "top1_same":false,
+    "top5_overlap":0.4
+  },
+  {
+    "player":"Brandon Ingram",
+    "top1_same":true,
+    "top5_overlap":1.0
+  },
+  {
+    "player":"Vince Williams Jr.",
+    "top1_same":true,
+    "top5_overlap":0.6
+  },
+  {
+    "player":"Oso Ighodaro",
+    "top1_same":true,
+    "top5_overlap":0.8
+  },
+  {
+    "player":"Kyle Filipowski",
+    "top1_same":true,
+    "top5_overlap":0.8
+  },
+  {
+    "player":"Scoot Henderson",
+    "top1_same":false,
+    "top5_overlap":0.4
+  },
+  {
+    "player":"Gabe Vincent",
+    "top1_same":true,
+    "top5_overlap":1.0
+  },
+  {
+    "player":"Kawhi Leonard",
+    "top1_same":true,
+    "top5_overlap":0.6
+  },
+  {
+    "player":"Kyle Anderson",
+    "top1_same":false,
+    "top5_overlap":0.2
+  },
+  {
+    "player":"Andrew Wiggins",
+    "top1_same":false,
+    "top5_overlap":0.8
+  },
+  {
+    "player":"Jahmai Mashack",
+    "top1_same":true,
+    "top5_overlap":0.6
+  },
+  {
+    "player":"Immanuel Quickley",
+    "top1_same":true,
+    "top5_overlap":0.6
+  },
+  {
+    "player":"AJ Green",
+    "top1_same":true,
+    "top5_overlap":0.8
+  },
+  {
+    "player":"Day'Ron Sharpe",
+    "top1_same":true,
+    "top5_overlap":0.6
+  },
+  {
+    "player":"Derrick White",
+    "top1_same":false,
+    "top5_overlap":0.6
+  },
+  {
+    "player":"Baylor Scheierman",
+    "top1_same":false,
+    "top5_overlap":1.0
+  },
+  {
+    "player":"Tristan Vukcevic",
+    "top1_same":true,
+    "top5_overlap":0.8
+  },
+  {
+    "player":"Alex Caruso",
+    "top1_same":true,
+    "top5_overlap":0.6
+  },
+  {
+    "player":"Trey Murphy III",
+    "top1_same":true,
+    "top5_overlap":0.8
+  },
+  {
+    "player":"Luke Kornet",
+    "top1_same":true,
+    "top5_overlap":0.6
+  },
+  {
+    "player":"Jarace Walker",
+    "top1_same":true,
+    "top5_overlap":0.6
+  },
+  {
+    "player":"Dean Wade",
+    "top1_same":false,
+    "top5_overlap":0.2
+  },
+  {
+    "player":"CJ McCollum",
+    "top1_same":false,
+    "top5_overlap":0.6
+  },
+  {
+    "player":"Ryan Kalkbrenner",
+    "top1_same":true,
+    "top5_overlap":1.0
+  },
+  {
+    "player":"Bryce McGowens",
+    "top1_same":false,
+    "top5_overlap":0.6
+  },
+  {
+    "player":"Cam Spencer",
+    "top1_same":true,
+    "top5_overlap":1.0
+  },
+  {
+    "player":"Franz Wagner",
+    "top1_same":false,
+    "top5_overlap":0.4
+  },
+  {
+    "player":"Dylan Cardwell",
+    "top1_same":false,
+    "top5_overlap":0.6
+  },
+  {
+    "player":"Pelle Larsson",
+    "top1_same":true,
+    "top5_overlap":0.8
+  },
+  {
+    "player":"Luka Garza",
+    "top1_same":true,
+    "top5_overlap":0.8
+  },
+  {
+    "player":"Austin Reaves",
+    "top1_same":false,
+    "top5_overlap":0.8
+  },
+  {
+    "player":"Justin Champagnie",
+    "top1_same":false,
+    "top5_overlap":0.8
+  },
+  {
+    "player":"Kyle Kuzma",
+    "top1_same":true,
+    "top5_overlap":0.8
+  },
+  {
+    "player":"Derik Queen",
+    "top1_same":true,
+    "top5_overlap":0.6
+  },
+  {
+    "player":"T.J. McConnell",
+    "top1_same":true,
+    "top5_overlap":0.6
+  },
+  {
+    "player":"Bobby Portis",
+    "top1_same":true,
+    "top5_overlap":0.4
+  },
+  {
+    "player":"Clint Capela",
+    "top1_same":true,
+    "top5_overlap":0.8
+  },
+  {
+    "player":"Coby White",
+    "top1_same":true,
+    "top5_overlap":1.0
+  },
+  {
+    "player":"Gary Trent Jr.",
+    "top1_same":true,
+    "top5_overlap":1.0
+  }
+]

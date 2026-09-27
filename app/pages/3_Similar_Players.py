@@ -38,6 +38,7 @@ from ball_ai.analytics.similarity import (  # noqa: E402
 )
 from ball_ai.analytics.play_style import (  # noqa: E402
     BROAD_OFFENSIVE_FEATURES,
+    MODERN_MOVE_FEATURES,
     OFFENSIVE_PRESENCE_WEIGHT,
     SIAMESE_DETAIL_START,
     SIAMESE_ENSEMBLE_WEIGHT,
@@ -123,7 +124,7 @@ def _load_siamese_embeddings(root: str) -> pd.DataFrame | None:
 
 @st.cache_data(show_spinner=False)
 def _load_siamese_evaluation(root: str) -> dict | None:
-    path = settings.root_dir / "models/play_style/siamese_tabular_v3_summary.json"
+    path = settings.root_dir / "models/play_style/siamese_tabular_v4_summary.json"
     return json.loads(path.read_text(encoding="utf-8")) if path.exists() else None
 
 
@@ -731,9 +732,12 @@ if model_mode == "Trained Player DNA":
             reference_season,
             compared_season,
             feature_names=(
-                BROAD_OFFENSIVE_FEATURES
+                (
+                    BROAD_OFFENSIVE_FEATURES
+                    if min(reference_season, compared_season) < SIAMESE_DETAIL_START
+                    else [*BROAD_OFFENSIVE_FEATURES, *MODERN_MOVE_FEATURES]
+                )
                 if siamese_active
-                and min(reference_season, compared_season) < SIAMESE_DETAIL_START
                 else None
             ),
         )
@@ -842,7 +846,7 @@ if model_mode == "Trained Player DNA":
             ("Temporal metric learning", "Learn persistent behavior from repeated seasons: same-player seasons define positive classes and other player-seasons define negatives; identity never enters the input vector."),
             ("Siamese metric learning", "Send both player-seasons through the same MLP and use contrastive loss to pull adjacent same-player seasons together while pushing other players apart."),
             ("Coverage guard", "Exclude floater, pull-up, and step-back labels from Broad History because the source does not encode them before 2007-08."),
-            ("Deployed offensive ensemble", "Use stable Siamese Player DNA for every pair; when both seasons are 2007-08 or later, blend 25% stable and 75% detailed Siamese similarity."),
+            ("Deployed offensive ensemble", "Use stable Siamese Player DNA for every pair; when both seasons are 2007-08 or later, blend 50% stable and 50% detailed Siamese similarity."),
             ("Impact separation", "Attach DPM, O-DPM, and D-DPM after retrieval; they never enter the style encoder."),
             ("Model selection", "Choose latent size, temperature, and the covered-pair blend on development folds, then report performance on separate chronological holdouts."),
         ], expanded=True)

@@ -21,9 +21,7 @@ for path in (ROOT, SRC, SCRIPTS):
         sys.path.insert(0, str(path))
 
 from ball_ai.analytics.play_style import (  # noqa: E402
-    BROAD_OFFENSIVE_FEATURES,
     MODERN_MOVE_FEATURES,
-    SIAMESE_DETAIL_WEIGHT,
     SIAMESE_ENSEMBLE_WEIGHT,
     find_style_neighbors,
     fit_style_artifact,
@@ -44,6 +42,7 @@ from scripts.evaluate_broad_v2_robustness import (  # noqa: E402
     retrieval_metrics,
 )
 from scripts.train_siamese_style_encoder import (  # noqa: E402
+    STABLE_FEATURES,
     _coverage_aware_scores,
     fit_siamese_encoder,
     transform_siamese,
@@ -121,7 +120,7 @@ def _split_metrics(first: pd.DataFrame, second: pd.DataFrame, artifacts: dict) -
         })
     _, score = _coverage_aware_scores(
         artifacts["siamese"], artifacts["detailed_siamese"],
-        first, second, SIAMESE_DETAIL_WEIGHT,
+        first, second, artifacts["detail_weight"],
     )
     rows.append({
         "model": "Coverage-aware Siamese",
@@ -156,9 +155,9 @@ def _bootstrap(root: Path, artifacts: dict) -> tuple[list[dict], pd.DataFrame]:
             ),
             "Siamese encoder": lambda frame: transform_siamese(artifacts["siamese"], frame),
             "Coverage-aware Siamese": lambda frame: np.concatenate([
-                np.sqrt(1 - SIAMESE_DETAIL_WEIGHT)
+                np.sqrt(1 - artifacts["detail_weight"])
                 * transform_siamese(artifacts["siamese"], frame),
-                np.sqrt(SIAMESE_DETAIL_WEIGHT)
+                np.sqrt(artifacts["detail_weight"])
                 * transform_siamese(artifacts["detailed_siamese"], frame),
             ], axis=1),
         }.items():
@@ -193,6 +192,7 @@ def _player_checks(
     features: pd.DataFrame,
     embeddings: pd.DataFrame,
     siamese_embeddings: pd.DataFrame,
+    detail_weight: float,
 ) -> dict:
     eligible = features["offensive_eligible"].fillna(False)
     cohort = features.loc[eligible].reset_index(drop=True)
@@ -211,7 +211,9 @@ def _player_checks(
         stable = find_style_neighbors(
             embeddings, player_id, siamese_detail_weight=0.0, **kwargs
         ).head(5)
-        challenger = find_style_neighbors(embeddings, player_id, **kwargs).head(5)
+        challenger = find_style_neighbors(
+            embeddings, player_id, siamese_detail_weight=detail_weight, **kwargs
+        ).head(5)
         columns = ["player_name", "season", "similarity_score"]
         checks[name] = {
             "season": season,
@@ -221,7 +223,7 @@ def _player_checks(
     return checks
 
 
-def _held_out_behavior(features: pd.DataFrame) -> list[dict]:
+def _held_out_behavior(features: pd.DataFrame, detail_weight: float) -> list[dict]:
     """Test whether embeddings predict behavior deliberately removed before training."""
 
     rows = []
@@ -229,7 +231,7 @@ def _held_out_behavior(features: pd.DataFrame) -> list[dict]:
         "2024-25"
     )
     for target, excluded in HELD_OUT_TARGETS.items():
-        names = [name for name in BROAD_OFFENSIVE_FEATURES if name not in excluded]
+        names = [name for name in STABLE_FEATURES if name not in excluded]
         baseline = fit_style_artifact(
             features,
             "Offensive",
@@ -246,7 +248,7 @@ def _held_out_behavior(features: pd.DataFrame) -> list[dict]:
             feature_names=names,
         )
         detailed_names = [
-            name for name in [*BROAD_OFFENSIVE_FEATURES, *MODERN_MOVE_FEATURES]
+            name for name in [*STABLE_FEATURES, *MODERN_MOVE_FEATURES]
             if name not in excluded
         ]
         detailed = fit_siamese_encoder(
@@ -260,8 +262,8 @@ def _held_out_behavior(features: pd.DataFrame) -> list[dict]:
         cohort = features.loc[cohort_mask & features[target].notna()].reset_index(drop=True)
         actual = cohort[target].to_numpy(dtype=float)
         coverage_values = np.concatenate([
-            np.sqrt(1 - SIAMESE_DETAIL_WEIGHT) * transform_siamese(siamese, cohort),
-            np.sqrt(SIAMESE_DETAIL_WEIGHT) * transform_siamese(detailed, cohort),
+            np.sqrt(1 - detail_weight) * transform_siamese(siamese, cohort),
+            np.sqrt(detail_weight) * transform_siamese(detailed, cohort),
         ], axis=1)
         for model, values in (
             ("Denoising Player DNA", transform_style(baseline, cohort, "Denoising autoencoder")),
@@ -289,7 +291,7 @@ def _shortcut_audit(features: pd.DataFrame, artifacts: dict) -> dict:
     query, candidates = _cohorts(features, "2025-26", "2024-25")
     _, score = _coverage_aware_scores(
         artifacts["siamese"], artifacts["detailed_siamese"],
-        query, candidates, SIAMESE_DETAIL_WEIGHT,
+        query, candidates, artifacts["detail_weight"],
     )
     candidate_ids = candidates["player_id"].astype(int).to_numpy()
 
@@ -367,17 +369,21 @@ def _shortcut_audit(features: pd.DataFrame, artifacts: dict) -> dict:
 
 def main() -> int:
     root = settings.historical_data_dir
+    summary = json.loads(
+        (ROOT / "models/play_style/siamese_tabular_v4_summary.json").read_text()
+    )
     artifacts = {
         "autoencoder": joblib.load(root / "play_style_models.joblib")["Broad history"]["Offensive"],
         "temporal": joblib.load(
             root / "model_registry/play_style/candidates/temporal_contrastive_v1/model.joblib"
         ),
         "siamese": joblib.load(
-            root / "model_registry/play_style/v3/siamese_model.joblib"
+            root / "model_registry/play_style/v4/siamese_model.joblib"
         ),
         "detailed_siamese": joblib.load(
-            root / "model_registry/play_style/v3/detailed_siamese_model.joblib"
+            root / "model_registry/play_style/v4/detailed_siamese_model.joblib"
         ),
+        "detail_weight": float(summary["selected_detail_weight"]),
     }
     split_rows = []
     for season in SPLIT_SEASONS:
@@ -389,13 +395,15 @@ def main() -> int:
     bootstrap, bootstrap_rows = _bootstrap(root, artifacts)
     features = pd.read_parquet(root / "player_style_features.parquet")
     embeddings = pd.read_parquet(root / "player_style_embeddings.parquet")
-    siamese_embeddings = pd.read_parquet(root / "siamese_offensive_embeddings.parquet")
-    players = _player_checks(features, embeddings, siamese_embeddings)
-    held_out = _held_out_behavior(features)
+    siamese_embeddings = pd.read_parquet(
+        root / "model_registry/play_style/v4/siamese_offensive_embeddings.parquet"
+    )
+    players = _player_checks(
+        features, embeddings, siamese_embeddings, artifacts["detail_weight"]
+    )
+    held_out = _held_out_behavior(features, artifacts["detail_weight"])
     shortcut_audit = _shortcut_audit(features, artifacts)
-    fold_report = json.loads(
-        (ROOT / "models/play_style/siamese_tabular_v3_summary.json").read_text()
-    )["holdout_evaluations"]
+    fold_report = summary["holdout_evaluations"]
     fold_frame = pd.DataFrame(fold_report)
     pivot = fold_frame.pivot(index="fold", columns="model")
     fold_deltas = pd.DataFrame({
@@ -404,7 +412,7 @@ def main() -> int:
     }).reset_index()
     payload = {
         "created_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
-        "model_id": "siamese-tabular-v3-coverage-aware",
+        "model_id": "siamese-tabular-v4-no-duplicate-three-point-rate",
         "production_changed": True,
         "fold_deltas": fold_deltas.to_dict(orient="records"),
         "fold_wins": {
@@ -417,14 +425,14 @@ def main() -> int:
         "shortcut_audit": shortcut_audit,
         "representative_player_checks": players,
     }
-    local = root / "model_registry/play_style/v3"
+    local = root / "model_registry/play_style/v4"
     (local / "robustness_evaluation.json").write_text(
         json.dumps(payload, indent=2), encoding="utf-8"
     )
     bootstrap_rows.to_parquet(
         local / "bootstrap_player_stability.parquet", index=False, compression="snappy"
     )
-    tracked = ROOT / "models/play_style/siamese_tabular_v3_robustness.json"
+    tracked = ROOT / "models/play_style/siamese_tabular_v4_robustness.json"
     tracked.write_text(json.dumps(payload, indent=2), encoding="utf-8")
     print("\nFold wins\n", payload["fold_wins"])
     print("\nSplit-season means\n", pd.DataFrame(split_rows).groupby("model")[

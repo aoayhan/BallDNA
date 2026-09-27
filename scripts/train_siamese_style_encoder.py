@@ -45,7 +45,9 @@ LATEST_TEST_FOLD = ROLLING_FOLDS[-1]
 EMBEDDING_DIMENSIONS = [16, 32]
 TEMPERATURES = [.07, .15]
 DETAIL_WEIGHTS = [.25, .50, .75, 1.0]
-DETAILED_FEATURES = [*BROAD_OFFENSIVE_FEATURES, *MODERN_MOVE_FEATURES]
+MODEL_VERSION = "v4"
+STABLE_FEATURES = list(BROAD_OFFENSIVE_FEATURES)
+DETAILED_FEATURES = [*STABLE_FEATURES, *MODERN_MOVE_FEATURES]
 EPOCHS = 60
 BATCH_SIZE = 256
 
@@ -124,7 +126,7 @@ def fit_siamese_encoder(
 
     torch.manual_seed(random_state)
     np.random.seed(random_state)
-    columns = list(feature_names or BROAD_OFFENSIVE_FEATURES)
+    columns = list(feature_names or STABLE_FEATURES)
     training = features.loc[
         features["offensive_eligible"].fillna(False)
         & features["season"].le(training_end)
@@ -357,7 +359,7 @@ def main() -> int:
         detail_weight=detail_weight,
         label="latest_test",
     )
-    destination = settings.historical_data_dir / "model_registry/play_style/v3"
+    destination = settings.historical_data_dir / f"model_registry/play_style/{MODEL_VERSION}"
     destination.mkdir(parents=True, exist_ok=True)
     stable_artifact, detailed_artifact = _fit_components(
         features, "2023-24", dimensions, temperature
@@ -369,9 +371,7 @@ def main() -> int:
     deployed_embeddings = build_siamese_embedding_frame(
         stable_artifact, features, detailed_artifact
     )
-    deployed_embeddings.to_parquet(
-        settings.historical_data_dir / "siamese_offensive_embeddings.parquet", index=False
-    )
+    deployed_embeddings.to_parquet(destination / "siamese_offensive_embeddings.parquet", index=False)
     leaderboard_metadata = features[[
         "player_id", "season", "player_name", "position", "shot_attempts",
     ]]
@@ -396,18 +396,19 @@ def main() -> int:
         deployed_embeddings,
         leaderboard_metadata,
         top_n=100,
+        detail_weight=detail_weight,
     ).to_parquet(
-        settings.historical_data_dir / "style_similarity_leaderboard.parquet", index=False
+        destination / "style_similarity_leaderboard.parquet", index=False
     )
     payload = {
         "created_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
-        "model_id": "siamese-tabular-v3-coverage-aware",
+        "model_id": "siamese-tabular-v4-no-duplicate-three-point-rate",
         "status": "promoted_broad_offense_component",
         "production_changed": True,
         "architecture": "shared 64 -> 32 MLPs with 32-dimensional L2-normalized embeddings",
         "objective": "Multi-positive supervised contrastive InfoNCE",
         "positive_pairs": "Adjacent eligible seasons and stochastic feature views",
-        "stable_feature_count": len(BROAD_OFFENSIVE_FEATURES),
+        "stable_feature_count": len(STABLE_FEATURES),
         "detailed_feature_count": len(DETAILED_FEATURES),
         "detail_coverage_start": SIAMESE_DETAIL_START,
         "input_exclusions": [
@@ -431,7 +432,7 @@ def main() -> int:
     (destination / "evaluation.json").write_text(
         json.dumps(payload, indent=2), encoding="utf-8"
     )
-    tracked = ROOT / "models/play_style/siamese_tabular_v3_summary.json"
+    tracked = ROOT / f"models/play_style/siamese_tabular_{MODEL_VERSION}_summary.json"
     tracked.write_text(json.dumps(payload, indent=2), encoding="utf-8")
     print("\nDevelopment\n", development_summary.head(12).to_string(index=False))
     print("\nAll 19 holdouts\n", pd.DataFrame(payload["all_19_holdouts"]).to_string())

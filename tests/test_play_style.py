@@ -29,6 +29,8 @@ from ball_ai.analytics.play_style import (
 def test_broad_history_excludes_era_limited_move_labels() -> None:
     assert not set(MODERN_MOVE_FEATURES) & set(BROAD_OFFENSIVE_FEATURES)
     assert set(MODERN_MOVE_FEATURES) <= set(OFFENSIVE_FEATURES)
+    assert "three_point_frequency" not in BROAD_OFFENSIVE_FEATURES
+    assert "three_point_attempt_rate" in BROAD_OFFENSIVE_FEATURES
 
 
 def test_feature_comparison_can_hide_unavailable_era_features() -> None:
@@ -167,6 +169,7 @@ def test_detailed_siamese_requires_coverage_for_both_seasons() -> None:
     modern = find_style_neighbors(
         embeddings, 1, lens="Offensive", method="Denoising autoencoder",
         season="2025-26", siamese_embeddings=siamese, siamese_weight=1.0,
+        siamese_detail_weight=.75,
     )
     early_embeddings = embeddings.assign(season="2006-07")
     early_siamese = siamese.assign(season="2006-07")

@@ -142,21 +142,23 @@ The frozen v1 Broad History offensive score is 42% denoising Player DNA, 30%
 temporal metric similarity, 26.6% positive-behavior overlap, and 1.4%
 information-weighted shared absence.
 
-The deployed v3 retrieval layer uses two true Siamese tabular encoders. Both sides
+The deployed v4 retrieval layer uses two true Siamese tabular encoders. Both sides
 pass through the same 64 → 32 MLP, while multi-positive contrastive InfoNCE pulls
 adjacent same-player seasons together and pushes other player-seasons apart. Player
 identity defines training pairs but never enters either feature vector. The stable
-encoder uses 16 consistently recorded behaviors across 1996-97 onward. A detailed
+encoder uses 15 consistently recorded behaviors across 1996-97 onward. A detailed
 encoder adds floater, pull-up, and step-back frequency, but is trained and applied
 only when both seasons have valid 2007-08+ source coverage. This prevents missing
 historical labels from acting as an era shortcut.
 
-Seven development folds selected **25% stable + 75% detailed** similarity when
+V4 removes shot-event three-point frequency because it duplicated the more reliable
+box-score `3PA/FGA` input at 0.994 correlation. Seven development folds selected
+**50% stable + 50% detailed** similarity when
 detailed coverage exists; earlier comparisons use 100% stable similarity. Across
-19 chronological holdouts, the coverage-aware model records **0.662 MRR**, **53.7%
-Top-1**, and **81.5% Top-5**. The latest untouched fold reaches **0.738 MRR**,
-**64.3% Top-1**, and **85.4% Top-5**. Split-season MRR is **0.740**. Metadata
-perturbation changes embeddings by exactly 0.0, unseen players retain 0.640 MRR,
+19 chronological holdouts, the coverage-aware model records **0.670 MRR**, **54.6%
+Top-1**, and **82.3% Top-5**. The latest untouched fold reaches **0.732 MRR**,
+**63.6% Top-1**, and **86.1% Top-5**. Split-season MRR is **0.742**. Metadata
+perturbation changes embeddings by exactly 0.0, unseen players retain 0.622 MRR,
 and independently permuting candidate identities drops MRR to 0.018. PyTorch is
 training-only; the app reads compact precomputed embeddings.
 

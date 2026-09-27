@@ -1,0 +1,523 @@
+{
+  "created_at": "2026-09-27T18:58:49+00:00",
+  "model_id": "siamese-tabular-v4-no-duplicate-three-point-rate",
+  "status": "promoted_broad_offense_component",
+  "production_changed": true,
+  "architecture": "shared 64 -> 32 MLPs with 32-dimensional L2-normalized embeddings",
+  "objective": "Multi-positive supervised contrastive InfoNCE",
+  "positive_pairs": "Adjacent eligible seasons and stochastic feature views",
+  "stable_feature_count": 15,
+  "detailed_feature_count": 18,
+  "detail_coverage_start": "2007-08",
+  "input_exclusions": [
+    "player identity",
+    "player name",
+    "team",
+    "position",
+    "height",
+    "weight",
+    "shooting efficiency",
+    "DARKO impact"
+  ],
+  "selected_embedding_dimensions": 32,
+  "selected_temperature": 0.07,
+  "selected_detail_weight": 0.5,
+  "development_summary": [
+    {
+      "embedding_dimensions": 32,
+      "temperature": 0.07,
+      "detail_weight": 0.5,
+      "mean_reciprocal_rank": 0.6914788807187818,
+      "recall_at_1": 0.5731016263466125,
+      "recall_at_5": 0.843428828882484
+    },
+    {
+      "embedding_dimensions": 16,
+      "temperature": 0.07,
+      "detail_weight": 0.5,
+      "mean_reciprocal_rank": 0.6869916294974809,
+      "recall_at_1": 0.5659104922260549,
+      "recall_at_5": 0.8384133879117287
+    },
+    {
+      "embedding_dimensions": 32,
+      "temperature": 0.07,
+      "detail_weight": 0.75,
+      "mean_reciprocal_rank": 0.6869794468938869,
+      "recall_at_1": 0.5669368429807975,
+      "recall_at_5": 0.8414187776311136
+    },
+    {
+      "embedding_dimensions": 16,
+      "temperature": 0.07,
+      "detail_weight": 0.75,
+      "mean_reciprocal_rank": 0.6851172294149348,
+      "recall_at_1": 0.5659218690215085,
+      "recall_at_5": 0.8319514496208837
+    },
+    {
+      "embedding_dimensions": 16,
+      "temperature": 0.07,
+      "detail_weight": 0.25,
+      "mean_reciprocal_rank": 0.680730070360507,
+      "recall_at_1": 0.5618757862285146,
+      "recall_at_5": 0.8319202431088649
+    },
+    {
+      "embedding_dimensions": 32,
+      "temperature": 0.07,
+      "detail_weight": 0.25,
+      "mean_reciprocal_rank": 0.6795476303509717,
+      "recall_at_1": 0.55926236708576,
+      "recall_at_5": 0.8361174717975327
+    },
+    {
+      "embedding_dimensions": 32,
+      "temperature": 0.07,
+      "detail_weight": 1.0,
+      "mean_reciprocal_rank": 0.6757008379866977,
+      "recall_at_1": 0.553849448944297,
+      "recall_at_5": 0.8273992142263327
+    },
+    {
+      "embedding_dimensions": 16,
+      "temperature": 0.07,
+      "detail_weight": 1.0,
+      "mean_reciprocal_rank": 0.6742955278748616,
+      "recall_at_1": 0.5528253440051821,
+      "recall_at_5": 0.8230823586403734
+    },
+    {
+      "embedding_dimensions": 32,
+      "temperature": 0.15,
+      "detail_weight": 0.5,
+      "mean_reciprocal_rank": 0.6672189803163366,
+      "recall_at_1": 0.5433037190117018,
+      "recall_at_5": 0.8199595675471768
+    },
+    {
+      "embedding_dimensions": 16,
+      "temperature": 0.15,
+      "detail_weight": 0.5,
+      "mean_reciprocal_rank": 0.6622761887562272,
+      "recall_at_1": 0.533582158246114,
+      "recall_at_5": 0.826536278688258
+    },
+    {
+      "embedding_dimensions": 32,
+      "temperature": 0.15,
+      "detail_weight": 0.75,
+      "mean_reciprocal_rank": 0.6614644351898773,
+      "recall_at_1": 0.5399984958112821,
+      "recall_at_5": 0.8161715853708663
+    },
+    {
+      "embedding_dimensions": 16,
+      "temperature": 0.15,
+      "detail_weight": 0.75,
+      "mean_reciprocal_rank": 0.6577081621341393,
+      "recall_at_1": 0.5299347228028733,
+      "recall_at_5": 0.818788727334008
+    },
+    {
+      "embedding_dimensions": 32,
+      "temperature": 0.15,
+      "detail_weight": 0.25,
+      "mean_reciprocal_rank": 0.6565595385908267,
+      "recall_at_1": 0.5317221248039082,
+      "recall_at_5": 0.8093313388956281
+    },
+    {
+      "embedding_dimensions": 16,
+      "temperature": 0.15,
+      "detail_weight": 0.25,
+      "mean_reciprocal_rank": 0.6551037169153352,
+      "recall_at_1": 0.525644514052377,
+      "recall_at_5": 0.8179414222808922
+    },
+    {
+      "embedding_dimensions": 32,
+      "temperature": 0.15,
+      "detail_weight": 1.0,
+      "mean_reciprocal_rank": 0.6463921727131974,
+      "recall_at_1": 0.5237440919486922,
+      "recall_at_5": 0.7984666100822577
+    },
+    {
+      "embedding_dimensions": 16,
+      "temperature": 0.15,
+      "detail_weight": 1.0,
+      "mean_reciprocal_rank": 0.6383887937523747,
+      "recall_at_1": 0.5061046890134144,
+      "recall_at_5": 0.8035687790762849
+    }
+  ],
+  "all_19_holdouts": {
+    "stable_siamese": {
+      "mean_reciprocal_rank": 0.6503224790771513,
+      "recall_at_1": 0.5205528169229767,
+      "recall_at_5": 0.812197289150413
+    },
+    "coverage_aware_ensemble": {
+      "mean_reciprocal_rank": 0.6698368779957349,
+      "recall_at_1": 0.5464988804059625,
+      "recall_at_5": 0.8233723863974651
+    }
+  },
+  "latest_test": {
+    "stable_siamese": {
+      "mean_reciprocal_rank": 0.6698468585602247,
+      "recall_at_1": 0.55,
+      "recall_at_5": 0.8392857142857143
+    },
+    "coverage_aware_ensemble": {
+      "mean_reciprocal_rank": 0.7316370337277911,
+      "recall_at_1": 0.6357142857142857,
+      "recall_at_5": 0.8607142857142858
+    }
+  },
+  "holdout_evaluations": [
+    {
+      "set": "all_19_holdouts",
+      "fold": "1999-00 -> 1998-99",
+      "model": "Stable Siamese",
+      "eligible_queries": 223,
+      "mean_reciprocal_rank": 0.6037518834687894,
+      "recall_at_1": 0.4663677130044843,
+      "recall_at_5": 0.7802690582959642
+    },
+    {
+      "set": "all_19_holdouts",
+      "fold": "1999-00 -> 1998-99",
+      "model": "Coverage-aware ensemble",
+      "eligible_queries": 223,
+      "mean_reciprocal_rank": 0.6037518834687894,
+      "recall_at_1": 0.4663677130044843,
+      "recall_at_5": 0.7802690582959642
+    },
+    {
+      "set": "all_19_holdouts",
+      "fold": "2005-06 -> 2004-05",
+      "model": "Stable Siamese",
+      "eligible_queries": 256,
+      "mean_reciprocal_rank": 0.6285814528330951,
+      "recall_at_1": 0.49609375,
+      "recall_at_5": 0.8046875
+    },
+    {
+      "set": "all_19_holdouts",
+      "fold": "2005-06 -> 2004-05",
+      "model": "Coverage-aware ensemble",
+      "eligible_queries": 256,
+      "mean_reciprocal_rank": 0.6285814528330951,
+      "recall_at_1": 0.49609375,
+      "recall_at_5": 0.8046875
+    },
+    {
+      "set": "all_19_holdouts",
+      "fold": "2011-12 -> 2010-11",
+      "model": "Stable Siamese",
+      "eligible_queries": 257,
+      "mean_reciprocal_rank": 0.677703023590095,
+      "recall_at_1": 0.5525291828793775,
+      "recall_at_5": 0.8249027237354085
+    },
+    {
+      "set": "all_19_holdouts",
+      "fold": "2011-12 -> 2010-11",
+      "model": "Coverage-aware ensemble",
+      "eligible_queries": 257,
+      "mean_reciprocal_rank": 0.6935313545078639,
+      "recall_at_1": 0.5680933852140078,
+      "recall_at_5": 0.8365758754863813
+    },
+    {
+      "set": "all_19_holdouts",
+      "fold": "2017-18 -> 2016-17",
+      "model": "Stable Siamese",
+      "eligible_queries": 274,
+      "mean_reciprocal_rank": 0.6327445983891428,
+      "recall_at_1": 0.5109489051094891,
+      "recall_at_5": 0.781021897810219
+    },
+    {
+      "set": "all_19_holdouts",
+      "fold": "2017-18 -> 2016-17",
+      "model": "Coverage-aware ensemble",
+      "eligible_queries": 274,
+      "mean_reciprocal_rank": 0.692421999596195,
+      "recall_at_1": 0.5875912408759124,
+      "recall_at_5": 0.8065693430656934
+    },
+    {
+      "set": "all_19_holdouts",
+      "fold": "2021-22 -> 2020-21",
+      "model": "Stable Siamese",
+      "eligible_queries": 300,
+      "mean_reciprocal_rank": 0.6554726213379731,
+      "recall_at_1": 0.52,
+      "recall_at_5": 0.83
+    },
+    {
+      "set": "all_19_holdouts",
+      "fold": "2021-22 -> 2020-21",
+      "model": "Coverage-aware ensemble",
+      "eligible_queries": 300,
+      "mean_reciprocal_rank": 0.710701949500535,
+      "recall_at_1": 0.5866666666666667,
+      "recall_at_5": 0.8733333333333333
+    },
+    {
+      "set": "all_19_holdouts",
+      "fold": "2000-01 -> 1999-00",
+      "model": "Stable Siamese",
+      "eligible_queries": 248,
+      "mean_reciprocal_rank": 0.6200553979731926,
+      "recall_at_1": 0.46774193548387094,
+      "recall_at_5": 0.8145161290322581
+    },
+    {
+      "set": "all_19_holdouts",
+      "fold": "2000-01 -> 1999-00",
+      "model": "Coverage-aware ensemble",
+      "eligible_queries": 248,
+      "mean_reciprocal_rank": 0.6200553979731926,
+      "recall_at_1": 0.46774193548387094,
+      "recall_at_5": 0.8145161290322581
+    },
+    {
+      "set": "all_19_holdouts",
+      "fold": "2001-02 -> 2000-01",
+      "model": "Stable Siamese",
+      "eligible_queries": 248,
+      "mean_reciprocal_rank": 0.6052842423654529,
+      "recall_at_1": 0.4596774193548387,
+      "recall_at_5": 0.7983870967741935
+    },
+    {
+      "set": "all_19_holdouts",
+      "fold": "2001-02 -> 2000-01",
+      "model": "Coverage-aware ensemble",
+      "eligible_queries": 248,
+      "mean_reciprocal_rank": 0.6052842423654529,
+      "recall_at_1": 0.4596774193548387,
+      "recall_at_5": 0.7983870967741935
+    },
+    {
+      "set": "all_19_holdouts",
+      "fold": "2002-03 -> 2001-02",
+      "model": "Stable Siamese",
+      "eligible_queries": 245,
+      "mean_reciprocal_rank": 0.6823866044635614,
+      "recall_at_1": 0.5387755102040817,
+      "recall_at_5": 0.8571428571428571
+    },
+    {
+      "set": "all_19_holdouts",
+      "fold": "2002-03 -> 2001-02",
+      "model": "Coverage-aware ensemble",
+      "eligible_queries": 245,
+      "mean_reciprocal_rank": 0.6823866044635614,
+      "recall_at_1": 0.5387755102040817,
+      "recall_at_5": 0.8571428571428571
+    },
+    {
+      "set": "all_19_holdouts",
+      "fold": "2004-05 -> 2003-04",
+      "model": "Stable Siamese",
+      "eligible_queries": 257,
+      "mean_reciprocal_rank": 0.6360434958413057,
+      "recall_at_1": 0.5019455252918288,
+      "recall_at_5": 0.8093385214007782
+    },
+    {
+      "set": "all_19_holdouts",
+      "fold": "2004-05 -> 2003-04",
+      "model": "Coverage-aware ensemble",
+      "eligible_queries": 257,
+      "mean_reciprocal_rank": 0.6360434958413057,
+      "recall_at_1": 0.5019455252918288,
+      "recall_at_5": 0.8093385214007782
+    },
+    {
+      "set": "all_19_holdouts",
+      "fold": "2006-07 -> 2005-06",
+      "model": "Stable Siamese",
+      "eligible_queries": 263,
+      "mean_reciprocal_rank": 0.6854844365432371,
+      "recall_at_1": 0.5703422053231939,
+      "recall_at_5": 0.844106463878327
+    },
+    {
+      "set": "all_19_holdouts",
+      "fold": "2006-07 -> 2005-06",
+      "model": "Coverage-aware ensemble",
+      "eligible_queries": 263,
+      "mean_reciprocal_rank": 0.6854844365432371,
+      "recall_at_1": 0.5703422053231939,
+      "recall_at_5": 0.844106463878327
+    },
+    {
+      "set": "all_19_holdouts",
+      "fold": "2007-08 -> 2006-07",
+      "model": "Stable Siamese",
+      "eligible_queries": 264,
+      "mean_reciprocal_rank": 0.6657037738339197,
+      "recall_at_1": 0.553030303030303,
+      "recall_at_5": 0.7916666666666666
+    },
+    {
+      "set": "all_19_holdouts",
+      "fold": "2007-08 -> 2006-07",
+      "model": "Coverage-aware ensemble",
+      "eligible_queries": 264,
+      "mean_reciprocal_rank": 0.6657037738339197,
+      "recall_at_1": 0.553030303030303,
+      "recall_at_5": 0.7916666666666666
+    },
+    {
+      "set": "all_19_holdouts",
+      "fold": "2009-10 -> 2008-09",
+      "model": "Stable Siamese",
+      "eligible_queries": 254,
+      "mean_reciprocal_rank": 0.709692780066886,
+      "recall_at_1": 0.5905511811023622,
+      "recall_at_5": 0.8661417322834646
+    },
+    {
+      "set": "all_19_holdouts",
+      "fold": "2009-10 -> 2008-09",
+      "model": "Coverage-aware ensemble",
+      "eligible_queries": 254,
+      "mean_reciprocal_rank": 0.709692780066886,
+      "recall_at_1": 0.5905511811023622,
+      "recall_at_5": 0.8661417322834646
+    },
+    {
+      "set": "all_19_holdouts",
+      "fold": "2010-11 -> 2009-10",
+      "model": "Stable Siamese",
+      "eligible_queries": 274,
+      "mean_reciprocal_rank": 0.6692725425450542,
+      "recall_at_1": 0.551094890510949,
+      "recall_at_5": 0.8138686131386861
+    },
+    {
+      "set": "all_19_holdouts",
+      "fold": "2010-11 -> 2009-10",
+      "model": "Coverage-aware ensemble",
+      "eligible_queries": 274,
+      "mean_reciprocal_rank": 0.6775424289786036,
+      "recall_at_1": 0.5766423357664233,
+      "recall_at_5": 0.7992700729927007
+    },
+    {
+      "set": "all_19_holdouts",
+      "fold": "2012-13 -> 2011-12",
+      "model": "Stable Siamese",
+      "eligible_queries": 252,
+      "mean_reciprocal_rank": 0.665484342532662,
+      "recall_at_1": 0.5476190476190477,
+      "recall_at_5": 0.7976190476190477
+    },
+    {
+      "set": "all_19_holdouts",
+      "fold": "2012-13 -> 2011-12",
+      "model": "Coverage-aware ensemble",
+      "eligible_queries": 252,
+      "mean_reciprocal_rank": 0.6940496494148437,
+      "recall_at_1": 0.5952380952380952,
+      "recall_at_5": 0.8055555555555556
+    },
+    {
+      "set": "all_19_holdouts",
+      "fold": "2014-15 -> 2013-14",
+      "model": "Stable Siamese",
+      "eligible_queries": 281,
+      "mean_reciprocal_rank": 0.6918513878619492,
+      "recall_at_1": 0.5622775800711743,
+      "recall_at_5": 0.8505338078291815
+    },
+    {
+      "set": "all_19_holdouts",
+      "fold": "2014-15 -> 2013-14",
+      "model": "Coverage-aware ensemble",
+      "eligible_queries": 281,
+      "mean_reciprocal_rank": 0.7279174220835252,
+      "recall_at_1": 0.6156583629893239,
+      "recall_at_5": 0.8647686832740213
+    },
+    {
+      "set": "all_19_holdouts",
+      "fold": "2015-16 -> 2014-15",
+      "model": "Stable Siamese",
+      "eligible_queries": 288,
+      "mean_reciprocal_rank": 0.6148373873768129,
+      "recall_at_1": 0.46875,
+      "recall_at_5": 0.7916666666666666
+    },
+    {
+      "set": "all_19_holdouts",
+      "fold": "2015-16 -> 2014-15",
+      "model": "Coverage-aware ensemble",
+      "eligible_queries": 288,
+      "mean_reciprocal_rank": 0.6406703572791317,
+      "recall_at_1": 0.5104166666666666,
+      "recall_at_5": 0.8229166666666666
+    },
+    {
+      "set": "all_19_holdouts",
+      "fold": "2016-17 -> 2015-16",
+      "model": "Stable Siamese",
+      "eligible_queries": 285,
+      "mean_reciprocal_rank": 0.6911198260176297,
+      "recall_at_1": 0.5719298245614035,
+      "recall_at_5": 0.8491228070175438
+    },
+    {
+      "set": "all_19_holdouts",
+      "fold": "2016-17 -> 2015-16",
+      "model": "Coverage-aware ensemble",
+      "eligible_queries": 285,
+      "mean_reciprocal_rank": 0.7156002870556055,
+      "recall_at_1": 0.6,
+      "recall_at_5": 0.8456140350877193
+    },
+    {
+      "set": "all_19_holdouts",
+      "fold": "2019-20 -> 2018-19",
+      "model": "Stable Siamese",
+      "eligible_queries": 265,
+      "mean_reciprocal_rank": 0.6116920231640699,
+      "recall_at_1": 0.4716981132075472,
+      "recall_at_5": 0.7622641509433963
+    },
+    {
+      "set": "all_19_holdouts",
+      "fold": "2019-20 -> 2018-19",
+      "model": "Coverage-aware ensemble",
+      "eligible_queries": 265,
+      "mean_reciprocal_rank": 0.681102367052508,
+      "recall_at_1": 0.5660377358490566,
+      "recall_at_5": 0.8188679245283019
+    },
+    {
+      "set": "all_19_holdouts",
+      "fold": "2020-21 -> 2019-20",
+      "model": "Stable Siamese",
+      "eligible_queries": 276,
+      "mean_reciprocal_rank": 0.6089652822610462,
+      "recall_at_1": 0.4891304347826087,
+      "recall_at_5": 0.7644927536231884
+    },
+    {
+      "set": "all_19_holdouts",
+      "fold": "2020-21 -> 2019-20",
+      "model": "Coverage-aware ensemble",
+      "eligible_queries": 276,
+      "mean_reciprocal_rank": 0.6563787990607114,
+      "recall_at_1": 0.532608695652174,
+      "recall_at_5": 0.8043478260869565
+    }
+  ]
+}

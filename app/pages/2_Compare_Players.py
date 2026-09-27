@@ -27,6 +27,7 @@ from ball_ai.analytics.tables import (  # noqa: E402
 )
 from ball_ai.analytics.play_style import (  # noqa: E402
     BROAD_OFFENSIVE_FEATURES,
+    MODERN_MOVE_FEATURES,
     OFFENSIVE_PRESENCE_WEIGHT,
     SIAMESE_DETAIL_START,
     SIAMESE_ENSEMBLE_WEIGHT,
@@ -277,8 +278,12 @@ def _render_style_matchup(
         first_season,
         second_season,
         feature_names=(
-            BROAD_OFFENSIVE_FEATURES
-            if siamese_active and min(first_season, second_season) < SIAMESE_DETAIL_START
+            (
+                BROAD_OFFENSIVE_FEATURES
+                if min(first_season, second_season) < SIAMESE_DETAIL_START
+                else [*BROAD_OFFENSIVE_FEATURES, *MODERN_MOVE_FEATURES]
+            )
+            if siamese_active
             else None
         ),
     )
@@ -331,7 +336,7 @@ def _render_style_matchup(
         render_copyable_table(display)
 
     formula = (
-        "coverage-aware Siamese Player DNA: 25% stable + 75% detailed when both seasons have 2007-08+ move coverage"
+        "coverage-aware Siamese Player DNA: 50% stable + 50% detailed when both seasons have 2007-08+ move coverage"
         if siamese_active
         else "42% denoising Player DNA + 30% temporal metric learning + 26.6% positive behavior + 1.4% shared absence"
         if temporal_active

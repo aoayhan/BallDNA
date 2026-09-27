@@ -1,0 +1,74 @@
+{
+  "model_id": "play-style-broad-offense-v4",
+  "status": "champion",
+  "promoted_at": "2026-09-27T21:16:00+02:00",
+  "scope": "Broad History Offensive only",
+  "rollback_tag": "model-broad-offense-v3",
+  "change": {
+    "removed_input": "three_point_frequency",
+    "reason": "Shot-event three-point frequency duplicated official box-score 3PA/FGA at 0.994 correlation.",
+    "retained_input": "three_point_attempt_rate"
+  },
+  "architecture": {
+    "stable_encoder": "15 -> 64 -> 32 -> 32-dimensional L2-normalized embedding",
+    "detailed_encoder": "18 -> 64 -> 32 -> 32-dimensional L2-normalized embedding",
+    "objective": "Multi-positive supervised contrastive InfoNCE",
+    "temperature": 0.07,
+    "detail_coverage_start": "2007-08",
+    "covered_pair_weights": {
+      "stable_siamese": 0.5,
+      "detailed_siamese": 0.5
+    },
+    "uncovered_pair_weights": {
+      "stable_siamese": 1.0,
+      "detailed_siamese": 0.0
+    }
+  },
+  "input_exclusions": [
+    "player identity",
+    "player name",
+    "team",
+    "position",
+    "height",
+    "weight",
+    "shooting efficiency",
+    "DARKO impact"
+  ],
+  "all_19_chronological_holdouts": {
+    "mean_reciprocal_rank": 0.6698368779957349,
+    "recall_at_1": 0.5464988804059625,
+    "recall_at_5": 0.8233723863974651
+  },
+  "latest_untouched_fold": {
+    "mean_reciprocal_rank": 0.7316370337277911,
+    "recall_at_1": 0.6357142857142857,
+    "recall_at_5": 0.8607142857142858
+  },
+  "robustness": {
+    "split_season_mean_reciprocal_rank": 0.7415843717302728,
+    "split_season_recall_at_1": 0.635234586446908,
+    "split_season_recall_at_5": 0.87676386564367,
+    "bootstrap_mean_embedding_cosine": 0.9732470100194083,
+    "bootstrap_mean_top_10_jaccard": 0.5168453956890008,
+    "metadata_perturbation_max_abs_delta": 0.0,
+    "forbidden_input_features": [],
+    "unseen_player_mean_reciprocal_rank": 0.6215109121501599,
+    "permuted_identity_null_mean_reciprocal_rank": 0.01827268449769595,
+    "era_limited_features_guarded": true,
+    "tests_passed": 99,
+    "streamlit_pages_with_exceptions": 0
+  },
+  "tradeoff": "V4 improves aggregate and split-season retrieval but trails V3 slightly on the five-seed latest-fold mean; V3 remains the rollback model.",
+  "artifact_sha256": {
+    "siamese_offensive_embeddings.parquet": "5ad5cdad6fe7a0ed8c9ce9174bf7139ed87f3af38f1c2afe31e02cb9db1b9203",
+    "style_similarity_leaderboard.parquet": "0d0104583a12ed3f35b335026c0e9c28e87e38f4d9f7fcbff4a7f1947373cfdb",
+    "siamese_tabular_v4_summary.json": "3d871d8c374e84e1e0403af53b4600e07fd376ded8c5a8c8def1456728fdd770",
+    "siamese_tabular_v4_robustness.json": "ad78b93fc4dd8770f96d5ddd656ba01c5f3ea09c7fad2cef01aa28bed072238c",
+    "siamese_tabular_v4_seed_stability.json": "4cfa87a86a1147c7b1246ca198230285dc46dd97f0cdcb97dbc97778b58a4bac",
+    "siamese_tabular_v4_live_stability.json": "b2fc7e868911e043b7b3fda9e1780e8957b4d4748d0bd0930dbe5edd5b1f1f92",
+    "train_siamese_style_encoder.py": "e2cbca49be99d0981eff5bad3103fa93d2a498fd07a3a83c1e5c1c24f5628d3c",
+    "evaluate_siamese_robustness.py": "9cffadda0115c7f9661da126db8b576915db0c486f20d868564df74e23f7c543",
+    "play_style.py": "cf386a5812d878ad411064959f6a62571fad0a32e337139c9060cfed4bb25750",
+    "test_play_style.py": "978db885c4caf43de665d6365c8b1702e215bb173d0e4fb694b004baa84e1dda"
+  }
+}

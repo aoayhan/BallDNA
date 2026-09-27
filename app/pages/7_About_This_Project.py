@@ -110,10 +110,10 @@ with right:
     )
 
 siamese = _read_json(
-    settings.root_dir / "models/play_style/siamese_tabular_v3_summary.json"
+    settings.root_dir / "models/play_style/siamese_tabular_v4_summary.json"
 )
 if siamese:
-    detail_weight = siamese.get("selected_detail_weight", 0.75)
+    detail_weight = siamese.get("selected_detail_weight", 0.50)
     st.subheader("Deployed Broad History offensive ensemble")
     weight_columns = st.columns(2)
     weight_columns[0].metric("Stable Siamese", f"{1 - detail_weight:.0%}")
