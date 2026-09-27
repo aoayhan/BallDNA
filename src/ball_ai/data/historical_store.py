@@ -68,6 +68,30 @@ def get_latest_historical_player_teams(root: Path | None = None) -> pd.DataFrame
     )
 
 
+def get_player_season_team(
+    player_id: int, season: str, root: Path | None = None
+) -> str | None:
+    """Return the player's team from their last regular-season game."""
+
+    archive = Path(root or settings.historical_data_dir)
+    paths = sorted(
+        archive.glob(f"player_game_stats/season={season}/season_type=regular/*.parquet")
+    )
+    rows = [
+        pd.read_parquet(path, columns=["player_id", "team", "game_date"])
+        for path in paths
+    ]
+    if not rows:
+        return None
+    games = pd.concat(rows, ignore_index=True)
+    games = games.loc[pd.to_numeric(games["player_id"], errors="coerce").eq(int(player_id))]
+    if games.empty:
+        return None
+    games["game_date"] = pd.to_datetime(games["game_date"], errors="coerce")
+    games = games.dropna(subset=["game_date", "team"]).sort_values("game_date")
+    return None if games.empty else str(games.iloc[-1]["team"])
+
+
 def get_player_season_history(
     player_id: int, root: Path | None = None
 ) -> pd.DataFrame:

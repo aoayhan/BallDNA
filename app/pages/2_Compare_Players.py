@@ -43,6 +43,7 @@ from ball_ai.data.database import (  # noqa: E402
 from ball_ai.data.historical_store import (  # noqa: E402
     get_latest_historical_player_teams,
     get_player_season_history,
+    get_player_season_team,
     get_player_shot_history,
 )
 
@@ -118,14 +119,20 @@ def _comparison_players(root: str) -> pd.DataFrame:
     return players.sort_values("player_name").reset_index(drop=True)
 
 
-def _comparison_profile(player_id: int, players: pd.DataFrame) -> dict | None:
-    profile = get_player_profile(player_id)
-    if profile is not None:
-        return profile
+def _comparison_profile(
+    player_id: int, players: pd.DataFrame, season: str | None = None
+) -> dict | None:
+    if season is None:
+        profile = get_player_profile(player_id)
+        if profile is not None:
+            return profile
     history = get_player_season_history(player_id)
     if history.empty:
         return None
-    profile = history.iloc[-1].to_dict()
+    selected = history if season is None else history.loc[history["season"].eq(season)]
+    if selected.empty:
+        return None
+    profile = selected.iloc[-1].to_dict()
     games = float(profile.get("games_played") or 0)
     profile["two_points_made_per_game"] = (
         float(profile.get("two_points_made_total") or 0) / games if games else float("nan")
@@ -134,16 +141,19 @@ def _comparison_profile(player_id: int, players: pd.DataFrame) -> dict | None:
         float(profile.get("two_point_attempts_total") or 0) / games if games else float("nan")
     )
     metadata = players.loc[players["player_id"].astype(int).eq(int(player_id))].iloc[0]
-    profile.update({"team": metadata.get("team", "N/A"), "position": metadata["position"]})
+    team = get_player_season_team(player_id, str(profile["season"]))
+    profile.update({"team": team or metadata.get("team", "N/A"), "position": metadata["position"]})
     return profile
 
 
-def _comparison_shot_profile(player_id: int) -> dict | None:
-    profile = get_player_shot_profile(player_id)
-    if profile is not None:
-        return profile
+def _comparison_shot_profile(player_id: int, season: str | None = None) -> dict | None:
+    if season is None:
+        profile = get_player_shot_profile(player_id)
+        if profile is not None:
+            return profile
     history = get_player_shot_history(player_id)
-    return None if history.empty else history.iloc[-1].to_dict()
+    selected = history if season is None else history.loc[history["season"].eq(season)]
+    return None if selected.empty else selected.iloc[-1].to_dict()
 
 
 def _signed(value: object) -> str:
@@ -167,7 +177,7 @@ def _render_style_matchup(
     second_id: int,
     first_name: str,
     second_name: str,
-) -> None:
+) -> tuple[str, str] | None:
     root = settings.historical_data_dir
     required = (
         root / "player_style_embeddings.parquet",
@@ -256,7 +266,7 @@ def _render_style_matchup(
     st.metric("Similarity index", f"{score:.2%} · {similarity_bucket(score)}")
     st.caption(
         "Higher means more similar basketball tendencies—not equal ability, quality, or a probability. "
-        "Current-season DPM and O-DPM are shown in the chart below and do not increase the Style Twin score."
+        "Selected-season DPM and O-DPM are shown below and do not increase the Style Twin score."
     )
 
     comparison = input_feature_comparison(
@@ -330,6 +340,7 @@ def _render_style_matchup(
         else "angular similarity between normalized denoising-autoencoder Player DNA vectors"
     )
     st.caption(f"How this was built: {formula}. Player identity, team, position, height, and weight are excluded.")
+    return first_season, second_season
 
 
 st.set_page_config(page_title="Compare · BallDNA", page_icon="⚖️", layout="wide")
@@ -365,13 +376,24 @@ if first_id == second_id:
     st.warning("Choose two different players to build a comparison.")
     st.stop()
 
-first = _comparison_profile(first_id, players)
-second = _comparison_profile(second_id, players)
+player_names = players.set_index("player_id")["player_name"]
+with st.expander("Player DNA style matchup", expanded=True):
+    selected_seasons = _render_style_matchup(
+        first_id,
+        second_id,
+        str(player_names.loc[first_id]),
+        str(player_names.loc[second_id]),
+    )
+if selected_seasons is None:
+    st.stop()
+first_season, second_season = selected_seasons
+first = _comparison_profile(first_id, players, first_season)
+second = _comparison_profile(second_id, players, second_season)
 if first is None or second is None:
     st.error("Season statistics are unavailable for one of the selected players.")
     st.stop()
-first_shots = _comparison_shot_profile(first_id)
-second_shots = _comparison_shot_profile(second_id)
+first_shots = _comparison_shot_profile(first_id, first_season)
+second_shots = _comparison_shot_profile(second_id, second_season)
 impact = _load_impact(str(settings.historical_data_dir)).set_index(["player_id", "season"])
 for profile in (first, second):
     key = (int(profile["player_id"]), str(profile["season"]))
@@ -379,14 +401,6 @@ for profile in (first, second):
         profile.update(impact.loc[key, ["dpm", "o_dpm"]].to_dict())
     else:
         profile.update({"dpm": float("nan"), "o_dpm": float("nan")})
-
-with st.expander("Player DNA style matchup", expanded=True):
-    _render_style_matchup(
-        first_id,
-        second_id,
-        str(first["player_name"]),
-        str(second["player_name"]),
-    )
 
 st.plotly_chart(
     comparison_bar_chart(first, second),
@@ -412,7 +426,7 @@ if first_shots and second_shots:
 
 render_build_trace(
     [
-        ("SQL retrieval", "Load the two selected season profiles."),
+        ("Parquet retrieval", "Load the two selected-season profiles."),
         ("Horizontal comparison", "Present players as rows and stats left-to-right in Basketball Reference order."),
         ("Player DNA", "Score behavioral similarity with the validated learned representation."),
         ("Impact separation", "Show DARKO impact beside style without allowing quality to inflate similarity."),

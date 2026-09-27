@@ -9,6 +9,7 @@ import pandas as pd
 from ball_ai.data.historical_store import (
     get_historical_coverage,
     get_latest_historical_player_teams,
+    get_player_season_team,
     get_player_season_history,
     historical_archive_available,
 )
@@ -50,3 +51,4 @@ def test_latest_historical_team_uses_the_last_regular_season_game(tmp_path: Path
     assert result.loc[1, "team"] == "DAL"
     assert result.loc[1, "latest_season"] == "2024-25"
     assert result.loc[2, "team"] == "BOS"
+    assert get_player_season_team(1, "2024-25", tmp_path) == "DAL"
