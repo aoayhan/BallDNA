@@ -28,6 +28,7 @@ from ball_ai.analytics.play_style import (  # noqa: E402
     BROAD_OFFENSIVE_FEATURES,
     MODERN_MOVE_FEATURES,
     SIAMESE_DETAIL_START,
+    top_siamese_style_pairs,
 )
 from ball_ai.config import settings  # noqa: E402
 from scripts.evaluate_play_style_rolling import ROLLING_FOLDS  # noqa: E402
@@ -365,11 +366,38 @@ def main() -> int:
         raise RuntimeError("Detailed Siamese training requires 2007-08+ history.")
     joblib.dump(stable_artifact, destination / "siamese_model.joblib")
     joblib.dump(detailed_artifact, destination / "detailed_siamese_model.joblib")
-    build_siamese_embedding_frame(
+    deployed_embeddings = build_siamese_embedding_frame(
         stable_artifact, features, detailed_artifact
+    )
+    deployed_embeddings.to_parquet(
+        settings.historical_data_dir / "siamese_offensive_embeddings.parquet", index=False
+    )
+    leaderboard_metadata = features[[
+        "player_id", "season", "player_name", "position", "shot_attempts",
+    ]]
+    impact_path = settings.historical_data_dir / "darko_dpm.parquet"
+    if impact_path.exists():
+        leaderboard_metadata = leaderboard_metadata.merge(
+            pd.read_parquet(
+                impact_path, columns=["player_id", "season", "dpm", "o_dpm", "d_dpm"]
+            ).drop_duplicates(["player_id", "season"], keep="last"),
+            on=["player_id", "season"],
+            how="left",
+            validate="one_to_one",
+        )
+    else:
+        leaderboard_metadata = leaderboard_metadata.merge(
+            features[["player_id", "season", "dpm", "o_dpm", "d_dpm"]],
+            on=["player_id", "season"],
+            how="left",
+            validate="one_to_one",
+        )
+    top_siamese_style_pairs(
+        deployed_embeddings,
+        leaderboard_metadata,
+        top_n=100,
     ).to_parquet(
-        settings.historical_data_dir / "siamese_offensive_embeddings.parquet",
-        index=False,
+        settings.historical_data_dir / "style_similarity_leaderboard.parquet", index=False
     )
     payload = {
         "created_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),

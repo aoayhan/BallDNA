@@ -9,7 +9,7 @@ import pandas as pd
 from sklearn.decomposition import PCA
 from sklearn.impute import SimpleImputer
 from sklearn.neural_network import MLPRegressor
-from sklearn.neighbors import NeighborhoodComponentsAnalysis
+from sklearn.neighbors import NeighborhoodComponentsAnalysis, NearestNeighbors
 from sklearn.preprocessing import StandardScaler, normalize
 
 from ball_ai.analytics.shot_profile import engineer_shot_events
@@ -1258,6 +1258,91 @@ def find_style_neighbors(
     if unique_players:
         candidates = candidates.drop_duplicates("player_id", keep="first")
     return candidates.head(top_n).reset_index(drop=True)
+
+
+def top_siamese_style_pairs(
+    siamese_embeddings: pd.DataFrame,
+    metadata: pd.DataFrame,
+    *,
+    top_n: int = 100,
+    candidate_pool: int = 250,
+) -> pd.DataFrame:
+    """Return the highest-scoring different-player season pairs from deployed vectors."""
+
+    frame = siamese_embeddings.merge(
+        metadata.drop_duplicates(["player_id", "season"], keep="last"),
+        on=["player_id", "season"],
+        how="inner",
+        validate="one_to_one",
+    ).reset_index(drop=True)
+    stable_columns = [column for column in frame if column.startswith("siamese_embedding_")]
+    detailed_columns = [
+        column for column in frame if column.startswith("detailed_siamese_embedding_")
+    ]
+    if frame.empty or not stable_columns:
+        raise ValueError("The leaderboard requires deployed Siamese embeddings.")
+    stable = frame[stable_columns].to_numpy(dtype=float)
+    detailed = frame[detailed_columns].to_numpy(dtype=float) if detailed_columns else None
+    neighbor_count = min(max(top_n * 10, candidate_pool), len(frame))
+    # ponytail: a 250-neighbor union avoids a 100M-pair matrix; use a chunked
+    # exhaustive scan if the archive grows enough to change the top results.
+    stable_neighbors = NearestNeighbors(
+        n_neighbors=neighbor_count, metric="cosine", algorithm="brute"
+    ).fit(stable).kneighbors(stable, return_distance=False)
+    modern = frame["season"].ge(SIAMESE_DETAIL_START).to_numpy()
+    modern_positions = np.flatnonzero(modern)
+    detailed_neighbors = None
+    detailed_row = {}
+    if detailed is not None and len(modern_positions):
+        detailed_neighbors = modern_positions[
+            NearestNeighbors(
+                n_neighbors=min(neighbor_count, len(modern_positions)),
+                metric="cosine",
+                algorithm="brute",
+            ).fit(detailed[modern]).kneighbors(detailed[modern], return_distance=False)
+        ]
+        detailed_row = {position: index for index, position in enumerate(modern_positions)}
+
+    pairs: dict[tuple[int, int], float] = {}
+    player_ids = frame["player_id"].astype(int).to_numpy()
+    for reference in range(len(frame)):
+        candidates = set(stable_neighbors[reference])
+        if detailed_neighbors is not None and modern[reference]:
+            candidates.update(detailed_neighbors[detailed_row[reference]])
+        candidate_indices = np.fromiter(candidates, dtype=int)
+        candidate_indices = candidate_indices[player_ids[candidate_indices] != player_ids[reference]]
+        stable_similarity = 1 - np.arccos(
+            np.clip(stable[candidate_indices] @ stable[reference], -1, 1)
+        ) / np.pi
+        scores = stable_similarity.copy()
+        covered = modern[reference] & modern[candidate_indices]
+        if detailed is not None and covered.any():
+            detailed_similarity = 1 - np.arccos(
+                np.clip(
+                    detailed[candidate_indices[covered]] @ detailed[reference], -1, 1
+                )
+            ) / np.pi
+            scores[covered] = (
+                (1 - SIAMESE_DETAIL_WEIGHT) * stable_similarity[covered]
+                + SIAMESE_DETAIL_WEIGHT * detailed_similarity
+            )
+        for candidate, score in zip(candidate_indices, scores):
+            key = tuple(sorted((reference, int(candidate))))
+            pairs[key] = max(pairs.get(key, 0.0), float(score))
+
+    rows = []
+    for (first, second), score in sorted(
+        pairs.items(), key=lambda item: item[1], reverse=True
+    )[:top_n]:
+        row = {"similarity_score": score}
+        for prefix, index in (("player_a", first), ("player_b", second)):
+            for column in metadata.columns:
+                if column not in {"player_id", "season"}:
+                    row[f"{prefix}_{column}"] = frame.at[index, column]
+            row[f"{prefix}_id"] = int(frame.at[index, "player_id"])
+            row[f"{prefix}_season"] = frame.at[index, "season"]
+        rows.append(row)
+    return pd.DataFrame(rows)
 
 
 def input_feature_comparison(

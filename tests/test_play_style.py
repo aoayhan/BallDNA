@@ -21,6 +21,7 @@ from ball_ai.analytics.play_style import (
     input_feature_comparison,
     shot_sample_reliability,
     temporal_self_match,
+    top_siamese_style_pairs,
     transform_temporal_contrastive,
 )
 
@@ -176,6 +177,28 @@ def test_detailed_siamese_requires_coverage_for_both_seasons() -> None:
 
     assert modern.iloc[0]["player_name"] == "Detailed"
     assert early.iloc[0]["player_name"] == "Stable"
+
+
+def test_siamese_leaderboard_excludes_self_and_mirrored_pairs() -> None:
+    vectors = pd.DataFrame({
+        "player_id": [1, 1, 2, 3],
+        "season": ["2024-25", "2023-24", "2024-25", "2024-25"],
+        "siamese_embedding_00": [1.0, 1.0, 1.0, 0.0],
+        "siamese_embedding_01": [0.0, 0.0, 0.0, 1.0],
+        "detailed_siamese_embedding_00": [1.0, 1.0, 1.0, 0.0],
+        "detailed_siamese_embedding_01": [0.0, 0.0, 0.0, 1.0],
+    })
+    metadata = pd.DataFrame({
+        "player_id": [1, 1, 2, 3],
+        "season": vectors["season"],
+        "player_name": ["One", "One", "Two", "Three"],
+    })
+
+    leaderboard = top_siamese_style_pairs(vectors, metadata, top_n=10)
+
+    assert not (leaderboard["player_a_id"] == leaderboard["player_b_id"]).any()
+    assert len(leaderboard) == 5
+    assert leaderboard.iloc[0]["similarity_score"] == 1.0
 
 
 def test_direct_style_comparison_targets_requested_player_season() -> None:

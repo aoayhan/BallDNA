@@ -26,7 +26,7 @@ AI, data science, and data engineering roles increasingly ask for proof that a c
 |---|---|---|
 | Player Scout | Find a player by name or team, inspect a profile, and create a rule-based summary | The fixed template cites stable evidence IDs shown in a table |
 | Compare Players | Search or team-filter two players and compare their production profiles | Output explains fit for a stated need, not a universal winner |
-| Similar Players | Switch between Broad History (common cross-era inputs) and Modern Detailed (2020+ action context), then filter candidates by season, age, position, or impact | Separate self-supervised Player DNA encoders are tested against cosine and PCA baselines; identity, team, position, size, efficiency, and impact are excluded from their inputs |
+| Similar Players | Search one player or browse the top 20 different-player season pairs, then filter individual retrieval by season, age, position, or impact | Separate self-supervised Player DNA encoders are tested against cosine and PCA baselines; identity, team, position, size, efficiency, and impact are excluded from their inputs |
 | Ask the Data | Try an under-construction keyword-based question router for a selected player | Unsupported causes are refused when context is missing |
 | Team Needs Lab | Compare any team with a configurable top-5–10 benchmark and retrieve player examples for its largest gaps | Candidate robustness is measured across nine cohort/lookback definitions and capped by broad position |
 | Roster Construction Lab | Add/remove players or assemble a custom roster | DARKO DPM estimates impact, custom per-36/shot embeddings describe fit, and a held-out-season model estimates team quality |

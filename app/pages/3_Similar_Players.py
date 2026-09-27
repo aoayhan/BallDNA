@@ -17,6 +17,7 @@ if str(APP_DIR) not in sys.path:
 from _bootstrap import initialize_app  # noqa: E402
 from components.charts import (  # noqa: E402
     SIMILARITY_BUCKETS,
+    similarity_bucket,
     similarity_chart,
     similarity_radar_chart,
 )
@@ -129,6 +130,56 @@ def _load_siamese_evaluation(root: str) -> dict | None:
 @st.cache_data(show_spinner=False)
 def _load_latest_player_teams(root: str) -> pd.DataFrame:
     return get_latest_historical_player_teams(Path(root))
+
+
+@st.cache_data(show_spinner=False)
+def _load_style_leaderboard(root: str) -> pd.DataFrame:
+    path = Path(root) / "style_similarity_leaderboard.parquet"
+    return pd.read_parquet(path) if path.exists() else pd.DataFrame()
+
+
+page_view = st.segmented_control(
+    "Similarity view",
+    ["Find Similar Players", "Similarity Leaderboard"],
+    default="Find Similar Players",
+    label_visibility="collapsed",
+)
+if page_view == "Similarity Leaderboard":
+    leaderboard = _load_style_leaderboard(str(settings.historical_data_dir))
+    if leaderboard.empty:
+        st.error("The leaderboard asset has not been generated for this model version.")
+        st.stop()
+    display = leaderboard.head(20).copy()
+    display.insert(0, "Rank", range(1, len(display) + 1))
+    display["Player A"] = (
+        display["player_a_player_name"] + " · " + display["player_a_season"]
+    )
+    display["Player B"] = (
+        display["player_b_player_name"] + " · " + display["player_b_season"]
+    )
+    display["Similarity index"] = display["similarity_score"].map(lambda value: f"{value:.2%}")
+    display["Match tier"] = display["similarity_score"].map(similarity_bucket)
+    for source, target in (
+        ("player_a_o_dpm", "Player A O-DPM"),
+        ("player_b_o_dpm", "Player B O-DPM"),
+    ):
+        display[target] = pd.to_numeric(display[source], errors="coerce").map(
+            lambda value: "—" if pd.isna(value) else f"{value:+.2f}"
+        )
+    st.subheader("Closest player-season style matches")
+    st.caption(
+        "The top 20 different-player pairs from Broad History offensive Player DNA. "
+        "Mirrored pairs and every same-player season are excluded."
+    )
+    render_copyable_table(display[[
+        "Rank", "Player A", "Player B", "Similarity index", "Match tier",
+        "Player A O-DPM", "Player B O-DPM",
+    ]])
+    st.caption(
+        "O-DPM is impact context only and does not affect the similarity ranking. "
+        "The similarity index measures behavioral closeness, not equal ability or a probability."
+    )
+    st.stop()
 
 
 def _advanced_retrieval_settings(
