@@ -2,10 +2,25 @@
 
 from __future__ import annotations
 
+from pathlib import Path
+
 import streamlit as st
 
 from overview import render_overview
 
+
+supporting_pages = [
+    st.Page("pages/2_Compare_Players.py", title="Compare Players"),
+    st.Page("pages/1_Player_Scout.py", title="Scout Players"),
+]
+if not Path.cwd().is_relative_to("/mount/src"):
+    supporting_pages.extend(
+        [
+            st.Page("pages/4_Ask_the_Data.py", title="Ask the Data 🚧"),
+            st.Page("pages/5_Team_Needs_Lab.py", title="Team Needs Lab 🚧"),
+            st.Page("pages/6_Roster_Construction_Lab.py", title="Roster Construction Lab 🚧"),
+        ]
+    )
 
 navigation = st.navigation(
     {
@@ -22,13 +37,7 @@ navigation = st.navigation(
                 title="Player Similarity",
             ),
         ],
-        "Supporting tools": [
-            st.Page("pages/2_Compare_Players.py", title="Compare Players"),
-            st.Page("pages/1_Player_Scout.py", title="Scout Players"),
-            st.Page("pages/4_Ask_the_Data.py", title="Ask the Data 🚧"),
-            st.Page("pages/5_Team_Needs_Lab.py", title="Team Needs Lab 🚧"),
-            st.Page("pages/6_Roster_Construction_Lab.py", title="Roster Construction Lab 🚧"),
-        ],
+        "Supporting tools": supporting_pages,
         "Project": [st.Page("pages/7_About_This_Project.py", title="About This Project", icon="ℹ️")],
     }
 )
