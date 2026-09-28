@@ -745,25 +745,20 @@ if model_mode == "Trained Player DNA":
                 else None
             ),
         )
-        explanation_count = min(8, len(comparison) // 2)
-        different_features = comparison.sort_values(
-            "Standardized gap", ascending=False
-        ).head(explanation_count)
-        shared_features = (
-            comparison.loc[~comparison.index.isin(different_features.index)]
-            .sort_values(
-                ["Shared tendency strength", "Standardized gap"],
-                ascending=[False, True],
-            )
-            .head(explanation_count)
-        )
         close, different = st.columns(2)
         with close:
             st.markdown("**Strongest shared tendencies**")
-            render_copyable_table(shared_features)
+            render_copyable_table(
+                comparison.sort_values(
+                    ["Shared tendency strength", "Standardized gap"],
+                    ascending=[False, True],
+                ).head(8),
+            )
         with different:
             st.markdown("**Largest observed differences**")
-            render_copyable_table(different_features)
+            render_copyable_table(
+                comparison.sort_values("Standardized gap", ascending=False).head(8)
+            )
         st.caption(
             "Positive behavior provides strong evidence. Shared absence provides weak evidence, "
             "reduced further when that absence is common in training. Differences remain "

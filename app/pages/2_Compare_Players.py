@@ -287,25 +287,15 @@ def _render_style_matchup(
             else None
         ),
     )
-    explanation_count = min(12, len(comparison) // 2)
-    different_features = comparison.sort_values(
-        "Standardized gap", ascending=False
-    ).head(explanation_count)
-    shared_features = (
-        comparison.loc[~comparison.index.isin(different_features.index)]
-        .sort_values(
-            ["Shared tendency strength", "Standardized gap"],
-            ascending=[False, True],
-        )
-        .head(explanation_count)
-    )
     shared_tab, differences_tab, context_tab = st.tabs(
         ["Shared tendencies", "Largest differences", "Impact and efficiency"]
     )
     with shared_tab:
         render_copyable_table(
             _feature_table(
-                shared_features,
+                comparison.sort_values(
+                    ["Shared tendency strength", "Standardized gap"], ascending=[False, True]
+                ).head(12),
                 first_name,
                 second_name,
             )
@@ -313,7 +303,7 @@ def _render_style_matchup(
     with differences_tab:
         render_copyable_table(
             _feature_table(
-                different_features,
+                comparison.sort_values("Standardized gap", ascending=False).head(12),
                 first_name,
                 second_name,
             )
