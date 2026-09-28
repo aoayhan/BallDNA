@@ -34,6 +34,7 @@ from ball_ai.analytics.play_style import (  # noqa: E402
     TEMPORAL_ENSEMBLE_WEIGHT,
     find_style_neighbors,
     input_feature_comparison,
+    split_feature_explanations,
 )
 from ball_ai.config import settings  # noqa: E402
 from ball_ai.data.database import (  # noqa: E402
@@ -287,15 +288,14 @@ def _render_style_matchup(
             else None
         ),
     )
+    shared_features, different_features = split_feature_explanations(comparison, 12)
     shared_tab, differences_tab, context_tab = st.tabs(
         ["Shared tendencies", "Largest differences", "Impact and efficiency"]
     )
     with shared_tab:
         render_copyable_table(
             _feature_table(
-                comparison.sort_values(
-                    ["Shared tendency strength", "Standardized gap"], ascending=[False, True]
-                ).head(12),
+                shared_features,
                 first_name,
                 second_name,
             )
@@ -303,7 +303,7 @@ def _render_style_matchup(
     with differences_tab:
         render_copyable_table(
             _feature_table(
-                comparison.sort_values("Standardized gap", ascending=False).head(12),
+                different_features,
                 first_name,
                 second_name,
             )
@@ -363,7 +363,7 @@ with left:
         players,
         "Player A",
         "compare_a",
-        default_player_name="Shai Gilgeous-Alexander",
+        default_player_name="Luka Doncic",
         single_box=True,
     )
 with right:
@@ -371,7 +371,7 @@ with right:
         players,
         "Player B",
         "compare_b",
-        default_player_name="Luka Doncic",
+        default_player_name="James Harden",
         single_box=True,
     )
 

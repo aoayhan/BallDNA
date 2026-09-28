@@ -20,6 +20,7 @@ from ball_ai.analytics.play_style import (
     historical_self_similarities,
     input_feature_comparison,
     shot_sample_reliability,
+    split_feature_explanations,
     temporal_self_match,
     top_siamese_style_pairs,
     transform_temporal_contrastive,
@@ -54,6 +55,20 @@ def test_feature_comparison_can_hide_unavailable_era_features() -> None:
     )
 
     assert comparison["Feature"].tolist() == ["Rim shot frequency"]
+
+
+def test_feature_explanation_lists_do_not_overlap() -> None:
+    comparison = pd.DataFrame({
+        "Feature": ["A", "B", "C", "D"],
+        "Standardized gap": [4.0, 1.0, 3.0, 0.5],
+        "Shared tendency strength": [4.0, 3.0, 2.0, 1.0],
+    })
+
+    shared, different = split_feature_explanations(comparison, 2)
+
+    assert different["Feature"].tolist() == ["A", "C"]
+    assert shared["Feature"].tolist() == ["B", "D"]
+    assert set(shared["Feature"]).isdisjoint(different["Feature"])
 
 
 def test_presence_aware_retrieval_rewards_shared_actions_not_shared_zeros() -> None:

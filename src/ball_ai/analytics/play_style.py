@@ -1403,3 +1403,22 @@ def input_feature_comparison(
         "Shared tendency strength": shared_presence / (1 + gap),
         "Weak shared-absence evidence": shared_absence,
     }).sort_values("Standardized gap")
+
+
+def split_feature_explanations(
+    comparison: pd.DataFrame,
+    limit: int,
+) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """Return equally sized, non-overlapping shared and different features."""
+
+    count = min(limit, len(comparison) // 2)
+    different = comparison.sort_values("Standardized gap", ascending=False).head(count)
+    shared = (
+        comparison.loc[~comparison.index.isin(different.index)]
+        .sort_values(
+            ["Shared tendency strength", "Standardized gap"],
+            ascending=[False, True],
+        )
+        .head(count)
+    )
+    return shared, different

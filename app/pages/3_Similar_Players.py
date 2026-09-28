@@ -47,6 +47,7 @@ from ball_ai.analytics.play_style import (  # noqa: E402
     historical_self_similarities,
     input_feature_comparison,
     shot_sample_reliability,
+    split_feature_explanations,
     temporal_self_match,
 )
 from ball_ai.analytics.stat_order import BASKETBALL_REFERENCE_STAT_ORDER  # noqa: E402
@@ -745,20 +746,14 @@ if model_mode == "Trained Player DNA":
                 else None
             ),
         )
+        shared_features, different_features = split_feature_explanations(comparison, 8)
         close, different = st.columns(2)
         with close:
             st.markdown("**Strongest shared tendencies**")
-            render_copyable_table(
-                comparison.sort_values(
-                    ["Shared tendency strength", "Standardized gap"],
-                    ascending=[False, True],
-                ).head(8),
-            )
+            render_copyable_table(shared_features)
         with different:
             st.markdown("**Largest observed differences**")
-            render_copyable_table(
-                comparison.sort_values("Standardized gap", ascending=False).head(8)
-            )
+            render_copyable_table(different_features)
         st.caption(
             "Positive behavior provides strong evidence. Shared absence provides weak evidence, "
             "reduced further when that absence is common in training. Differences remain "
