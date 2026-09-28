@@ -33,3 +33,11 @@ navigation = st.navigation(
     }
 )
 navigation.run()
+st.sidebar.markdown(
+    """<div style="position:fixed;bottom:1rem;left:1rem;z-index:2">
+    <a href="https://ko-fi.com/Q3A127SI46" target="_blank" rel="noopener noreferrer">
+    <img height="36" style="border:0;height:36px"
+    src="https://storage.ko-fi.com/cdn/kofi6.png?v=6" alt="Buy Me a Coffee at Ko-fi">
+    </a></div>""",
+    unsafe_allow_html=True,
+)
