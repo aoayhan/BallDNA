@@ -41,7 +41,6 @@ navigation = st.navigation(
         "Project": [st.Page("pages/7_About_This_Project.py", title="About This Project", icon="ℹ️")],
     }
 )
-navigation.run()
 st.sidebar.markdown(
     """<div style="position:fixed;bottom:1rem;left:1rem;z-index:2">
     <a href="https://ko-fi.com/Q3A127SI46" target="_blank" rel="noopener noreferrer">
@@ -50,3 +49,4 @@ st.sidebar.markdown(
     </a></div>""",
     unsafe_allow_html=True,
 )
+navigation.run()
