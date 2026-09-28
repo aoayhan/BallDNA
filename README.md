@@ -160,7 +160,11 @@ Top-1**, and **82.3% Top-5**. The latest untouched fold reaches **0.732 MRR**,
 **63.6% Top-1**, and **86.1% Top-5**. Split-season MRR is **0.742**. Metadata
 perturbation changes embeddings by exactly 0.0, unseen players retain 0.622 MRR,
 and independently permuting candidate identities drops MRR to 0.018. PyTorch is
-training-only; the app reads compact precomputed embeddings.
+training-only; the app reads compact precomputed embeddings. A small NumPy export
+of the deployed MLPs powers pair-specific counterfactual attribution: neutralizing
+one player's feature measures similarity contribution, while matching one value to
+the other measures difference penalty. These local effects explain the trained
+model without changing its retrieval score.
 
 Reproduce the neural challenger and its robustness checks with:
 
@@ -227,7 +231,7 @@ adds signal without dominating the full representation. Complete reproducible
 results live in `models/play_style/broad_v2_robustness_summary.json`.
 11. Validation and untouched future-season tests ask whether a player retrieves their own adjacent season; cosine and PCA implementations provide non-neural baselines.
 12. Style Twin ranks behavioral proximity alone. Comparable Player applies a lens-specific DARKO DPM band after retrieval, without leaking impact into the embedding.
-13. Standardized input gaps explain why each neighbor was retrieved, while efficiency and impact differences remain visible as non-ranking context.
+13. Symmetric perturbation tests expose which inputs pull each pair together or push it apart; standardized input gaps remain as observed statistical evidence, while efficiency and impact stay separate from ranking.
 14. The evidence layer selects a compact, serializable packet with source status and limitations for auditable UI summaries.
 
 ### Team Needs Lab

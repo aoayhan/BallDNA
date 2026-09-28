@@ -77,10 +77,10 @@ st.code(
                          ▼
         cosine retrieval in learned space
                          ▼
- similarity score + tendencies + differences
+ similarity score + pairwise model attribution
                          │
                          ▼
-       DARKO impact shown separately""",
+ observed tendencies + DARKO impact context""",
     language=None,
 )
 
@@ -182,7 +182,7 @@ with left:
         "- **Machine learning:** denoising autoencoders, temporal metric learning, and a Siamese contrastive MLP\n"
         "- **Evaluation:** chronological holdouts, MRR, Recall@1/5, bootstrap stability, and baselines\n"
         "- **Data engineering:** multi-source ingestion, Parquet partitioning, SQLite, validation, and provenance\n"
-        "- **Explainability:** observed feature gaps \n"
+        "- **Explainability:** symmetric feature perturbations, observed feature gaps, and local score effects\n"
         "- **Product engineering:** searchable Streamlit workflows, interactive Plotly charts, caching, and tests\n"
     )
 with right:

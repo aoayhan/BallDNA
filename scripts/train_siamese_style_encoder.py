@@ -211,6 +211,34 @@ def build_siamese_embedding_frame(
     return output
 
 
+def export_numpy_inference_artifacts(
+    stable: dict,
+    detailed: dict,
+    destination: Path,
+    detail_weight: float,
+) -> None:
+    """Export production inference arrays without a PyTorch runtime dependency."""
+
+    payload: dict[str, np.ndarray] = {
+        "detail_weight": np.asarray(detail_weight),
+        "detail_start": np.asarray(SIAMESE_DETAIL_START),
+    }
+    for prefix, artifact in (("stable", stable), ("detailed", detailed)):
+        payload[f"{prefix}_feature_names"] = np.asarray(artifact["feature_names"])
+        payload[f"{prefix}_imputer_statistics"] = artifact["imputer"].statistics_
+        payload[f"{prefix}_scaler_mean"] = artifact["scaler"].mean_
+        payload[f"{prefix}_scaler_scale"] = artifact["scaler"].scale_
+        for index, layer in enumerate((0, 3, 5)):
+            payload[f"{prefix}_weight_{index}"] = (
+                artifact["state_dict"][f"network.{layer}.weight"].detach().cpu().numpy()
+            )
+            payload[f"{prefix}_bias_{index}"] = (
+                artifact["state_dict"][f"network.{layer}.bias"].detach().cpu().numpy()
+            )
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    np.savez_compressed(destination, **payload)
+
+
 def _siamese_scores(artifact: dict, query: pd.DataFrame, candidates: pd.DataFrame) -> np.ndarray:
     cosine = np.clip(
         transform_siamese(artifact, query) @ transform_siamese(artifact, candidates).T,
@@ -368,6 +396,12 @@ def main() -> int:
         raise RuntimeError("Detailed Siamese training requires 2007-08+ history.")
     joblib.dump(stable_artifact, destination / "siamese_model.joblib")
     joblib.dump(detailed_artifact, destination / "detailed_siamese_model.joblib")
+    export_numpy_inference_artifacts(
+        stable_artifact,
+        detailed_artifact,
+        ROOT / f"models/play_style/siamese_tabular_{MODEL_VERSION}_inference.npz",
+        detail_weight,
+    )
     deployed_embeddings = build_siamese_embedding_frame(
         stable_artifact, features, detailed_artifact
     )

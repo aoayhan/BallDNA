@@ -49,6 +49,11 @@ from ball_ai.analytics.play_style import (  # noqa: E402
     shot_sample_reliability,
     temporal_self_match,
 )
+from ball_ai.analytics.siamese_attribution import (  # noqa: E402
+    format_attribution_table,
+    load_siamese_inference_artifacts,
+    siamese_pair_attribution,
+)
 from ball_ai.analytics.stat_order import BASKETBALL_REFERENCE_STAT_ORDER  # noqa: E402
 from ball_ai.config import settings  # noqa: E402
 from ball_ai.data.database import (  # noqa: E402
@@ -120,6 +125,11 @@ def _load_temporal_evaluation(root: str) -> dict | None:
 def _load_siamese_embeddings(root: str) -> pd.DataFrame | None:
     path = Path(root) / "siamese_offensive_embeddings.parquet"
     return pd.read_parquet(path) if path.exists() else None
+
+
+@st.cache_resource(show_spinner=False)
+def _load_siamese_attribution_artifacts(path: str) -> dict:
+    return load_siamese_inference_artifacts(Path(path))
 
 
 @st.cache_data(show_spinner=False)
@@ -238,6 +248,12 @@ if model_mode == "Trained Player DNA":
     temporal_artifact = _load_temporal_component(str(style_root))
     temporal_evaluation = _load_temporal_evaluation(str(style_root))
     siamese_embeddings = _load_siamese_embeddings(str(style_root))
+    attribution_path = settings.root_dir / "models/play_style/siamese_tabular_v4_inference.npz"
+    siamese_attribution_artifacts = (
+        _load_siamese_attribution_artifacts(str(attribution_path))
+        if attribution_path.exists()
+        else None
+    )
     siamese_evaluation = _load_siamese_evaluation(str(style_root))
     profile = st.session_state["similar_profile_depth"]
     method_options = ["Denoising autoencoder", "Cosine baseline", "PCA baseline"]
@@ -745,6 +761,40 @@ if model_mode == "Trained Player DNA":
                 else None
             ),
         )
+        if siamese_active and siamese_attribution_artifacts is not None:
+            attributed_score, attribution = siamese_pair_attribution(
+                style_features,
+                siamese_attribution_artifacts,
+                player_id,
+                compared_id,
+                reference_season,
+                compared_season,
+            )
+            st.markdown("### Model-derived drivers")
+            similarity_drivers, difference_drivers = st.columns(2)
+            with similarity_drivers:
+                st.markdown("**Similarity drivers**")
+                render_copyable_table(format_attribution_table(
+                    attribution,
+                    "Similarity contribution",
+                    reference_name,
+                    labels[(compared_id, compared_season)].split(" · ")[0],
+                ))
+            with difference_drivers:
+                st.markdown("**Difference drivers**")
+                render_copyable_table(format_attribution_table(
+                    attribution,
+                    "Difference penalty",
+                    reference_name,
+                    labels[(compared_id, compared_season)].split(" · ")[0],
+                ))
+            st.caption(
+                f"Local sensitivity around this {attributed_score:.2%} Siamese score. "
+                "Similarity effect is the score drop when one player's feature is neutralized; "
+                "difference effect is the score gain when one player's value is matched to the other. "
+                "Effects are symmetric, non-additive, and do not change the ranking."
+            )
+            st.markdown("### Observed statistical evidence")
         close, different = st.columns(2)
         with close:
             st.markdown("**Strongest shared tendencies**")

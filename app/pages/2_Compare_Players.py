@@ -35,6 +35,11 @@ from ball_ai.analytics.play_style import (  # noqa: E402
     find_style_neighbors,
     input_feature_comparison,
 )
+from ball_ai.analytics.siamese_attribution import (  # noqa: E402
+    format_attribution_table,
+    load_siamese_inference_artifacts,
+    siamese_pair_attribution,
+)
 from ball_ai.config import settings  # noqa: E402
 from ball_ai.data.database import (  # noqa: E402
     get_player_profile,
@@ -81,6 +86,11 @@ def _load_temporal_model(root: str) -> dict | None:
 def _load_siamese_embeddings(root: str) -> pd.DataFrame | None:
     path = Path(root) / "siamese_offensive_embeddings.parquet"
     return pd.read_parquet(path) if path.exists() else None
+
+
+@st.cache_resource(show_spinner=False)
+def _load_siamese_attribution_artifacts(path: str) -> dict:
+    return load_siamese_inference_artifacts(Path(path))
 
 
 @st.cache_data(show_spinner=False)
@@ -193,6 +203,12 @@ def _render_style_matchup(
     models = _load_style_models(str(root))
     temporal_model = _load_temporal_model(str(root))
     siamese_embeddings = _load_siamese_embeddings(str(root))
+    attribution_path = settings.root_dir / "models/play_style/siamese_tabular_v4_inference.npz"
+    siamese_attribution_artifacts = (
+        _load_siamese_attribution_artifacts(str(attribution_path))
+        if attribution_path.exists()
+        else None
+    )
     control_columns = st.columns(2)
     profile = control_columns[0].selectbox(
         "Profile depth", ["Broad history", "Modern detailed"], key="compare_style_profile"
@@ -287,10 +303,30 @@ def _render_style_matchup(
             else None
         ),
     )
+    attribution = None
+    if siamese_active and siamese_attribution_artifacts is not None:
+        _, attribution = siamese_pair_attribution(
+            features,
+            siamese_attribution_artifacts,
+            first_id,
+            second_id,
+            first_season,
+            second_season,
+        )
     shared_tab, differences_tab, context_tab = st.tabs(
         ["Shared tendencies", "Largest differences", "Impact and efficiency"]
     )
     with shared_tab:
+        if attribution is not None:
+            st.markdown("**Model-derived similarity drivers**")
+            render_copyable_table(format_attribution_table(
+                attribution, "Similarity contribution", first_name, second_name, limit=12
+            ))
+            st.caption(
+                "Score drop when either player's feature is neutralized. Positive values indicate "
+                "behaviors that pull this pair together in the Siamese embedding."
+            )
+            st.markdown("**Observed shared tendencies**")
         render_copyable_table(
             _feature_table(
                 comparison.sort_values(
@@ -301,6 +337,16 @@ def _render_style_matchup(
             )
         )
     with differences_tab:
+        if attribution is not None:
+            st.markdown("**Model-derived difference drivers**")
+            render_copyable_table(format_attribution_table(
+                attribution, "Difference penalty", first_name, second_name, limit=12
+            ))
+            st.caption(
+                "Score gain when either player's value is matched to the other. Positive values "
+                "indicate behaviors that push this pair apart; effects are symmetric and non-additive."
+            )
+            st.markdown("**Observed largest differences**")
         render_copyable_table(
             _feature_table(
                 comparison.sort_values("Standardized gap", ascending=False).head(12),
