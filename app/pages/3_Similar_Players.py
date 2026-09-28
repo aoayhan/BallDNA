@@ -47,7 +47,6 @@ from ball_ai.analytics.play_style import (  # noqa: E402
     historical_self_similarities,
     input_feature_comparison,
     shot_sample_reliability,
-    split_feature_explanations,
     temporal_self_match,
 )
 from ball_ai.analytics.stat_order import BASKETBALL_REFERENCE_STAT_ORDER  # noqa: E402
@@ -746,7 +745,18 @@ if model_mode == "Trained Player DNA":
                 else None
             ),
         )
-        shared_features, different_features = split_feature_explanations(comparison, 8)
+        explanation_count = min(8, len(comparison) // 2)
+        different_features = comparison.sort_values(
+            "Standardized gap", ascending=False
+        ).head(explanation_count)
+        shared_features = (
+            comparison.loc[~comparison.index.isin(different_features.index)]
+            .sort_values(
+                ["Shared tendency strength", "Standardized gap"],
+                ascending=[False, True],
+            )
+            .head(explanation_count)
+        )
         close, different = st.columns(2)
         with close:
             st.markdown("**Strongest shared tendencies**")

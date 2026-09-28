@@ -34,7 +34,6 @@ from ball_ai.analytics.play_style import (  # noqa: E402
     TEMPORAL_ENSEMBLE_WEIGHT,
     find_style_neighbors,
     input_feature_comparison,
-    split_feature_explanations,
 )
 from ball_ai.config import settings  # noqa: E402
 from ball_ai.data.database import (  # noqa: E402
@@ -288,7 +287,18 @@ def _render_style_matchup(
             else None
         ),
     )
-    shared_features, different_features = split_feature_explanations(comparison, 12)
+    explanation_count = min(12, len(comparison) // 2)
+    different_features = comparison.sort_values(
+        "Standardized gap", ascending=False
+    ).head(explanation_count)
+    shared_features = (
+        comparison.loc[~comparison.index.isin(different_features.index)]
+        .sort_values(
+            ["Shared tendency strength", "Standardized gap"],
+            ascending=[False, True],
+        )
+        .head(explanation_count)
+    )
     shared_tab, differences_tab, context_tab = st.tabs(
         ["Shared tendencies", "Largest differences", "Impact and efficiency"]
     )
