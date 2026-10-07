@@ -334,6 +334,17 @@ st.markdown(
         .bd-driver-grid {grid-template-columns: 1fr;}
     }
     @media (max-width: 600px) {
+        .st-key-mock_nav [data-testid="stHorizontalBlock"] {
+            display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .2rem;
+        }
+        .st-key-mock_nav [data-testid="stColumn"] {width: auto !important; min-width: 0;}
+        .st-key-mock_nav [data-testid="stColumn"]:nth-child(1) {grid-column: 1 / 3; grid-row: 1;}
+        .st-key-mock_nav [data-testid="stColumn"]:nth-child(2) {grid-column: 1; grid-row: 2;}
+        .st-key-mock_nav [data-testid="stColumn"]:nth-child(3) {grid-column: 2; grid-row: 2;}
+        .st-key-mock_nav [data-testid="stColumn"]:nth-child(4) {grid-column: 3; grid-row: 2;}
+        .st-key-mock_nav [data-testid="stColumn"]:nth-child(5) {grid-column: 4; grid-row: 2;}
+        .st-key-mock_nav [data-testid="stColumn"]:has(.bd-kofi) {grid-column: 3 / 5; grid-row: 1; text-align: right;}
+        .st-key-mock_nav div[data-testid="stButton"] button {font-size: .72rem; white-space: nowrap;}
         .st-key-mock_brand {width: 112px;}
         .st-key-mock_brand div[data-testid="stButton"] button {
             width: 112px !important; background-size: 112px auto !important;
@@ -359,23 +370,40 @@ st.markdown(
 st.markdown('<a class="bd-skip" href="#ball-dna-main">Skip to main content</a>', unsafe_allow_html=True)
 
 
-@st.cache_data(show_spinner=False)
+@st.cache_resource(show_spinner=False)
 def load_player_dna() -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
-    """Load only the frozen assets needed by this isolated concept."""
+    """Load the filtered, read-only inference assets used by the app."""
 
-    embeddings = pd.read_parquet(DATA / "player_style_embeddings.parquet")
-    features = pd.read_parquet(DATA / "player_style_features.parquet")
+    embedding_columns = [f"embedding_{index:02d}" for index in range(34)]
+    embeddings = pd.read_parquet(
+        DATA / "player_style_embeddings.parquet",
+        columns=[
+            "player_id", "player_name", "season", "age", "position", "eligible",
+            "profile", "lens", "method", *embedding_columns,
+        ],
+        filters=[
+            ("profile", "==", "Broad history"),
+            ("method", "==", "Denoising autoencoder"),
+            ("eligible", "==", True),
+        ],
+    )
+    artifacts = load_attribution_model()
+    feature_columns = list(dict.fromkeys([
+        "player_id",
+        "season",
+        *artifacts["stable"]["feature_names"],
+        *artifacts["detailed"]["feature_names"],
+    ]))
+    features = pd.read_parquet(
+        DATA / "player_style_features.parquet",
+        columns=feature_columns,
+    )
     siamese = pd.read_parquet(DATA / "siamese_offensive_embeddings.parquet")
-    history = embeddings.loc[
-        embeddings["profile"].eq("Broad history")
-        & embeddings["method"].eq("Denoising autoencoder")
-        & embeddings["eligible"].astype("boolean").fillna(False)
-    ].copy()
     impact = pd.read_parquet(
         DATA / "darko_dpm.parquet",
         columns=["player_id", "season", "dpm", "o_dpm", "d_dpm"],
     ).drop_duplicates(["player_id", "season"], keep="last")
-    history = history.drop(columns=["dpm", "o_dpm", "d_dpm"], errors="ignore").merge(
+    history = embeddings.merge(
         impact,
         on=["player_id", "season"],
         how="left",
@@ -401,7 +429,7 @@ def initials(name: str) -> str:
 def headshot(player_id: object) -> str:
     """Return the public NBA CDN headshot for a numeric player ID."""
 
-    return f"https://cdn.nba.com/headshots/nba/latest/1040x760/{int(player_id)}.png"
+    return f"https://cdn.nba.com/headshots/nba/latest/260x190/{int(player_id)}.png"
 
 
 def tier(score: float) -> str:
@@ -699,15 +727,6 @@ if view == "home":
     )
     st.stop()
 
-from ball_ai.analytics.play_style import (  # noqa: E402
-    SIAMESE_ENSEMBLE_WEIGHT,
-    find_style_neighbors,
-)
-from ball_ai.analytics.siamese_attribution import (  # noqa: E402
-    load_siamese_inference_artifacts,
-    siamese_pair_attribution,
-)
-
 title, description = page_copy[view]
 st.markdown(
     f"""
@@ -722,15 +741,6 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-history, features, siamese = load_player_dna()
-players = (
-    history.sort_values("season")
-    .drop_duplicates("player_id", keep="last")
-    [["player_id", "player_name", "position"]]
-    .sort_values("player_name")
-)
-player_names = players["player_name"].tolist()
-
 if view == "leaderboard":
     leaderboard = load_leaderboard().head(20)
     st.html(
@@ -740,6 +750,24 @@ if view == "leaderboard":
         + '<div class="bd-footnote">O-DPM is context only and does not affect the ranking. The similarity index measures behavioral closeness, not equal ability or a probability.</div>'
     )
     st.stop()
+
+from ball_ai.analytics.play_style import (  # noqa: E402
+    SIAMESE_ENSEMBLE_WEIGHT,
+    find_style_neighbors,
+)
+from ball_ai.analytics.siamese_attribution import (  # noqa: E402
+    load_siamese_inference_artifacts,
+    siamese_pair_attribution,
+)
+
+history, features, siamese = load_player_dna()
+players = (
+    history.sort_values("season")
+    .drop_duplicates("player_id", keep="last")
+    [["player_id", "player_name", "position"]]
+    .sort_values("player_name")
+)
+player_names = players["player_name"].tolist()
 
 if view == "compare":
     offensive_history = history.loc[history["lens"].eq("Offensive")]

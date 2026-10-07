@@ -6,11 +6,6 @@ from collections.abc import Iterable
 
 import numpy as np
 import pandas as pd
-from sklearn.decomposition import PCA
-from sklearn.impute import SimpleImputer
-from sklearn.neural_network import MLPRegressor
-from sklearn.neighbors import NeighborhoodComponentsAnalysis, NearestNeighbors
-from sklearn.preprocessing import StandardScaler, normalize
 
 from ball_ai.analytics.shot_profile import engineer_shot_events
 
@@ -745,6 +740,11 @@ def fit_style_artifact(
 ) -> dict:
     """Fit a denoising autoencoder and matching statistical baselines."""
 
+    from sklearn.decomposition import PCA
+    from sklearn.impute import SimpleImputer
+    from sklearn.neural_network import MLPRegressor
+    from sklearn.preprocessing import StandardScaler
+
     columns = list(feature_names or STYLE_FEATURE_SETS[profile][lens])
     eligibility_column, reliability_column = _profile_columns(profile, lens)
     eligible = features[eligibility_column].fillna(False)
@@ -809,6 +809,10 @@ def fit_temporal_contrastive_artifact(
     from one player are pulled together while other player-seasons act as negatives.
     """
 
+    from sklearn.impute import SimpleImputer
+    from sklearn.neighbors import NeighborhoodComponentsAnalysis
+    from sklearn.preprocessing import StandardScaler
+
     columns = BROAD_OFFENSIVE_FEATURES
     training = features.loc[
         features["offensive_eligible"].fillna(False)
@@ -847,6 +851,8 @@ def fit_temporal_contrastive_artifact(
 def transform_temporal_contrastive(artifact: dict, frame: pd.DataFrame) -> np.ndarray:
     """Transform player-season behavior into normalized temporal metric space."""
 
+    from sklearn.preprocessing import normalize
+
     clean = artifact["scaler"].transform(
         artifact["imputer"].transform(frame[artifact["feature_names"]])
     )
@@ -855,6 +861,8 @@ def transform_temporal_contrastive(artifact: dict, frame: pd.DataFrame) -> np.nd
 
 def transform_style(artifact: dict, frame: pd.DataFrame, method: str) -> np.ndarray:
     """Transform player rows with a fitted baseline or learned encoder."""
+
+    from sklearn.preprocessing import normalize
 
     clean = artifact["scaler"].transform(
         artifact["imputer"].transform(frame[artifact["feature_names"]])
@@ -1268,6 +1276,8 @@ def top_siamese_style_pairs(
     detail_weight: float = SIAMESE_DETAIL_WEIGHT,
 ) -> pd.DataFrame:
     """Return the highest-scoring different-player season pairs from deployed vectors."""
+
+    from sklearn.neighbors import NearestNeighbors
 
     frame = siamese_embeddings.merge(
         metadata.drop_duplicates(["player_id", "season"], keep="last"),
