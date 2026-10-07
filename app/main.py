@@ -789,7 +789,12 @@ if view == "compare":
         st.markdown('<div class="bd-control-label">Choose two player-seasons</div>', unsafe_allow_html=True)
         first_player_column, first_season_column, second_player_column, second_season_column = st.columns([1.45, .65, 1.45, .65])
         with first_player_column:
-            first_name = st.selectbox("Player A", player_names, index=first_default, key="mock_compare_a")
+            first_name = st.selectbox(
+                "Player A",
+                player_names,
+                index=first_default if "mock_compare_a" not in st.session_state else None,
+                key="mock_compare_a",
+            )
         first_id = int(players.loc[players["player_name"].eq(first_name), "player_id"].iloc[0])
         first_seasons = sorted(offensive_history.loc[offensive_history["player_id"].astype(int).eq(first_id), "season"].unique())
         with first_season_column:
@@ -798,7 +803,12 @@ if view == "compare":
         second_names = [name for name in player_names if name != first_name]
         second_default = second_names.index("Allen Iverson") if "Allen Iverson" in second_names else 0
         with second_player_column:
-            second_name = st.selectbox("Player B", second_names, index=second_default, key="mock_compare_b")
+            second_name = st.selectbox(
+                "Player B",
+                second_names,
+                index=second_default if "mock_compare_b" not in st.session_state else None,
+                key="mock_compare_b",
+            )
         second_id = int(players.loc[players["player_name"].eq(second_name), "player_id"].iloc[0])
         second_seasons = sorted(offensive_history.loc[offensive_history["player_id"].astype(int).eq(second_id), "season"].unique())
         with second_season_column:
@@ -857,7 +867,12 @@ with control_shell:
         [1.45, .72, .62, .85, .58]
     )
     with player_column:
-        player_name = st.selectbox("Player", player_names, index=default_index, key="mock_player")
+        player_name = st.selectbox(
+            "Player",
+            player_names,
+            index=default_index if "mock_player" not in st.session_state else None,
+            key="mock_player",
+        )
     player_id = int(players.loc[players["player_name"].eq(player_name), "player_id"].iloc[0])
     player_lenses = set(
         history.loc[history["player_id"].astype(int).eq(player_id), "lens"].dropna()
