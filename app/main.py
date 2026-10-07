@@ -597,6 +597,19 @@ view = str(st.query_params.get("view", "home"))
 if view not in {"home", "discover", "compare", "leaderboard", "legal"}:
     view = "home"
 
+# Keep routed widget state alive while its controls are not rendered. Without
+# this, Streamlit can restore a stale first option when the user returns.
+for widget_key in (
+    "mock_player",
+    "mock_lens",
+    "mock_season",
+    "mock_result_set",
+    "mock_compare_a",
+    "mock_compare_b",
+):
+    if widget_key in st.session_state:
+        st.session_state[widget_key] = st.session_state[widget_key]
+
 
 def navigate(destination: str) -> None:
     """Update the route before Streamlit renders the next page."""
