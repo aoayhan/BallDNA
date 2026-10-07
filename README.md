@@ -1,16 +1,18 @@
-# BallDNA
+# Basketball DNA
 
 > An explainable, self-supervised NBA player-style retrieval product built from historical box scores, shot profiles, and learned Player DNA embeddings.
 
-![BallDNA demo placeholder](docs/demo-placeholder.svg)
+![Basketball DNA demo placeholder](docs/demo-placeholder.svg)
 
-BallDNA is a public portfolio project built to demonstrate practical machine-learning and data-engineering skills in one useful product. The ML pipeline is the product: feature engineering creates auditable player representations, self-supervised encoders learn persistent playing tendencies, and deterministic retrieval searches NBA history for comparable player-seasons.
+Basketball DNA is a public portfolio project built to demonstrate practical machine-learning and data-engineering skills in one useful product. The ML pipeline is the product: feature engineering creates auditable player representations, self-supervised encoders learn persistent playing tendencies, and deterministic retrieval searches NBA history for comparable player-seasons.
 
-> **Data note:** the default demo combines a checked-in derivative of [Eoin A Moore's NBA box-score dataset on Kaggle](https://www.kaggle.com/datasets/eoinamoore/historical-nba-data-and-player-box-scores), designated **CC0-1.0 / Public Domain** by its publisher, with engineered profiles from the [NBA Data Archive](https://huggingface.co/datasets/cdechoch/nba-data-archive), whose mirror declares **Apache-2.0**. Checked-in compact inference assets plus a larger local, Git-ignored Parquet archive cover team games from 1946-47, player games from 1951-52, and 6.3 million shot events from 1996-97 onward. A dated [nbarapm DARKO history snapshot](https://nbarapm.com/datasets/MetricHistory) supplies DPM context from 1996-97 onward; BallDNA ignores its historical team labels and joins only by NBA player ID and season. Coverage and provenance are stored alongside the data so an unavailable historical statistic is never treated as zero.
+Privacy, terms, accessibility, third-party source credits, and important limitations are documented in [LEGAL.md](LEGAL.md). Security issues can be reported using [SECURITY.md](SECURITY.md).
+
+> **Data note:** the default demo combines a checked-in derivative of [Eoin A Moore's NBA box-score dataset on Kaggle](https://www.kaggle.com/datasets/eoinamoore/historical-nba-data-and-player-box-scores), designated **CC0-1.0 / Public Domain** by its publisher, with engineered profiles from the [NBA Data Archive](https://huggingface.co/datasets/cdechoch/nba-data-archive), whose mirror declares **Apache-2.0**. Checked-in compact inference assets plus a larger local, Git-ignored Parquet archive cover team games from 1946-47, player games from 1951-52, and 6.3 million shot events from 1996-97 onward. A dated [nbarapm DARKO history snapshot](https://nbarapm.com/datasets/MetricHistory) supplies DPM context from 1996-97 onward; Basketball DNA ignores its historical team labels and joins only by NBA player ID and season. Coverage and provenance are stored alongside the data so an unavailable historical statistic is never treated as zero.
 
 ## Why I built it
 
-AI, data science, and data engineering roles increasingly ask for proof that a candidate can turn ambiguous requirements into a working, explainable product. BallDNA combines API-ready ingestion boundaries, SQL storage, analytics, self-supervised representation learning, similarity search, evaluation, UI design, and graceful error handling in a recruiter-friendly prototype.
+AI, data science, and data engineering roles increasingly ask for proof that a candidate can turn ambiguous requirements into a working, explainable product. Basketball DNA combines API-ready ingestion boundaries, SQL storage, analytics, self-supervised representation learning, similarity search, evaluation, UI design, and graceful error handling in a recruiter-friendly prototype.
 
 ## What it demonstrates
 
@@ -33,7 +35,7 @@ AI, data science, and data engineering roles increasingly ask for proof that a c
 | Quality checks | Inspect model validation, data coverage, summary structure, citations, and numeric support | Tests verify the retrieval pipeline and deterministic summaries |
 | Export | Download a report as Markdown | Export preserves citations and limitations |
 
-Player discovery treats the selected team as a preference: if a name is not found on that team, BallDNA recommends matching players elsewhere and makes their team context explicit. Statistical cards, tables, chart series, and evidence follow the familiar relative order used by Basketball Reference; unavailable source fields are omitted and BallDNA-specific scores are placed last.
+Player discovery treats the selected team as a preference: if a name is not found on that team, Basketball DNA recommends matching players elsewhere and makes their team context explicit. Statistical cards, tables, chart series, and evidence follow the familiar relative order used by Basketball Reference; unavailable source fields are omitted and Basketball DNA-specific scores are placed last.
 
 ## Tech stack
 
@@ -192,7 +194,7 @@ python scripts/evaluate_grouped_behavior.py
 python scripts/train_multiview_temporal_challenger.py
 ```
 
-This no-promotion result is intentional: BallDNA changes the live model only when
+This no-promotion result is intentional: Basketball DNA changes the live model only when
 a challenger wins predeclared development criteria before holdout inspection.
 
 The first Broad History v2 challenger adds stable 1996+ distance bands, corner
@@ -296,7 +298,7 @@ roster's standardized distance from its nearest historical team and compares it
 with the 95th percentile of leave-one-out historical neighbour distances.
 
 If a custom roster is outside that empirical boundary—such as a lineup made
-almost entirely of high-usage stars—BallDNA hides the cross-sectional association
+almost entirely of high-usage stars—Basketball DNA hides the cross-sectional association
 model rather than presenting an unsupported regression extrapolation. The sandbox
 still displays experimental expected wins, team identity, a rotation/top-three
 talent index, and clearly labeled historical analogues.
@@ -350,7 +352,7 @@ model estimate only when the empirical support check passes.
 
 The raw model can produce tiny signed differences that are far below its validated
 resolution. Until counterfactual deltas can be backtested directly, changes smaller
-than the held-out Net Rating MAE are labeled **no detectable change**. BallDNA does
+than the held-out Net Rating MAE are labeled **no detectable change**. Basketball DNA does
 not interpret a −0.1 estimate as evidence that the removed player was better.
 
 Build or refresh these assets with:
@@ -447,7 +449,7 @@ The suite covers metric calculations, zero denominators, Player DNA eligibility,
 - Roster Construction Lab uses same-season player performance to estimate the team quality associated with a hypothetical profile; adding a player does not establish that the real transaction would cause the displayed change.
 - The roster model infers contribution weights from observed MPG and games played; it does not yet predict future injuries, missed games, coaching decisions, chemistry, or nonlinear lineup interactions.
 - Player recommendations do not include salary, contracts, availability, trade rules, injury status, or chemistry.
-- The CC0 designation is made by the Kaggle publisher. BallDNA records the publisher's license and upstream attribution but does not independently warrant rights in upstream material.
+- The CC0 designation is made by the Kaggle publisher. Basketball DNA records the publisher's license and upstream attribution but does not independently warrant rights in upstream material.
 - Names, positions, and historical rows can contain source-data gaps or normalization differences.
 - Shot detail captures selection and action labels but omits direct defender distance, ball/player tracking, lineup combinations, opponent strength, injuries, contracts, and defensive assignments.
 - Player DNA describes proximity within observable public statistics, not an objectively correct scouting comparison. Defensive retrieval remains lower-confidence because public events do not fully observe scheme, positioning, communication, or off-ball decisions.

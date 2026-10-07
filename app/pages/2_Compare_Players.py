@@ -394,7 +394,7 @@ def _render_style_matchup(
     return first_season, second_season
 
 
-st.set_page_config(page_title="Compare · BallDNA", page_icon="⚖️", layout="wide")
+st.set_page_config(page_title="Compare · Basketball DNA", page_icon="⚖️", layout="wide")
 apply_styles()
 initialize_app()
 st.title("Compare Players")

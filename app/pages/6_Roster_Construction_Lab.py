@@ -50,7 +50,7 @@ from ball_ai.data.player_filters import (  # noqa: E402
 
 
 st.set_page_config(
-    page_title="Roster Construction Lab · BallDNA",
+    page_title="Roster Construction Lab · Basketball DNA",
     page_icon="🧬",
     layout="wide",
 )
@@ -185,7 +185,7 @@ st.caption(
     "estimates the team profile; deterministic summaries report fixed results without changing them."
 )
 st.info(
-    "DARKO DPM supplies the player-impact estimate; BallDNA's per-36 and shot-profile traits "
+    "DARKO DPM supplies the player-impact estimate; Basketball DNA's per-36 and shot-profile traits "
     "describe style and fit. Minutes are not player quality. Actual season minute shares represent "
     "role and availability when players are pooled into a team."
 )
@@ -815,7 +815,7 @@ elif quality_supported:
 else:
     outside_count = len(support["features_outside_training_range"])
     st.error(
-        "This roster is outside the historical support of the quality model, so BallDNA will not "
+        "This roster is outside the historical support of the quality model, so Basketball DNA will not "
         "present its raw regression result as a Net Rating or win forecast. Its nearest historical "
         f"roster is {support['distance_ratio']:.1f}× the empirical support boundary away, and "
         f"{outside_count} model feature(s) exceed every training team. The identity chart remains "
@@ -980,7 +980,7 @@ with evidence_tab:
     )
     st.caption(
         "A low team-profile MAE does not validate the causal effect of adding a player. "
-        "BallDNA keeps those claims separate rather than borrowing confidence from the wrong test."
+        "Basketball DNA keeps those claims separate rather than borrowing confidence from the wrong test."
     )
     model_rows = pd.DataFrame(evaluation["models"])
     st.subheader("Model comparison")

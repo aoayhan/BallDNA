@@ -14,7 +14,7 @@ CSS = """
         padding: 1rem 1rem .5rem;
     }
     [data-testid="stSidebarHeader"]::before {
-        content: "BallDNA"; color: #152238; font-size: 1.05rem; font-weight: 600;
+        content: "Basketball DNA"; color: #152238; font-size: 1.05rem; font-weight: 600;
     }
     [data-testid="stSidebarCollapseButton"] {
         position: static; margin-left: auto; visibility: visible !important;

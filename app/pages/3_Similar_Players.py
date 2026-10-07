@@ -65,7 +65,7 @@ from ball_ai.data.database import (  # noqa: E402
 from ball_ai.data.historical_store import get_latest_historical_player_teams  # noqa: E402
 
 
-st.set_page_config(page_title="Similar Players · BallDNA", page_icon="🧭", layout="wide")
+st.set_page_config(page_title="Similar Players · Basketball DNA", page_icon="🧭", layout="wide")
 apply_styles()
 initialize_app()
 st.markdown(

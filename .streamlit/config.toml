@@ -10,3 +10,8 @@ gatherUsageStats = false
 
 [client]
 toolbarMode = "viewer"
+showErrorDetails = false
+
+[server]
+enableCORS = true
+enableXsrfProtection = true

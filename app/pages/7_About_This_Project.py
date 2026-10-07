@@ -28,12 +28,12 @@ def _read_json(path: Path) -> dict:
     return json.loads(path.read_text(encoding="utf-8")) if path.exists() else {}
 
 
-st.set_page_config(page_title="About · BallDNA", page_icon="🧬", layout="wide")
+st.set_page_config(page_title="About · Basketball DNA", page_icon="🧬", layout="wide")
 apply_styles()
 initialize_app()
 st.title("About This Project")
 st.caption(
-    "BallDNA is a self-supervised NBA play-style retrieval product I built to explore how "
+    "Basketball DNA is a self-supervised NBA play-style retrieval product I built to explore how "
     "AI and machine learning can be applied to basketball statistics, while designing new "
     "features, running experiments, and building interesting analytics products."
 )

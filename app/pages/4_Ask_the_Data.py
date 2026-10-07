@@ -29,7 +29,7 @@ from ball_ai.data.database import (  # noqa: E402
 from ball_ai.data.historical_store import get_player_season_history  # noqa: E402
 
 
-st.set_page_config(page_title="Ask the Data · BallDNA", page_icon="💬", layout="wide")
+st.set_page_config(page_title="Ask the Data · Basketball DNA", page_icon="💬", layout="wide")
 apply_styles()
 initialize_app()
 st.title("Ask the Data")
@@ -65,7 +65,7 @@ question = st.text_area(
 )
 result_key = f"qa_result_{player_id}_{hash(question.strip())}"
 
-if st.button("Ask BallDNA", type="primary", disabled=not question.strip()):
+if st.button("Ask Basketball DNA", type="primary", disabled=not question.strip()):
     with st.spinner("Checking the evidence packet…"):
         st.session_state[result_key] = answer_question(packet, question)
 

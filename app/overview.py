@@ -1,4 +1,4 @@
-"""Short landing page for BallDNA."""
+"""Short landing page for Basketball DNA."""
 
 from base64 import b64encode
 from pathlib import Path
@@ -12,11 +12,11 @@ from components.styles import apply_styles
 def render_overview() -> None:
     """Introduce Player DNA and send visitors to the flagship workflow."""
 
-    st.set_page_config(page_title="BallDNA", page_icon="🏀", layout="wide")
+    st.set_page_config(page_title="Basketball DNA", page_icon="🏀", layout="wide")
     apply_styles()
     initialize_app()
-    photo = b64encode(
-        (Path(__file__).parent / "assets" / "iverson_stepover_source.jpg").read_bytes()
+    iverson_data = b64encode(
+        (Path(__file__).parent / "assets" / "allen_iverson_cc_by_sa.jpg").read_bytes()
     ).decode("ascii")
     st.markdown(
         f"""
@@ -35,18 +35,18 @@ def render_overview() -> None:
             position: absolute;
             inset: 0;
             background-image:
-                linear-gradient(90deg, #f8fbff 0%, #f8fbff 58%, rgba(248,251,255,.05) 82%),
-                url("data:image/jpeg;base64,{photo}");
-            background-position: center, right center;
+                linear-gradient(90deg, #f8fbff 0%, #f8fbff 48%, rgba(248,251,255,.76) 64%, rgba(248,251,255,.1) 100%),
+                url("data:image/jpeg;base64,{iverson_data}");
+            background-position: center, 92% 40%;
+            background-size: cover, 52% auto;
             background-repeat: no-repeat;
-            background-size: cover, auto 100%;
             filter: grayscale(1);
         }}
         .overview-hero > * {{position: relative; z-index: 1;}}
         @media (max-width: 720px) {{
             .overview-hero {{padding: 2rem 1.5rem;}}
             .overview-hero h1 {{font-size: 2.5rem !important;}}
-            .overview-hero::after {{background-size: cover, auto 100%; opacity: .45;}}
+            .overview-hero::after {{opacity: .55;}}
         }}
         .overview-hero h1 {{font-size: 3.2rem; line-height: 1.02; margin: .5rem 0 1rem; max-width: 650px;}}
         .overview-hero p {{color: #34435a; max-width: 610px; font-size: 1.08rem;}}
@@ -68,9 +68,9 @@ def render_overview() -> None:
         </style>
         <section class="overview-hero">
             <h1>Find out who your favorite player plays like.</h1>
-            <p>BallDNA learns Player DNA from NBA shot selection, creation, playmaking,
+            <p>Basketball DNA learns Player DNA from NBA shot selection, creation, playmaking,
             and defensive actions, then searches basketball history for the closest style matches.</p>
-            <p class="overview-joke">Yes, that is Allen Iverson. No, he did not train the model.</p>
+            <p class="overview-joke">AI here means embeddings—not Allen Iverson, although he is in the search pool.</p>
         </section>
         """,
         unsafe_allow_html=True,

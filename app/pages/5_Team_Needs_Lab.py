@@ -32,7 +32,7 @@ from ball_ai.analytics.team_needs import (  # noqa: E402
 from ball_ai.config import settings  # noqa: E402
 
 
-st.set_page_config(page_title="Team Needs Lab · BallDNA", page_icon="🧪", layout="wide")
+st.set_page_config(page_title="Team Needs Lab · Basketball DNA", page_icon="🧪", layout="wide")
 apply_styles()
 initialize_app()
 @st.cache_data(show_spinner=False)

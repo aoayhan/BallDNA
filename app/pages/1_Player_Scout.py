@@ -39,7 +39,7 @@ from ball_ai.data.database import (  # noqa: E402
 from ball_ai.data.historical_store import get_player_season_history  # noqa: E402
 
 
-st.set_page_config(page_title="Player Scout · BallDNA", page_icon="🔎", layout="wide")
+st.set_page_config(page_title="Player Scout · Basketball DNA", page_icon="🔎", layout="wide")
 apply_styles()
 initialize_app()
 
