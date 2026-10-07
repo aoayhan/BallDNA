@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import sys
-from base64 import b64encode
 from html import escape
 from pathlib import Path
 
@@ -16,29 +15,15 @@ SRC = ROOT / "src"
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
-from ball_ai.analytics.play_style import (  # noqa: E402
-    SIAMESE_ENSEMBLE_WEIGHT,
-    find_style_neighbors,
-)
-from ball_ai.analytics.siamese_attribution import (  # noqa: E402
-    load_siamese_inference_artifacts,
-    siamese_pair_attribution,
-)
-
-
 DATA = ROOT / "data" / "historical"
 MODEL = ROOT / "models" / "play_style" / "siamese_tabular_v4_inference.npz"
-LOGO = ROOT / "app" / "assets" / "balldna-logo.png"
-LOGO_DATA = b64encode(LOGO.read_bytes()).decode("ascii")
-IVERSON_DATA = b64encode((ROOT / "app" / "assets" / "allen_iverson_cc_by_sa.jpg").read_bytes()).decode("ascii")
-KOFI_DATA = b64encode((ROOT / "app" / "assets" / "kofi-button.png").read_bytes()).decode("ascii")
 LEGAL = ROOT / "LEGAL.md"
 
 
 st.set_page_config(page_title="Basketball DNA · Player similarity", page_icon="◉", layout="wide")
 
 st.markdown(
-    ("""
+    """
     <style>
     :root {
         --ink: #f5f7fb;
@@ -76,7 +61,7 @@ st.markdown(
     .st-key-mock_brand div[data-testid="stButton"] button {
         width: 132px !important; height: 48px !important; min-height: 48px !important; padding: 0 !important;
         color: transparent !important; font-size: 0 !important; cursor: pointer;
-        background: transparent url("data:image/png;base64,LOGO_IMAGE") left center / 132px auto no-repeat !important;
+        background: transparent url("app/static/balldna-logo.png") left center / 132px auto no-repeat !important;
     }
     .st-key-mock_brand:has(button:focus-visible) {outline: 2px solid var(--orange); outline-offset: 5px; border-radius: 6px;}
     .st-key-mock_nav div[data-testid="stButton"] button {
@@ -115,7 +100,7 @@ st.markdown(
     }
     .st-key-home_hero::before {
         content: ""; position: absolute; inset: 0; z-index: 0; opacity: .48; filter: grayscale(1);
-        background: transparent url("data:image/jpeg;base64,IVERSON_IMAGE") 90% 40% / 52% auto no-repeat;
+        background: transparent url("app/static/allen_iverson_cc_by_sa.jpg") 90% 40% / 52% auto no-repeat;
     }
     .st-key-home_hero::after {
         content: ""; position: absolute; inset: 0; z-index: 0;
@@ -367,7 +352,7 @@ st.markdown(
         .bd-match-card, .bd-driver-panel, .bd-match-stage, .st-key-mock_control_shell {border: 1px solid CanvasText;}
     }
     </style>
-    """).replace("LOGO_IMAGE", LOGO_DATA).replace("IVERSON_IMAGE", IVERSON_DATA),
+    """,
     unsafe_allow_html=True,
 )
 
@@ -584,6 +569,12 @@ view = str(st.query_params.get("view", "home"))
 if view not in {"home", "discover", "compare", "leaderboard", "legal"}:
     view = "home"
 
+
+def navigate(destination: str) -> None:
+    """Update the route before Streamlit renders the next page."""
+
+    st.query_params["view"] = destination
+
 page_copy = {
     "discover": (
         "Who plays like your favorite player?",
@@ -611,9 +602,7 @@ with st.container(key="mock_nav"):
     brand_column, discover_column, compare_column, leaderboard_column, legal_column, support_column = st.columns([5.1, .8, .75, 1, .55, 1.2])
     with brand_column:
         with st.container(key="mock_brand"):
-            if st.button("Basketball DNA home", key="go_home"):
-                st.query_params["view"] = "home"
-                st.rerun()
+            st.button("Basketball DNA home", key="go_home", on_click=navigate, args=("home",))
     for column, name, label in (
         (discover_column, "discover", "Discover"),
         (compare_column, "compare", "Compare"),
@@ -622,11 +611,15 @@ with st.container(key="mock_nav"):
     ):
         with column:
             with st.container(key=f"nav_{name}"):
-                if st.button(label, key=f"go_{name}", use_container_width=True):
-                    st.query_params["view"] = name
-                    st.rerun()
+                st.button(
+                    label,
+                    key=f"go_{name}",
+                    use_container_width=True,
+                    on_click=navigate,
+                    args=(name,),
+                )
     support_column.markdown(
-        f'<a class="bd-kofi" href="https://ko-fi.com/Q3A127SI46" target="_blank" rel="noopener noreferrer" aria-label="Support Basketball DNA on Ko-fi"><img src="data:image/png;base64,{KOFI_DATA}" alt="Support Basketball DNA on Ko-fi"></a>',
+        '<a class="bd-kofi" href="https://ko-fi.com/Q3A127SI46" target="_blank" rel="noopener noreferrer" aria-label="Support Basketball DNA on Ko-fi"><img src="app/static/kofi-button.png" alt="Support Basketball DNA on Ko-fi"></a>',
         unsafe_allow_html=True,
     )
 
@@ -653,14 +646,22 @@ if view == "home":
             discover_action, compare_action = st.columns([1, 1.08])
             with discover_action:
                 with st.container(key="home_discover"):
-                    if st.button("Explore Player DNA", key="home_go_discover", use_container_width=True):
-                        st.query_params["view"] = "discover"
-                        st.rerun()
+                    st.button(
+                        "Explore Player DNA",
+                        key="home_go_discover",
+                        use_container_width=True,
+                        on_click=navigate,
+                        args=("discover",),
+                    )
             with compare_action:
                 with st.container(key="home_compare"):
-                    if st.button("Compare two players", key="home_go_compare", use_container_width=True):
-                        st.query_params["view"] = "compare"
-                        st.rerun()
+                    st.button(
+                        "Compare two players",
+                        key="home_go_compare",
+                        use_container_width=True,
+                        on_click=navigate,
+                        args=("compare",),
+                    )
 
     st.markdown(
         """
@@ -697,6 +698,15 @@ if view == "home":
         unsafe_allow_html=True,
     )
     st.stop()
+
+from ball_ai.analytics.play_style import (  # noqa: E402
+    SIAMESE_ENSEMBLE_WEIGHT,
+    find_style_neighbors,
+)
+from ball_ai.analytics.siamese_attribution import (  # noqa: E402
+    load_siamese_inference_artifacts,
+    siamese_pair_attribution,
+)
 
 title, description = page_copy[view]
 st.markdown(

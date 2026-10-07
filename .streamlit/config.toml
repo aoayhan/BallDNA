@@ -9,9 +9,11 @@ font = "sans serif"
 gatherUsageStats = false
 
 [client]
+showSidebarNavigation = false
 toolbarMode = "viewer"
 showErrorDetails = false
 
 [server]
 enableCORS = true
+enableStaticServing = true
 enableXsrfProtection = true

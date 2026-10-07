@@ -16,7 +16,7 @@ def render_overview() -> None:
     apply_styles()
     initialize_app()
     iverson_data = b64encode(
-        (Path(__file__).parent / "assets" / "allen_iverson_cc_by_sa.jpg").read_bytes()
+        (Path(__file__).parent / "static" / "allen_iverson_cc_by_sa.jpg").read_bytes()
     ).decode("ascii")
     st.markdown(
         f"""
