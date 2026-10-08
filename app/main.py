@@ -99,8 +99,9 @@ st.markdown(
         box-shadow: 0 34px 100px rgba(0,0,0,.3);
     }
     .st-key-home_hero::before {
-        content: ""; position: absolute; inset: 0; z-index: 0; opacity: .48; filter: grayscale(1);
-        background: transparent url("app/static/allen_iverson_cc_by_sa.jpg") 90% 40% / 52% auto no-repeat;
+        content: ""; position: absolute; inset: 0; z-index: 0; opacity: .62;
+        filter: grayscale(.15) saturate(.85) contrast(1.05);
+        background: transparent url("app/static/iverson_drive.png") 60% 27% / cover no-repeat;
     }
     .st-key-home_hero::after {
         content: ""; position: absolute; inset: 0; z-index: 0;

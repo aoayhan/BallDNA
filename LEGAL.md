@@ -39,7 +39,7 @@ Nothing in this notice creates permission to reuse third-party names, statistics
 - Impact context: DARKO Daily Plus-Minus by Kostya Medvedovsky, accessed through the historical export at [nbarapm](https://nbarapm.com/datasets/MetricHistory). DARKO values are credited, shown only as separate context, and are not model inputs.
 - NBA names and statistics are used for identification and analysis. NBA.com is attributed as an upstream source. NBA and team names and marks belong to their respective owners.
 - Current-player headshots are displayed from the NBA CDN for identification. They remain the property of their respective rightsholders; Basketball DNA claims no ownership, affiliation, or endorsement and will remove disputed material on request.
-- Allen Iverson hero photograph by [Keith Allison](https://commons.wikimedia.org/wiki/File:Allen_Iverson.jpg), licensed under [CC BY-SA 2.0](https://creativecommons.org/licenses/by-sa/2.0/). Basketball DNA uses a cropped, grayscale presentation; the photographer does not endorse this project.
+- The homepage Allen Iverson artwork was supplied by the project owner for this non-commercial portfolio. Basketball DNA claims no ownership, affiliation, or endorsement and will remove disputed material on request.
 - Ko-fi button artwork is an official Ko-fi brand asset used to link to the project's Ko-fi page.
 - Basketball DNA's interface uses system fonts and does not distribute a third-party web font.
 
