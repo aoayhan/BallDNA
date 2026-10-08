@@ -237,6 +237,21 @@ st.markdown(
     .bd-impact-pair span {display: flex; flex-direction: column; gap: .2rem;}
     .bd-impact-pair small {color: #707b8f; font-size: .57rem; letter-spacing: .07em; text-transform: uppercase;}
     .bd-impact-pair b {color: var(--ink); font-size: .78rem; font-variant-numeric: tabular-nums;}
+    .st-key-closest_pair {
+        margin: 1rem 0 1.5rem; padding: .85rem 0 .35rem; border-block: 1px solid var(--line);
+    }
+    .st-key-closest_pair [data-testid="stHorizontalBlock"] {align-items: center;}
+    .bd-pair-title {margin: 0; color: var(--ink); font-size: .92rem; font-weight: 780; letter-spacing: -.02em;}
+    .bd-pair-copy {margin: .28rem 0 0; color: var(--muted); font-size: .72rem; line-height: 1.5;}
+    .bd-pair-score {color: var(--lime); font-weight: 820; font-variant-numeric: tabular-nums;}
+    .st-key-closest_pair button {
+        min-height: 42px; border-color: rgba(255,107,53,.55); border-radius: 10px;
+        color: var(--ink); background: rgba(255,107,53,.08); font-size: .76rem; font-weight: 750;
+    }
+    .st-key-closest_pair button:hover {border-color: var(--orange); color: var(--ink); background: rgba(255,107,53,.14);}
+    .st-key-closest_pair button:disabled {
+        opacity: 1; border-color: var(--line); color: #778195; background: rgba(255,255,255,.025);
+    }
     .bd-section-head {display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; margin: 2.1rem 0 .85rem;}
     .bd-section-head h2 {font-size: 1.25rem; letter-spacing: -.035em; margin: 0;}
     .bd-section-head span {color: #697488; font: 600 .68rem/1 ui-monospace, SFMono-Regular, Menlo, monospace;}
@@ -332,6 +347,8 @@ st.markdown(
         .bd-player:last-child {text-align: left; align-items: flex-start;}
         .bd-match-grid {grid-template-columns: repeat(2, minmax(0, 1fr));}
         .bd-driver-grid {grid-template-columns: 1fr;}
+        .st-key-closest_pair [data-testid="stHorizontalBlock"] {display: grid; grid-template-columns: 1fr; gap: .7rem;}
+        .st-key-closest_pair [data-testid="stHorizontalBlock"] > div {width: auto !important; min-width: 0 !important; flex: none !important;}
     }
     @media (max-width: 600px) {
         .st-key-mock_nav [data-testid="stHorizontalBlock"] {
@@ -606,6 +623,8 @@ for widget_key in (
     "mock_result_set",
     "mock_compare_a",
     "mock_compare_b",
+    "mock_compare_a_season",
+    "mock_compare_b_season",
 ):
     if widget_key in st.session_state:
         st.session_state[widget_key] = st.session_state[widget_key]
@@ -782,6 +801,43 @@ players = (
 )
 player_names = players["player_name"].tolist()
 
+
+@st.cache_data(show_spinner=False)
+def closest_offensive_pair(first_id: int, second_id: int) -> tuple[str, str, float]:
+    """Return the highest-scoring eligible season pairing for two players."""
+
+    first_seasons = sorted(
+        history.loc[
+            history["lens"].eq("Offensive")
+            & history["player_id"].astype(int).eq(first_id),
+            "season",
+        ].unique()
+    )
+    pairs: list[tuple[str, str, float]] = []
+    for first_season in first_seasons:
+        match = find_style_neighbors(
+            history,
+            first_id,
+            lens="Offensive",
+            method="Denoising autoencoder",
+            season=first_season,
+            profile="Broad history",
+            top_n=1,
+            candidate_player_id=second_id,
+            siamese_embeddings=siamese,
+            siamese_weight=SIAMESE_ENSEMBLE_WEIGHT,
+        ).iloc[0]
+        pairs.append((first_season, str(match["season"]), float(match["similarity_score"])))
+    return max(pairs, key=lambda pair: pair[2])
+
+
+def select_compare_pair(first_season: str, second_season: str) -> None:
+    """Load a recommended season pairing into the primary comparison."""
+
+    st.session_state["mock_compare_a_season"] = first_season
+    st.session_state["mock_compare_b_season"] = second_season
+
+
 if view == "compare":
     offensive_history = history.loc[history["lens"].eq("Offensive")]
     first_default = player_names.index("Shai Gilgeous-Alexander")
@@ -797,8 +853,10 @@ if view == "compare":
             )
         first_id = int(players.loc[players["player_name"].eq(first_name), "player_id"].iloc[0])
         first_seasons = sorted(offensive_history.loc[offensive_history["player_id"].astype(int).eq(first_id), "season"].unique())
+        if st.session_state.get("mock_compare_a_season") not in first_seasons:
+            st.session_state["mock_compare_a_season"] = first_seasons[-1]
         with first_season_column:
-            first_season = st.selectbox("Season A", first_seasons, index=len(first_seasons) - 1)
+            first_season = st.selectbox("Season A", first_seasons, key="mock_compare_a_season")
 
         second_names = [name for name in player_names if name != first_name]
         second_default = second_names.index("Allen Iverson") if "Allen Iverson" in second_names else 0
@@ -811,8 +869,10 @@ if view == "compare":
             )
         second_id = int(players.loc[players["player_name"].eq(second_name), "player_id"].iloc[0])
         second_seasons = sorted(offensive_history.loc[offensive_history["player_id"].astype(int).eq(second_id), "season"].unique())
+        if st.session_state.get("mock_compare_b_season") not in second_seasons:
+            st.session_state["mock_compare_b_season"] = second_seasons[-1]
         with second_season_column:
-            second_season = st.selectbox("Season B", second_seasons, index=len(second_seasons) - 1)
+            second_season = st.selectbox("Season B", second_seasons, key="mock_compare_b_season")
 
     reference = offensive_history.loc[
         offensive_history["player_id"].astype(int).eq(first_id)
@@ -849,6 +909,31 @@ if view == "compare":
         f'<span class="bd-chip">{escape(second_name)} O-DPM {signed(comparison["o_dpm"])}</span>'
         '<span class="bd-chip">Impact does not change similarity</span></div>'
     )
+    closest_first_season, closest_second_season, closest_score = closest_offensive_pair(
+        first_id, second_id
+    )
+    with st.container(key="closest_pair"):
+        closest_copy, closest_action = st.columns([4, 1])
+        with closest_copy:
+            st.html(
+                f'<p class="bd-pair-title">Their closest season pairing</p>'
+                f'<p class="bd-pair-copy">{escape(first_name)} {escape(closest_first_season)} ↔ '
+                f'{escape(second_name)} {escape(closest_second_season)} · '
+                f'<span class="bd-pair-score">{closest_score:.2%} · {escape(tier(closest_score))}</span></p>'
+            )
+        with closest_action:
+            closest_selected = (
+                first_season == closest_first_season
+                and second_season == closest_second_season
+            )
+            st.button(
+                "Currently selected" if closest_selected else "Compare this pairing",
+                key="load_closest_pair",
+                disabled=closest_selected,
+                use_container_width=True,
+                on_click=select_compare_pair,
+                args=(closest_first_season, closest_second_season),
+            )
     attributed_score = render_model_drivers(features, reference, comparison, score)
     with st.expander("Model and comparison details"):
         st.markdown(
