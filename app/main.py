@@ -800,7 +800,35 @@ players = (
     [["player_id", "player_name", "position"]]
     .sort_values("player_name")
 )
-player_names = players["player_name"].tolist()
+season_spans = (
+    history.groupby("player_id", as_index=False)["season"]
+    .agg(first_season="min", last_season="max")
+)
+players = players.merge(season_spans, on="player_id", how="left", validate="one_to_one")
+players["selector_label"] = players["player_name"]
+duplicate_names = players["player_name"].duplicated(keep=False)
+players.loc[duplicate_names, "selector_label"] = players.loc[duplicate_names].apply(
+    lambda row: f"{row['player_name']} · {row['first_season']}"
+    if row["first_season"] == row["last_season"]
+    else f"{row['player_name']} · {row['first_season']}–{row['last_season']}",
+    axis=1,
+)
+player_options = players["selector_label"].tolist()
+
+
+def selected_player(
+    selection: str | None, label: str, options: list[str]
+) -> pd.Series:
+    """Resolve a selector value or stop at a recoverable empty state."""
+
+    if selection not in options:
+        st.info(f"Choose {label} to continue.")
+        st.stop()
+    matches = players.loc[players["selector_label"].eq(selection)]
+    if matches.empty:
+        st.info(f"Choose {label} to continue.")
+        st.stop()
+    return matches.iloc[0]
 
 
 @st.cache_data(show_spinner=False)
@@ -841,34 +869,42 @@ def select_compare_pair(first_season: str, second_season: str) -> None:
 
 if view == "compare":
     offensive_history = history.loc[history["lens"].eq("Offensive")]
-    first_default = player_names.index("Shai Gilgeous-Alexander")
+    first_default = (
+        player_options.index("Shai Gilgeous-Alexander")
+        if "Shai Gilgeous-Alexander" in player_options
+        else 0
+    )
     with st.container(key="mock_control_shell"):
         st.markdown('<div class="bd-control-label">Choose two player-seasons</div>', unsafe_allow_html=True)
         first_player_column, first_season_column, second_player_column, second_season_column = st.columns([1.45, .65, 1.45, .65])
         with first_player_column:
-            first_name = st.selectbox(
+            first_selection = st.selectbox(
                 "Player A",
-                player_names,
+                player_options,
                 index=first_default if "mock_compare_a" not in st.session_state else None,
                 key="mock_compare_a",
             )
-        first_id = int(players.loc[players["player_name"].eq(first_name), "player_id"].iloc[0])
+        first_player = selected_player(first_selection, "Player A", player_options)
+        first_id = int(first_player["player_id"])
+        first_name = str(first_player["player_name"])
         first_seasons = sorted(offensive_history.loc[offensive_history["player_id"].astype(int).eq(first_id), "season"].unique())
         if st.session_state.get("mock_compare_a_season") not in first_seasons:
             st.session_state["mock_compare_a_season"] = first_seasons[-1]
         with first_season_column:
             first_season = st.selectbox("Season A", first_seasons, key="mock_compare_a_season")
 
-        second_names = [name for name in player_names if name != first_name]
-        second_default = second_names.index("Allen Iverson") if "Allen Iverson" in second_names else 0
+        second_options = [option for option in player_options if option != first_selection]
+        second_default = second_options.index("Allen Iverson") if "Allen Iverson" in second_options else 0
         with second_player_column:
-            second_name = st.selectbox(
+            second_selection = st.selectbox(
                 "Player B",
-                second_names,
+                second_options,
                 index=second_default if "mock_compare_b" not in st.session_state else None,
                 key="mock_compare_b",
             )
-        second_id = int(players.loc[players["player_name"].eq(second_name), "player_id"].iloc[0])
+        second_player = selected_player(second_selection, "Player B", second_options)
+        second_id = int(second_player["player_id"])
+        second_name = str(second_player["player_name"])
         second_seasons = sorted(offensive_history.loc[offensive_history["player_id"].astype(int).eq(second_id), "season"].unique())
         if st.session_state.get("mock_compare_b_season") not in second_seasons:
             st.session_state["mock_compare_b_season"] = second_seasons[-1]
@@ -945,7 +981,7 @@ if view == "compare":
     st.stop()
 
 default_name = "Stephen Curry"
-default_index = player_names.index(default_name) if default_name in player_names else 0
+default_index = player_options.index(default_name) if default_name in player_options else 0
 control_shell = st.container(key="mock_control_shell")
 with control_shell:
     st.markdown('<div class="bd-control-label">Build a query</div>', unsafe_allow_html=True)
@@ -953,13 +989,15 @@ with control_shell:
         [1.45, .72, .62, .85, .58]
     )
     with player_column:
-        player_name = st.selectbox(
+        player_selection = st.selectbox(
             "Player",
-            player_names,
+            player_options,
             index=default_index if "mock_player" not in st.session_state else None,
             key="mock_player",
         )
-    player_id = int(players.loc[players["player_name"].eq(player_name), "player_id"].iloc[0])
+    player = selected_player(player_selection, "a player", player_options)
+    player_id = int(player["player_id"])
+    player_name = str(player["player_name"])
     player_lenses = set(
         history.loc[history["player_id"].astype(int).eq(player_id), "lens"].dropna()
     )
