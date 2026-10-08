@@ -15,6 +15,7 @@ from ball_ai.analytics.play_style import (
     build_action_profiles,
     build_defensive_matchup_profiles,
     build_shot_context_features,
+    correct_known_positions,
     find_style_neighbors,
     fit_temporal_contrastive_artifact,
     historical_self_similarities,
@@ -24,6 +25,32 @@ from ball_ai.analytics.play_style import (
     top_siamese_style_pairs,
     transform_temporal_contrastive,
 )
+
+
+def test_embiid_position_correction_limits_position_aware_matches_to_centers() -> None:
+    embeddings = pd.DataFrame({
+        "player_id": [203954, 2, 3],
+        "player_name": ["Joel Embiid", "Center", "Forward"],
+        "season": ["2023-24", "2022-23", "2022-23"],
+        "position": ["F-C", "C", "F"],
+        "dpm": [0.0] * 3,
+        "o_dpm": [0.0] * 3,
+        "d_dpm": [0.0] * 3,
+        "eligible": [True] * 3,
+        "lens": ["Offensive"] * 3,
+        "method": ["Denoising autoencoder"] * 3,
+        "embedding_00": [1.0, .99, .999],
+        "embedding_01": [0.0, np.sqrt(1 - .99**2), np.sqrt(1 - .999**2)],
+    })
+
+    result = find_style_neighbors(
+        embeddings, 203954, lens="Offensive", method="Denoising autoencoder",
+        season="2023-24", position_aware=True,
+    )
+
+    assert correct_known_positions(embeddings).iloc[0]["position"] == "C"
+    assert result["player_name"].tolist() == ["Center"]
+    assert embeddings.iloc[0]["position"] == "F-C"
 
 
 def test_broad_history_excludes_era_limited_move_labels() -> None:

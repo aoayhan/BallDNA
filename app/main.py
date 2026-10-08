@@ -405,6 +405,7 @@ def load_player_dna() -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
             ("eligible", "==", True),
         ],
     )
+    embeddings = correct_known_positions(embeddings)
     artifacts = load_attribution_model()
     feature_columns = list(dict.fromkeys([
         "player_id",
@@ -786,6 +787,7 @@ if view == "leaderboard":
 
 from ball_ai.analytics.play_style import (  # noqa: E402
     SIAMESE_ENSEMBLE_WEIGHT,
+    correct_known_positions,
     find_style_neighbors,
 )
 from ball_ai.analytics.siamese_attribution import (  # noqa: E402

@@ -56,6 +56,7 @@ TEMPORAL_ENSEMBLE_WEIGHT = 0.3
 SIAMESE_ENSEMBLE_WEIGHT = 1.0
 SIAMESE_DETAIL_WEIGHT = 0.50
 SIAMESE_DETAIL_START = "2007-08"
+POSITION_OVERRIDES = {203954: "C"}  # Joel Embiid is a center, not a forward-center.
 
 DEFENSIVE_FEATURES = [
     "defensive_rebounds_per_36",
@@ -98,6 +99,17 @@ PROFILE_ELIGIBILITY = {
         "Overall": ("modern_overall_eligible", "modern_overall_reliability"),
     },
 }
+
+
+def correct_known_positions(frame: pd.DataFrame) -> pd.DataFrame:
+    """Apply reviewed position corrections without mutating the caller's data."""
+
+    corrected = frame.copy()
+    if {"player_id", "position"}.issubset(corrected.columns):
+        player_ids = pd.to_numeric(corrected["player_id"], errors="coerce")
+        for player_id, position in POSITION_OVERRIDES.items():
+            corrected.loc[player_ids.eq(player_id), "position"] = position
+    return corrected
 
 FEATURE_LABELS = {
     "rim_frequency": "Rim shot frequency",
@@ -594,6 +606,7 @@ def build_style_features(
         ) or "N/A",
         axis=1,
     )
+    frame = correct_known_positions(frame)
     frame["height_inches"] = pd.to_numeric(frame.get("heightInches"), errors="coerce")
     frame["weight_lbs"] = pd.to_numeric(frame.get("bodyWeightLbs"), errors="coerce")
     birth_dates = pd.to_datetime(frame.get("birthDate"), errors="coerce")
@@ -1055,6 +1068,7 @@ def find_style_neighbors(
     ].copy()
     if profile is not None:
         cohort = cohort.loc[cohort["profile"].eq(profile)]
+    cohort = correct_known_positions(cohort)
     reference_rows = cohort.loc[
         cohort["player_id"].astype(int).eq(int(player_id))
         & cohort["season"].eq(season)
