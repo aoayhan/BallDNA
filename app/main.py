@@ -647,12 +647,13 @@ def restore_browser_view(destination: str) -> None:
 
 
 def enable_browser_history() -> None:
-    """Preserve the current URL before Streamlit replaces its query parameters."""
+    """Sync Streamlit navigation with the browser's top-level history."""
 
     st.iframe(
         """
         <script>
         const host = window.parent;
+        const historyHost = window.top;
         const routes = {
           "Basketball DNA home": "home",
           "Discover": "discover",
@@ -667,15 +668,15 @@ def enable_browser_history() -> None:
           if (!button) return;
           const destination = routes[button.textContent.trim()];
           if (!destination) return;
-          const current = new URL(host.location.href).searchParams.get("view") || "home";
+          const current = new URL(historyHost.location.href).searchParams.get("view") || "home";
           if (destination === current) return;
-          const url = new URL(host.location.href);
+          const url = new URL(historyHost.location.href);
           if (destination === "home") url.searchParams.delete("view");
           else url.searchParams.set("view", destination);
-          host.history.pushState({}, "", url);
+          historyHost.history.pushState({}, "", url);
         };
         const restorePage = () => {
-          const destination = new URL(host.location.href).searchParams.get("view") || "home";
+          const destination = new URL(historyHost.location.href).searchParams.get("view") || "home";
           host.document.querySelector(`.st-key-history_${destination} button`)?.click();
         };
         if (host.__ballDnaHistoryHandler) {
@@ -683,11 +684,12 @@ def enable_browser_history() -> None:
         }
         if (host.__ballDnaPopstateHandler) {
           host.removeEventListener("popstate", host.__ballDnaPopstateHandler);
+          historyHost.removeEventListener("popstate", host.__ballDnaPopstateHandler);
         }
         host.__ballDnaHistoryHandler = rememberPage;
         host.__ballDnaPopstateHandler = restorePage;
         host.document.addEventListener("click", rememberPage, true);
-        host.addEventListener("popstate", restorePage);
+        historyHost.addEventListener("popstate", restorePage);
         </script>
         """,
         width=1,
