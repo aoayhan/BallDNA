@@ -635,10 +635,9 @@ for widget_key in (
 
 
 def navigate(destination: str) -> None:
-    """Update the route before Streamlit renders the next page."""
+    """Update the session route after the browser records its destination URL."""
 
     st.session_state["browser_view"] = destination
-    st.query_params["view"] = destination
 
 
 def restore_browser_view(destination: str) -> None:
@@ -669,7 +668,11 @@ def enable_browser_history() -> None:
           const destination = routes[button.textContent.trim()];
           if (!destination) return;
           const current = new URL(host.location.href).searchParams.get("view") || "home";
-          if (destination !== current) host.history.pushState({}, "", host.location.href);
+          if (destination === current) return;
+          const url = new URL(host.location.href);
+          if (destination === "home") url.searchParams.delete("view");
+          else url.searchParams.set("view", destination);
+          host.history.pushState({}, "", url);
         };
         const restorePage = () => {
           const destination = new URL(host.location.href).searchParams.get("view") || "home";
