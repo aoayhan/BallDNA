@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import sys
 from html import escape
 from pathlib import Path
@@ -17,6 +18,7 @@ if str(SRC) not in sys.path:
 
 DATA = ROOT / "data" / "historical"
 MODEL = ROOT / "models" / "play_style" / "siamese_tabular_v5_inference.npz"
+MODEL_SUMMARY = ROOT / "models" / "play_style" / "siamese_tabular_v5_summary.json"
 LEGAL = ROOT / "LEGAL.md"
 
 
@@ -691,6 +693,8 @@ if view == "legal":
     st.stop()
 
 if view == "home":
+    evaluation = json.loads(MODEL_SUMMARY.read_text(encoding="utf-8"))
+    holdout = evaluation["all_19_holdouts"]["coverage_aware_ensemble"]
     with st.container(key="home_hero"):
         st.markdown(
             """
@@ -725,7 +729,7 @@ if view == "home":
                     )
 
     st.markdown(
-        """
+        f"""
         <section class="bd-home-section">
           <div class="bd-home-section-head">
             <div><div class="bd-kicker">How it works</div><h2>From basketball data to Player DNA.</h2></div>
@@ -743,14 +747,14 @@ if view == "home":
           <div class="bd-ml-copy">
             <div class="bd-kicker">The AI / ML work</div>
             <h2>Self-supervised learning, with the shortcuts removed.</h2>
-            <p>I trained shared <strong>64 → 32 MLP encoders</strong> with multi-positive contrastive InfoNCE, using adjacent player seasons and corrupted feature views as positive examples. The deployed representation combines stable cross-era features with richer detail when both seasons have reliable coverage.</p>
+            <p>I trained shared <strong>128 → 64 MLP encoders</strong> with multi-positive contrastive InfoNCE, using adjacent player seasons and corrupted feature views as positive examples. The deployed representation combines stable cross-era features with richer detail when both seasons have reliable coverage.</p>
             <p>Player identity, name, team, position, height, weight, shooting efficiency, and DARKO impact are excluded from the inputs. That forces the model to learn repeatable basketball behavior rather than memorize who the player is or how good he is.</p>
             <p>The pipeline uses Python, pandas, PyTorch, Parquet model assets, NumPy inference, and Streamlit. Impact and efficiency remain visible as separate context; they never inflate the style score.</p>
           </div>
           <div class="bd-metrics" aria-label="Chronological holdout evaluation">
-            <div class="bd-metric"><b>0.670</b><span>Holdout MRR</span></div>
-            <div class="bd-metric"><b>54.6%</b><span>Previous season at #1</span></div>
-            <div class="bd-metric"><b>82.3%</b><span>Previous season in top 5</span></div>
+            <div class="bd-metric"><b>{holdout['mean_reciprocal_rank']:.3f}</b><span>Holdout MRR</span></div>
+            <div class="bd-metric"><b>{holdout['recall_at_1']:.1%}</b><span>Previous season at #1</span></div>
+            <div class="bd-metric"><b>{holdout['recall_at_5']:.1%}</b><span>Previous season in top 5</span></div>
             <p class="bd-metric-note">Across 19 chronological holdouts. Each season queries an earlier-season pool; success means retrieving that player’s adjacent season near the top.</p>
           </div>
         </section>
