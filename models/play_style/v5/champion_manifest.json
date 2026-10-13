@@ -1,0 +1,80 @@
+{
+  "model_id": "play-style-broad-offense-v5-wider",
+  "status": "champion",
+  "promoted_at": "2026-10-13T11:09:27Z",
+  "scope": "Broad History Offensive only",
+  "rollback_model": "play-style-broad-offense-v4",
+  "change": {
+    "stable_encoder": "15 -> 128 -> 64 -> 32-dimensional L2-normalized embedding",
+    "detailed_encoder": "18 -> 128 -> 64 -> 32-dimensional L2-normalized embedding",
+    "reason": "The wider encoder improved all aggregate retrieval metrics across five seeds and 19 chronological folds.",
+    "rejected_changes": [
+      "odd/even game-profile training views",
+      "reliability-weighted contrastive loss"
+    ]
+  },
+  "objective": "Multi-positive supervised contrastive InfoNCE",
+  "temperature": 0.07,
+  "detail_coverage_start": "2007-08",
+  "covered_pair_weights": {
+    "stable_siamese": 0.5,
+    "detailed_siamese": 0.5
+  },
+  "uncovered_pair_weights": {
+    "stable_siamese": 1.0,
+    "detailed_siamese": 0.0
+  },
+  "input_exclusions": [
+    "player identity",
+    "player name",
+    "team",
+    "position",
+    "height",
+    "weight",
+    "shooting efficiency",
+    "DARKO impact"
+  ],
+  "five_seed_19_fold_evaluation": {
+    "v4": {
+      "mean_reciprocal_rank": 0.6679151077039401,
+      "recall_at_1": 0.5447306222939212,
+      "recall_at_5": 0.820697236458877
+    },
+    "v5": {
+      "mean_reciprocal_rank": 0.6783519601337209,
+      "recall_at_1": 0.5564299357233211,
+      "recall_at_5": 0.8291072109409923
+    },
+    "paired_fold_wins": {
+      "mean_reciprocal_rank": "19/19",
+      "recall_at_1": "16/19",
+      "recall_at_5": "15/19"
+    },
+    "bootstrap_95_percent_delta_intervals": {
+      "mean_reciprocal_rank": [0.0072392897524801185, 0.013910935493129712],
+      "recall_at_1": [0.007274417211124249, 0.016286535765898686],
+      "recall_at_5": [0.003727116424347826, 0.01376848801654953]
+    }
+  },
+  "robustness": {
+    "split_season_mean_reciprocal_rank": 0.7490405781590272,
+    "split_season_recall_at_1": 0.6440524218995326,
+    "split_season_recall_at_5": 0.8777866573801107,
+    "metadata_perturbation_max_abs_delta": 0.0,
+    "forbidden_input_features": [],
+    "held_out_behavior_targets_within_five_percent": "5/5"
+  },
+  "artifact_sha256": {
+    "siamese_offensive_embeddings.parquet": "212d7f37083bcdf986ca2fea64513cf171a9c4e7318fccf408997268d42a7f27",
+    "style_similarity_leaderboard.parquet": "3e07fb22f8cfcd324ebb7779b955d9345f4b517ef26ad1f3a6417e7eb19b0c00",
+    "siamese_tabular_v5_inference.npz": "e6bc7bc7e986da4e9a35c81462c28170b5ced0d17ff04b3598ef3a7046d0266f",
+    "siamese_tabular_v5_summary.json": "64a6f440574fdd97ac460caaeaf6ce129b3e4ecebf80b9f15a14e5e76a2944e3",
+    "siamese_wider_v1_multiseed_folds.json": "7558b8e92466c13385079cc1e9465314d164e8b67f095e91a06a8e943e2e5dd7",
+    "siamese_wider_v1_robustness.json": "659f9123142964f79e78a78797dd60afd5f9cacef2c86ea2078b0422a98e8385",
+    "promote_wider_siamese.py": "2da8f2610894986e874d1dbb150533e9a7241906d344347bb39501e6a32de5df",
+    "evaluate_siamese_multiseed_folds.py": "4927749fdfe1327b5d8daf6f034076e4b7e68c13084656c837a1b625eccb272f",
+    "train_siamese_multiview_challenger.py": "63ecaa164eead6eb416ccb7c17225ee5e8137f5d17a05632e20d53c84433bfcf",
+    "test_siamese_attribution.py": "4e3c17b49107b34e6587b4c0c58a027b83614846fed4bde69cd586640e427e95",
+    "test_siamese_style.py": "0c1ee8251e064dd73695f1951b6e37cedb2e76203bbb084bc5e172fe943e3793"
+  }
+}

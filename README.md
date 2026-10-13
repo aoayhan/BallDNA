@@ -144,8 +144,8 @@ The frozen v1 Broad History offensive score is 42% denoising Player DNA, 30%
 temporal metric similarity, 26.6% positive-behavior overlap, and 1.4%
 information-weighted shared absence.
 
-The deployed v4 retrieval layer uses two true Siamese tabular encoders. Both sides
-pass through the same 64 → 32 MLP, while multi-positive contrastive InfoNCE pulls
+The deployed v5 retrieval layer uses two true Siamese tabular encoders. Both sides
+pass through the same 128 → 64 MLP, while multi-positive contrastive InfoNCE pulls
 adjacent same-player seasons together and pushes other player-seasons apart. Player
 identity defines training pairs but never enters either feature vector. The stable
 encoder uses 15 consistently recorded behaviors across 1996-97 onward. A detailed
@@ -153,16 +153,17 @@ encoder adds floater, pull-up, and step-back frequency, but is trained and appli
 only when both seasons have valid 2007-08+ source coverage. This prevents missing
 historical labels from acting as an era shortcut.
 
-V4 removes shot-event three-point frequency because it duplicated the more reliable
+The retained v4 preprocessing removes shot-event three-point frequency because it duplicated the more reliable
 box-score `3PA/FGA` input at 0.994 correlation. Seven development folds selected
 **50% stable + 50% detailed** similarity when
-detailed coverage exists; earlier comparisons use 100% stable similarity. Across
-19 chronological holdouts, the coverage-aware model records **0.670 MRR**, **54.6%
-Top-1**, and **82.3% Top-5**. The latest untouched fold reaches **0.732 MRR**,
-**63.6% Top-1**, and **86.1% Top-5**. Split-season MRR is **0.742**. Metadata
-perturbation changes embeddings by exactly 0.0, unseen players retain 0.622 MRR,
-and independently permuting candidate identities drops MRR to 0.018. PyTorch is
-training-only; the app reads compact precomputed embeddings. A small NumPy export
+detailed coverage exists; earlier comparisons use 100% stable similarity. Five
+random seeds across 19 chronological holdouts improved the v4 baseline from
+**0.668 to 0.678 MRR**, **54.5% to 55.6% Top-1**, and **82.1% to 82.9% Top-5**.
+The paired fold bootstrap intervals exclude zero for all three metrics, and the
+wider model improved MRR on all 19 folds. Split-season, bootstrap-stability,
+unseen-player, metadata-invariance, permutation-null, and held-out-behavior checks
+were also run before promotion. PyTorch is training-only; the app reads compact
+precomputed embeddings. A small NumPy export
 of the deployed MLPs powers pair-specific counterfactual attribution: neutralizing
 one player's feature measures similarity contribution, while matching one value to
 the other measures difference penalty. These local effects explain the trained
@@ -173,6 +174,22 @@ Reproduce the neural challenger and its robustness checks with:
 ```bash
 python scripts/train_siamese_style_encoder.py
 python scripts/evaluate_siamese_robustness.py
+```
+
+The v5 experiment isolated three no-new-data changes: a wider
+128 → 64 shared encoder, disjoint odd/even game profiles, and reliability-weighted
+contrastive loss. The wider encoder was the only development winner. Across the
+same 19 locked folds, five-seed evaluation confirmed the gains above. Odd/even
+views and reliability weighting did not improve development retrieval and were not
+deployed. The earlier latest-season-only seed check was effectively tied on Top-1;
+the broader paired evaluation resolved that uncertainty and passed every promotion
+gate. V4 remains intact as the rollback model. Reproduce the ablation and promotion
+checks with:
+
+```bash
+python scripts/train_siamese_multiview_challenger.py
+python scripts/evaluate_wider_siamese_robustness.py
+python scripts/evaluate_siamese_multiseed_folds.py
 ```
 
 The temporal command writes the complete local evidence beside the frozen artifacts and a

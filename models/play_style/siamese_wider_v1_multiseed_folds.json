@@ -1,0 +1,1925 @@
+{
+  "created_at": "2026-10-13T09:44:41+00:00",
+  "model_id": "siamese-wider-v1-five-seed-19-fold",
+  "production_changed": false,
+  "seeds": [
+    7,
+    23,
+    42,
+    73,
+    101
+  ],
+  "fold_count": 19,
+  "promotion_gates": {
+    "mean_recall_at_1_beats_v4": true,
+    "mean_mrr_beats_v4": true,
+    "mean_recall_at_5_within_half_point": true
+  },
+  "promotion_gate_pass": true,
+  "summary": {
+    "model_means": {
+      "Frozen v4": {
+        "mean_reciprocal_rank": 0.6679151077039401,
+        "recall_at_1": 0.5447306222939212,
+        "recall_at_5": 0.820697236458877
+      },
+      "Wider": {
+        "mean_reciprocal_rank": 0.6783519601337209,
+        "recall_at_1": 0.5564299357233211,
+        "recall_at_5": 0.8291072109409923
+      }
+    },
+    "paired_fold_evidence": {
+      "mean_reciprocal_rank": {
+        "mean_delta": 0.010436852429780848,
+        "fold_wins": 19,
+        "fold_ties": 0,
+        "fold_losses": 0,
+        "fold_bootstrap_95_percent_interval": [
+          0.0072392897524801185,
+          0.013910935493129712
+        ]
+      },
+      "recall_at_1": {
+        "mean_delta": 0.011699313429399918,
+        "fold_wins": 16,
+        "fold_ties": 0,
+        "fold_losses": 3,
+        "fold_bootstrap_95_percent_interval": [
+          0.007274417211124249,
+          0.016286535765898686
+        ]
+      },
+      "recall_at_5": {
+        "mean_delta": 0.008409974482115255,
+        "fold_wins": 15,
+        "fold_ties": 0,
+        "fold_losses": 4,
+        "fold_bootstrap_95_percent_interval": [
+          0.003727116424347826,
+          0.01376848801654953
+        ]
+      }
+    }
+  },
+  "paired_deltas_by_fold": [
+    {
+      "fold": "1999-00 -> 1998-99",
+      "mean_reciprocal_rank": 0.02564707535959083,
+      "recall_at_1": 0.023318385650224215,
+      "recall_at_5": 0.041255605381165884
+    },
+    {
+      "fold": "2000-01 -> 1999-00",
+      "mean_reciprocal_rank": 0.017526357920317648,
+      "recall_at_1": 0.022580645161290314,
+      "recall_at_5": 0.008870967741935475
+    },
+    {
+      "fold": "2001-02 -> 2000-01",
+      "mean_reciprocal_rank": 0.024979660027777028,
+      "recall_at_1": 0.03387096774193547,
+      "recall_at_5": 0.019354838709677424
+    },
+    {
+      "fold": "2002-03 -> 2001-02",
+      "mean_reciprocal_rank": 0.006710731166210682,
+      "recall_at_1": 0.010612244897959177,
+      "recall_at_5": -0.0016326530612245094
+    },
+    {
+      "fold": "2004-05 -> 2003-04",
+      "mean_reciprocal_rank": 0.008549423341412865,
+      "recall_at_1": 0.01089494163424124,
+      "recall_at_5": 2.2204460492503132e-17
+    },
+    {
+      "fold": "2005-06 -> 2004-05",
+      "mean_reciprocal_rank": 0.009396261574663977,
+      "recall_at_1": 0.00703125,
+      "recall_at_5": 0.0125
+    },
+    {
+      "fold": "2006-07 -> 2005-06",
+      "mean_reciprocal_rank": 0.0029167390384039924,
+      "recall_at_1": -0.0022813688212927953,
+      "recall_at_5": 0.007604562737642606
+    },
+    {
+      "fold": "2007-08 -> 2006-07",
+      "mean_reciprocal_rank": 0.0027948424141037266,
+      "recall_at_1": 0.005303030303030321,
+      "recall_at_5": 0.004545454545454542
+    },
+    {
+      "fold": "2009-10 -> 2008-09",
+      "mean_reciprocal_rank": 0.0009762132859539418,
+      "recall_at_1": -0.0015748031496062743,
+      "recall_at_5": 0.0015748031496062964
+    },
+    {
+      "fold": "2010-11 -> 2009-10",
+      "mean_reciprocal_rank": 0.014919350472742865,
+      "recall_at_1": 0.014598540145985406,
+      "recall_at_5": 0.015328467153284665
+    },
+    {
+      "fold": "2011-12 -> 2010-11",
+      "mean_reciprocal_rank": 0.01873890304736625,
+      "recall_at_1": 0.01867704280155642,
+      "recall_at_5": 0.01556420233463034
+    },
+    {
+      "fold": "2012-13 -> 2011-12",
+      "mean_reciprocal_rank": 0.005066545977149372,
+      "recall_at_1": -0.005555555555555536,
+      "recall_at_5": 0.02380952380952379
+    },
+    {
+      "fold": "2014-15 -> 2013-14",
+      "mean_reciprocal_rank": 0.01693502114962666,
+      "recall_at_1": 0.024199288256227768,
+      "recall_at_5": 0.00996441281138789
+    },
+    {
+      "fold": "2015-16 -> 2014-15",
+      "mean_reciprocal_rank": 0.014261432598268486,
+      "recall_at_1": 0.015277777777777802,
+      "recall_at_5": 0.002083333333333304
+    },
+    {
+      "fold": "2016-17 -> 2015-16",
+      "mean_reciprocal_rank": 0.007158706927541813,
+      "recall_at_1": 0.012631578947368393,
+      "recall_at_5": 0.010526315789473694
+    },
+    {
+      "fold": "2017-18 -> 2016-17",
+      "mean_reciprocal_rank": 0.005009163395843142,
+      "recall_at_1": 0.01240875912408761,
+      "recall_at_5": -0.006569343065693433
+    },
+    {
+      "fold": "2019-20 -> 2018-19",
+      "mean_reciprocal_rank": 0.002964460588060258,
+      "recall_at_1": 0.0030188679245283013,
+      "recall_at_5": -0.0037735849056603765
+    },
+    {
+      "fold": "2020-21 -> 2019-20",
+      "mean_reciprocal_rank": 0.011799559220889733,
+      "recall_at_1": 0.01594202898550725,
+      "recall_at_5": 0.001449275362318847
+    },
+    {
+      "fold": "2021-22 -> 2020-21",
+      "mean_reciprocal_rank": 0.00194974865991282,
+      "recall_at_1": 0.001333333333333342,
+      "recall_at_5": -0.0026666666666666393
+    }
+  ],
+  "paired_deltas_by_seed": [
+    {
+      "seed": 7,
+      "mean_reciprocal_rank": 0.012017642575640091,
+      "recall_at_1": 0.011230194932278524,
+      "recall_at_5": 0.01046527089308421
+    },
+    {
+      "seed": 23,
+      "mean_reciprocal_rank": 0.009633945745003642,
+      "recall_at_1": 0.011053727965926165,
+      "recall_at_5": 0.005820902203370393
+    },
+    {
+      "seed": 42,
+      "mean_reciprocal_rank": 0.010425710206501801,
+      "recall_at_1": 0.011661241501213351,
+      "recall_at_5": 0.009385605687144322
+    },
+    {
+      "seed": 73,
+      "mean_reciprocal_rank": 0.011633073559796942,
+      "recall_at_1": 0.014749595170127049,
+      "recall_at_5": 0.011662920179302238
+    },
+    {
+      "seed": 101,
+      "mean_reciprocal_rank": 0.008473890061961758,
+      "recall_at_1": 0.009801807577454498,
+      "recall_at_5": 0.004715173447675107
+    }
+  ],
+  "evaluations": [
+    {
+      "seed": 7,
+      "fold": "1999-00 -> 1998-99",
+      "model": "Frozen v4",
+      "eligible_queries": 223,
+      "mean_reciprocal_rank": 0.5858284865094014,
+      "recall_at_1": 0.4484304932735426,
+      "recall_at_5": 0.7309417040358744
+    },
+    {
+      "seed": 7,
+      "fold": "1999-00 -> 1998-99",
+      "model": "Wider",
+      "eligible_queries": 223,
+      "mean_reciprocal_rank": 0.6210828812422833,
+      "recall_at_1": 0.484304932735426,
+      "recall_at_5": 0.7982062780269058
+    },
+    {
+      "seed": 7,
+      "fold": "2005-06 -> 2004-05",
+      "model": "Frozen v4",
+      "eligible_queries": 256,
+      "mean_reciprocal_rank": 0.6137843594272732,
+      "recall_at_1": 0.4765625,
+      "recall_at_5": 0.78515625
+    },
+    {
+      "seed": 7,
+      "fold": "2005-06 -> 2004-05",
+      "model": "Wider",
+      "eligible_queries": 256,
+      "mean_reciprocal_rank": 0.6347312725763192,
+      "recall_at_1": 0.4921875,
+      "recall_at_5": 0.8203125
+    },
+    {
+      "seed": 7,
+      "fold": "2011-12 -> 2010-11",
+      "model": "Frozen v4",
+      "eligible_queries": 257,
+      "mean_reciprocal_rank": 0.682403629056917,
+      "recall_at_1": 0.5486381322957199,
+      "recall_at_5": 0.8560311284046692
+    },
+    {
+      "seed": 7,
+      "fold": "2011-12 -> 2010-11",
+      "model": "Wider",
+      "eligible_queries": 257,
+      "mean_reciprocal_rank": 0.6892313471114633,
+      "recall_at_1": 0.5486381322957199,
+      "recall_at_5": 0.8638132295719845
+    },
+    {
+      "seed": 7,
+      "fold": "2017-18 -> 2016-17",
+      "model": "Frozen v4",
+      "eligible_queries": 274,
+      "mean_reciprocal_rank": 0.686805058527499,
+      "recall_at_1": 0.5802919708029197,
+      "recall_at_5": 0.8065693430656934
+    },
+    {
+      "seed": 7,
+      "fold": "2017-18 -> 2016-17",
+      "model": "Wider",
+      "eligible_queries": 274,
+      "mean_reciprocal_rank": 0.6996303944603091,
+      "recall_at_1": 0.5985401459854015,
+      "recall_at_5": 0.8029197080291971
+    },
+    {
+      "seed": 7,
+      "fold": "2021-22 -> 2020-21",
+      "model": "Frozen v4",
+      "eligible_queries": 300,
+      "mean_reciprocal_rank": 0.706084066959355,
+      "recall_at_1": 0.5966666666666667,
+      "recall_at_5": 0.8466666666666667
+    },
+    {
+      "seed": 7,
+      "fold": "2021-22 -> 2020-21",
+      "model": "Wider",
+      "eligible_queries": 300,
+      "mean_reciprocal_rank": 0.7055797929405895,
+      "recall_at_1": 0.5833333333333334,
+      "recall_at_5": 0.8433333333333334
+    },
+    {
+      "seed": 7,
+      "fold": "2000-01 -> 1999-00",
+      "model": "Frozen v4",
+      "eligible_queries": 248,
+      "mean_reciprocal_rank": 0.6128386242793805,
+      "recall_at_1": 0.4798387096774194,
+      "recall_at_5": 0.7620967741935484
+    },
+    {
+      "seed": 7,
+      "fold": "2000-01 -> 1999-00",
+      "model": "Wider",
+      "eligible_queries": 248,
+      "mean_reciprocal_rank": 0.6402019690332893,
+      "recall_at_1": 0.5040322580645161,
+      "recall_at_5": 0.7903225806451613
+    },
+    {
+      "seed": 7,
+      "fold": "2001-02 -> 2000-01",
+      "model": "Frozen v4",
+      "eligible_queries": 248,
+      "mean_reciprocal_rank": 0.620313586762093,
+      "recall_at_1": 0.4798387096774194,
+      "recall_at_5": 0.782258064516129
+    },
+    {
+      "seed": 7,
+      "fold": "2001-02 -> 2000-01",
+      "model": "Wider",
+      "eligible_queries": 248,
+      "mean_reciprocal_rank": 0.6367488606326962,
+      "recall_at_1": 0.49193548387096775,
+      "recall_at_5": 0.7943548387096774
+    },
+    {
+      "seed": 7,
+      "fold": "2002-03 -> 2001-02",
+      "model": "Frozen v4",
+      "eligible_queries": 245,
+      "mean_reciprocal_rank": 0.6883114120076687,
+      "recall_at_1": 0.5469387755102041,
+      "recall_at_5": 0.8734693877551021
+    },
+    {
+      "seed": 7,
+      "fold": "2002-03 -> 2001-02",
+      "model": "Wider",
+      "eligible_queries": 245,
+      "mean_reciprocal_rank": 0.6887083500082046,
+      "recall_at_1": 0.5551020408163265,
+      "recall_at_5": 0.8775510204081632
+    },
+    {
+      "seed": 7,
+      "fold": "2004-05 -> 2003-04",
+      "model": "Frozen v4",
+      "eligible_queries": 257,
+      "mean_reciprocal_rank": 0.6262420709875192,
+      "recall_at_1": 0.48638132295719844,
+      "recall_at_5": 0.8093385214007782
+    },
+    {
+      "seed": 7,
+      "fold": "2004-05 -> 2003-04",
+      "model": "Wider",
+      "eligible_queries": 257,
+      "mean_reciprocal_rank": 0.6409514469390742,
+      "recall_at_1": 0.5019455252918288,
+      "recall_at_5": 0.8249027237354085
+    },
+    {
+      "seed": 7,
+      "fold": "2006-07 -> 2005-06",
+      "model": "Frozen v4",
+      "eligible_queries": 263,
+      "mean_reciprocal_rank": 0.6840236818199932,
+      "recall_at_1": 0.5665399239543726,
+      "recall_at_5": 0.8326996197718631
+    },
+    {
+      "seed": 7,
+      "fold": "2006-07 -> 2005-06",
+      "model": "Wider",
+      "eligible_queries": 263,
+      "mean_reciprocal_rank": 0.678512082785055,
+      "recall_at_1": 0.5551330798479087,
+      "recall_at_5": 0.8365019011406845
+    },
+    {
+      "seed": 7,
+      "fold": "2007-08 -> 2006-07",
+      "model": "Frozen v4",
+      "eligible_queries": 264,
+      "mean_reciprocal_rank": 0.6532347686392818,
+      "recall_at_1": 0.5416666666666666,
+      "recall_at_5": 0.7916666666666666
+    },
+    {
+      "seed": 7,
+      "fold": "2007-08 -> 2006-07",
+      "model": "Wider",
+      "eligible_queries": 264,
+      "mean_reciprocal_rank": 0.6570981512890557,
+      "recall_at_1": 0.5492424242424242,
+      "recall_at_5": 0.7916666666666666
+    },
+    {
+      "seed": 7,
+      "fold": "2009-10 -> 2008-09",
+      "model": "Frozen v4",
+      "eligible_queries": 254,
+      "mean_reciprocal_rank": 0.7046572014108351,
+      "recall_at_1": 0.5826771653543307,
+      "recall_at_5": 0.8818897637795275
+    },
+    {
+      "seed": 7,
+      "fold": "2009-10 -> 2008-09",
+      "model": "Wider",
+      "eligible_queries": 254,
+      "mean_reciprocal_rank": 0.7118127573716706,
+      "recall_at_1": 0.5866141732283464,
+      "recall_at_5": 0.8740157480314961
+    },
+    {
+      "seed": 7,
+      "fold": "2010-11 -> 2009-10",
+      "model": "Frozen v4",
+      "eligible_queries": 274,
+      "mean_reciprocal_rank": 0.6871740040412503,
+      "recall_at_1": 0.5948905109489051,
+      "recall_at_5": 0.8029197080291971
+    },
+    {
+      "seed": 7,
+      "fold": "2010-11 -> 2009-10",
+      "model": "Wider",
+      "eligible_queries": 274,
+      "mean_reciprocal_rank": 0.6926029637097021,
+      "recall_at_1": 0.5912408759124088,
+      "recall_at_5": 0.8065693430656934
+    },
+    {
+      "seed": 7,
+      "fold": "2012-13 -> 2011-12",
+      "model": "Frozen v4",
+      "eligible_queries": 252,
+      "mean_reciprocal_rank": 0.6783650877587203,
+      "recall_at_1": 0.5714285714285714,
+      "recall_at_5": 0.8055555555555556
+    },
+    {
+      "seed": 7,
+      "fold": "2012-13 -> 2011-12",
+      "model": "Wider",
+      "eligible_queries": 252,
+      "mean_reciprocal_rank": 0.6901711239727696,
+      "recall_at_1": 0.5714285714285714,
+      "recall_at_5": 0.8174603174603174
+    },
+    {
+      "seed": 7,
+      "fold": "2014-15 -> 2013-14",
+      "model": "Frozen v4",
+      "eligible_queries": 281,
+      "mean_reciprocal_rank": 0.732020662456687,
+      "recall_at_1": 0.6227758007117438,
+      "recall_at_5": 0.8861209964412812
+    },
+    {
+      "seed": 7,
+      "fold": "2014-15 -> 2013-14",
+      "model": "Wider",
+      "eligible_queries": 281,
+      "mean_reciprocal_rank": 0.7309500025877741,
+      "recall_at_1": 0.6192170818505338,
+      "recall_at_5": 0.8790035587188612
+    },
+    {
+      "seed": 7,
+      "fold": "2015-16 -> 2014-15",
+      "model": "Frozen v4",
+      "eligible_queries": 288,
+      "mean_reciprocal_rank": 0.6276834888987778,
+      "recall_at_1": 0.4965277777777778,
+      "recall_at_5": 0.7986111111111112
+    },
+    {
+      "seed": 7,
+      "fold": "2015-16 -> 2014-15",
+      "model": "Wider",
+      "eligible_queries": 288,
+      "mean_reciprocal_rank": 0.65477259100081,
+      "recall_at_1": 0.5277777777777778,
+      "recall_at_5": 0.8263888888888888
+    },
+    {
+      "seed": 7,
+      "fold": "2016-17 -> 2015-16",
+      "model": "Frozen v4",
+      "eligible_queries": 285,
+      "mean_reciprocal_rank": 0.7239733594854895,
+      "recall_at_1": 0.6105263157894737,
+      "recall_at_5": 0.8631578947368421
+    },
+    {
+      "seed": 7,
+      "fold": "2016-17 -> 2015-16",
+      "model": "Wider",
+      "eligible_queries": 285,
+      "mean_reciprocal_rank": 0.7327811951227197,
+      "recall_at_1": 0.6280701754385964,
+      "recall_at_5": 0.8666666666666667
+    },
+    {
+      "seed": 7,
+      "fold": "2019-20 -> 2018-19",
+      "model": "Frozen v4",
+      "eligible_queries": 265,
+      "mean_reciprocal_rank": 0.6798346287733631,
+      "recall_at_1": 0.5660377358490566,
+      "recall_at_5": 0.8188679245283019
+    },
+    {
+      "seed": 7,
+      "fold": "2019-20 -> 2018-19",
+      "model": "Wider",
+      "eligible_queries": 265,
+      "mean_reciprocal_rank": 0.6949531055858916,
+      "recall_at_1": 0.5886792452830188,
+      "recall_at_5": 0.8188679245283019
+    },
+    {
+      "seed": 7,
+      "fold": "2020-21 -> 2019-20",
+      "model": "Frozen v4",
+      "eligible_queries": 276,
+      "mean_reciprocal_rank": 0.6432652999825992,
+      "recall_at_1": 0.5144927536231884,
+      "recall_at_5": 0.8043478260869565
+    },
+    {
+      "seed": 7,
+      "fold": "2020-21 -> 2019-20",
+      "model": "Wider",
+      "eligible_queries": 276,
+      "mean_reciprocal_rank": 0.6646583983515887,
+      "recall_at_1": 0.5471014492753623,
+      "recall_at_5": 0.8043478260869565
+    },
+    {
+      "seed": 23,
+      "fold": "1999-00 -> 1998-99",
+      "model": "Frozen v4",
+      "eligible_queries": 223,
+      "mean_reciprocal_rank": 0.5995983904395611,
+      "recall_at_1": 0.4618834080717489,
+      "recall_at_5": 0.7713004484304933
+    },
+    {
+      "seed": 23,
+      "fold": "1999-00 -> 1998-99",
+      "model": "Wider",
+      "eligible_queries": 223,
+      "mean_reciprocal_rank": 0.6105330364268632,
+      "recall_at_1": 0.4618834080717489,
+      "recall_at_5": 0.8026905829596412
+    },
+    {
+      "seed": 23,
+      "fold": "2005-06 -> 2004-05",
+      "model": "Frozen v4",
+      "eligible_queries": 256,
+      "mean_reciprocal_rank": 0.6096947594616127,
+      "recall_at_1": 0.46484375,
+      "recall_at_5": 0.79296875
+    },
+    {
+      "seed": 23,
+      "fold": "2005-06 -> 2004-05",
+      "model": "Wider",
+      "eligible_queries": 256,
+      "mean_reciprocal_rank": 0.6135095555124606,
+      "recall_at_1": 0.46875,
+      "recall_at_5": 0.796875
+    },
+    {
+      "seed": 23,
+      "fold": "2011-12 -> 2010-11",
+      "model": "Frozen v4",
+      "eligible_queries": 257,
+      "mean_reciprocal_rank": 0.6804224739654344,
+      "recall_at_1": 0.5447470817120622,
+      "recall_at_5": 0.8599221789883269
+    },
+    {
+      "seed": 23,
+      "fold": "2011-12 -> 2010-11",
+      "model": "Wider",
+      "eligible_queries": 257,
+      "mean_reciprocal_rank": 0.7152864619153184,
+      "recall_at_1": 0.5953307392996109,
+      "recall_at_5": 0.8560311284046692
+    },
+    {
+      "seed": 23,
+      "fold": "2017-18 -> 2016-17",
+      "model": "Frozen v4",
+      "eligible_queries": 274,
+      "mean_reciprocal_rank": 0.6901510885647792,
+      "recall_at_1": 0.583941605839416,
+      "recall_at_5": 0.8102189781021898
+    },
+    {
+      "seed": 23,
+      "fold": "2017-18 -> 2016-17",
+      "model": "Wider",
+      "eligible_queries": 274,
+      "mean_reciprocal_rank": 0.6932137724731146,
+      "recall_at_1": 0.5948905109489051,
+      "recall_at_5": 0.7992700729927007
+    },
+    {
+      "seed": 23,
+      "fold": "2021-22 -> 2020-21",
+      "model": "Frozen v4",
+      "eligible_queries": 300,
+      "mean_reciprocal_rank": 0.7042514632113434,
+      "recall_at_1": 0.5866666666666667,
+      "recall_at_5": 0.8633333333333333
+    },
+    {
+      "seed": 23,
+      "fold": "2021-22 -> 2020-21",
+      "model": "Wider",
+      "eligible_queries": 300,
+      "mean_reciprocal_rank": 0.6968224023979082,
+      "recall_at_1": 0.5733333333333334,
+      "recall_at_5": 0.86
+    },
+    {
+      "seed": 23,
+      "fold": "2000-01 -> 1999-00",
+      "model": "Frozen v4",
+      "eligible_queries": 248,
+      "mean_reciprocal_rank": 0.6256297726897626,
+      "recall_at_1": 0.4959677419354839,
+      "recall_at_5": 0.7782258064516129
+    },
+    {
+      "seed": 23,
+      "fold": "2000-01 -> 1999-00",
+      "model": "Wider",
+      "eligible_queries": 248,
+      "mean_reciprocal_rank": 0.6381770603234694,
+      "recall_at_1": 0.5080645161290323,
+      "recall_at_5": 0.8104838709677419
+    },
+    {
+      "seed": 23,
+      "fold": "2001-02 -> 2000-01",
+      "model": "Frozen v4",
+      "eligible_queries": 248,
+      "mean_reciprocal_rank": 0.6114145660606566,
+      "recall_at_1": 0.46774193548387094,
+      "recall_at_5": 0.7782258064516129
+    },
+    {
+      "seed": 23,
+      "fold": "2001-02 -> 2000-01",
+      "model": "Wider",
+      "eligible_queries": 248,
+      "mean_reciprocal_rank": 0.6511358456703445,
+      "recall_at_1": 0.5201612903225806,
+      "recall_at_5": 0.7983870967741935
+    },
+    {
+      "seed": 23,
+      "fold": "2002-03 -> 2001-02",
+      "model": "Frozen v4",
+      "eligible_queries": 245,
+      "mean_reciprocal_rank": 0.6897589255621869,
+      "recall_at_1": 0.563265306122449,
+      "recall_at_5": 0.8489795918367347
+    },
+    {
+      "seed": 23,
+      "fold": "2002-03 -> 2001-02",
+      "model": "Wider",
+      "eligible_queries": 245,
+      "mean_reciprocal_rank": 0.6916350469672363,
+      "recall_at_1": 0.5591836734693878,
+      "recall_at_5": 0.8530612244897959
+    },
+    {
+      "seed": 23,
+      "fold": "2004-05 -> 2003-04",
+      "model": "Frozen v4",
+      "eligible_queries": 257,
+      "mean_reciprocal_rank": 0.6469072525199077,
+      "recall_at_1": 0.5097276264591439,
+      "recall_at_5": 0.7937743190661478
+    },
+    {
+      "seed": 23,
+      "fold": "2004-05 -> 2003-04",
+      "model": "Wider",
+      "eligible_queries": 257,
+      "mean_reciprocal_rank": 0.6602492477430959,
+      "recall_at_1": 0.5408560311284046,
+      "recall_at_5": 0.8015564202334631
+    },
+    {
+      "seed": 23,
+      "fold": "2006-07 -> 2005-06",
+      "model": "Frozen v4",
+      "eligible_queries": 263,
+      "mean_reciprocal_rank": 0.6880950500549395,
+      "recall_at_1": 0.5665399239543726,
+      "recall_at_5": 0.8288973384030418
+    },
+    {
+      "seed": 23,
+      "fold": "2006-07 -> 2005-06",
+      "model": "Wider",
+      "eligible_queries": 263,
+      "mean_reciprocal_rank": 0.6966116773688278,
+      "recall_at_1": 0.5703422053231939,
+      "recall_at_5": 0.8479087452471483
+    },
+    {
+      "seed": 23,
+      "fold": "2007-08 -> 2006-07",
+      "model": "Frozen v4",
+      "eligible_queries": 264,
+      "mean_reciprocal_rank": 0.6628412739190094,
+      "recall_at_1": 0.5492424242424242,
+      "recall_at_5": 0.8106060606060606
+    },
+    {
+      "seed": 23,
+      "fold": "2007-08 -> 2006-07",
+      "model": "Wider",
+      "eligible_queries": 264,
+      "mean_reciprocal_rank": 0.6669500244319598,
+      "recall_at_1": 0.553030303030303,
+      "recall_at_5": 0.7954545454545454
+    },
+    {
+      "seed": 23,
+      "fold": "2009-10 -> 2008-09",
+      "model": "Frozen v4",
+      "eligible_queries": 254,
+      "mean_reciprocal_rank": 0.7104353793537874,
+      "recall_at_1": 0.5866141732283464,
+      "recall_at_5": 0.8700787401574803
+    },
+    {
+      "seed": 23,
+      "fold": "2009-10 -> 2008-09",
+      "model": "Wider",
+      "eligible_queries": 254,
+      "mean_reciprocal_rank": 0.7096055588554333,
+      "recall_at_1": 0.5905511811023622,
+      "recall_at_5": 0.8622047244094488
+    },
+    {
+      "seed": 23,
+      "fold": "2010-11 -> 2009-10",
+      "model": "Frozen v4",
+      "eligible_queries": 274,
+      "mean_reciprocal_rank": 0.6749000734039768,
+      "recall_at_1": 0.5656934306569343,
+      "recall_at_5": 0.8065693430656934
+    },
+    {
+      "seed": 23,
+      "fold": "2010-11 -> 2009-10",
+      "model": "Wider",
+      "eligible_queries": 274,
+      "mean_reciprocal_rank": 0.692738363559198,
+      "recall_at_1": 0.5912408759124088,
+      "recall_at_5": 0.8065693430656934
+    },
+    {
+      "seed": 23,
+      "fold": "2012-13 -> 2011-12",
+      "model": "Frozen v4",
+      "eligible_queries": 252,
+      "mean_reciprocal_rank": 0.6893543185906368,
+      "recall_at_1": 0.5952380952380952,
+      "recall_at_5": 0.8015873015873016
+    },
+    {
+      "seed": 23,
+      "fold": "2012-13 -> 2011-12",
+      "model": "Wider",
+      "eligible_queries": 252,
+      "mean_reciprocal_rank": 0.6949879929171379,
+      "recall_at_1": 0.5793650793650794,
+      "recall_at_5": 0.8452380952380952
+    },
+    {
+      "seed": 23,
+      "fold": "2014-15 -> 2013-14",
+      "model": "Frozen v4",
+      "eligible_queries": 281,
+      "mean_reciprocal_rank": 0.7188792157067225,
+      "recall_at_1": 0.6014234875444839,
+      "recall_at_5": 0.8647686832740213
+    },
+    {
+      "seed": 23,
+      "fold": "2014-15 -> 2013-14",
+      "model": "Wider",
+      "eligible_queries": 281,
+      "mean_reciprocal_rank": 0.742192005123968,
+      "recall_at_1": 0.6405693950177936,
+      "recall_at_5": 0.8790035587188612
+    },
+    {
+      "seed": 23,
+      "fold": "2015-16 -> 2014-15",
+      "model": "Frozen v4",
+      "eligible_queries": 288,
+      "mean_reciprocal_rank": 0.6346496992792782,
+      "recall_at_1": 0.5034722222222222,
+      "recall_at_5": 0.8194444444444444
+    },
+    {
+      "seed": 23,
+      "fold": "2015-16 -> 2014-15",
+      "model": "Wider",
+      "eligible_queries": 288,
+      "mean_reciprocal_rank": 0.6465786465537509,
+      "recall_at_1": 0.5173611111111112,
+      "recall_at_5": 0.8090277777777778
+    },
+    {
+      "seed": 23,
+      "fold": "2016-17 -> 2015-16",
+      "model": "Frozen v4",
+      "eligible_queries": 285,
+      "mean_reciprocal_rank": 0.7340677380370301,
+      "recall_at_1": 0.6350877192982456,
+      "recall_at_5": 0.8666666666666667
+    },
+    {
+      "seed": 23,
+      "fold": "2016-17 -> 2015-16",
+      "model": "Wider",
+      "eligible_queries": 285,
+      "mean_reciprocal_rank": 0.7315549001670922,
+      "recall_at_1": 0.631578947368421,
+      "recall_at_5": 0.8596491228070176
+    },
+    {
+      "seed": 23,
+      "fold": "2019-20 -> 2018-19",
+      "model": "Frozen v4",
+      "eligible_queries": 265,
+      "mean_reciprocal_rank": 0.6887278967561684,
+      "recall_at_1": 0.5849056603773585,
+      "recall_at_5": 0.8075471698113208
+    },
+    {
+      "seed": 23,
+      "fold": "2019-20 -> 2018-19",
+      "model": "Wider",
+      "eligible_queries": 265,
+      "mean_reciprocal_rank": 0.6782181340145783,
+      "recall_at_1": 0.5660377358490566,
+      "recall_at_5": 0.8075471698113208
+    },
+    {
+      "seed": 23,
+      "fold": "2020-21 -> 2019-20",
+      "model": "Frozen v4",
+      "eligible_queries": 276,
+      "mean_reciprocal_rank": 0.6553518072904989,
+      "recall_at_1": 0.5362318840579711,
+      "recall_at_5": 0.8152173913043478
+    },
+    {
+      "seed": 23,
+      "fold": "2020-21 -> 2019-20",
+      "model": "Wider",
+      "eligible_queries": 276,
+      "mean_reciprocal_rank": 0.6681763816006044,
+      "recall_at_1": 0.5507246376811594,
+      "recall_at_5": 0.8079710144927537
+    },
+    {
+      "seed": 42,
+      "fold": "1999-00 -> 1998-99",
+      "model": "Frozen v4",
+      "eligible_queries": 223,
+      "mean_reciprocal_rank": 0.6037518834687894,
+      "recall_at_1": 0.4663677130044843,
+      "recall_at_5": 0.7802690582959642
+    },
+    {
+      "seed": 42,
+      "fold": "1999-00 -> 1998-99",
+      "model": "Wider",
+      "eligible_queries": 223,
+      "mean_reciprocal_rank": 0.6357992045877859,
+      "recall_at_1": 0.4977578475336323,
+      "recall_at_5": 0.8161434977578476
+    },
+    {
+      "seed": 42,
+      "fold": "2005-06 -> 2004-05",
+      "model": "Frozen v4",
+      "eligible_queries": 256,
+      "mean_reciprocal_rank": 0.6285814528330951,
+      "recall_at_1": 0.49609375,
+      "recall_at_5": 0.8046875
+    },
+    {
+      "seed": 42,
+      "fold": "2005-06 -> 2004-05",
+      "model": "Wider",
+      "eligible_queries": 256,
+      "mean_reciprocal_rank": 0.6226703463815849,
+      "recall_at_1": 0.48046875,
+      "recall_at_5": 0.796875
+    },
+    {
+      "seed": 42,
+      "fold": "2011-12 -> 2010-11",
+      "model": "Frozen v4",
+      "eligible_queries": 257,
+      "mean_reciprocal_rank": 0.6935313545078639,
+      "recall_at_1": 0.5680933852140078,
+      "recall_at_5": 0.8365758754863813
+    },
+    {
+      "seed": 42,
+      "fold": "2011-12 -> 2010-11",
+      "model": "Wider",
+      "eligible_queries": 257,
+      "mean_reciprocal_rank": 0.711759783069137,
+      "recall_at_1": 0.5875486381322957,
+      "recall_at_5": 0.8793774319066148
+    },
+    {
+      "seed": 42,
+      "fold": "2017-18 -> 2016-17",
+      "model": "Frozen v4",
+      "eligible_queries": 274,
+      "mean_reciprocal_rank": 0.692421999596195,
+      "recall_at_1": 0.5875912408759124,
+      "recall_at_5": 0.8065693430656934
+    },
+    {
+      "seed": 42,
+      "fold": "2017-18 -> 2016-17",
+      "model": "Wider",
+      "eligible_queries": 274,
+      "mean_reciprocal_rank": 0.7061168388445481,
+      "recall_at_1": 0.6131386861313869,
+      "recall_at_5": 0.8065693430656934
+    },
+    {
+      "seed": 42,
+      "fold": "2021-22 -> 2020-21",
+      "model": "Frozen v4",
+      "eligible_queries": 300,
+      "mean_reciprocal_rank": 0.710701949500535,
+      "recall_at_1": 0.5866666666666667,
+      "recall_at_5": 0.8733333333333333
+    },
+    {
+      "seed": 42,
+      "fold": "2021-22 -> 2020-21",
+      "model": "Wider",
+      "eligible_queries": 300,
+      "mean_reciprocal_rank": 0.7139596851744445,
+      "recall_at_1": 0.5933333333333334,
+      "recall_at_5": 0.86
+    },
+    {
+      "seed": 42,
+      "fold": "2000-01 -> 1999-00",
+      "model": "Frozen v4",
+      "eligible_queries": 248,
+      "mean_reciprocal_rank": 0.6200553979731926,
+      "recall_at_1": 0.46774193548387094,
+      "recall_at_5": 0.8145161290322581
+    },
+    {
+      "seed": 42,
+      "fold": "2000-01 -> 1999-00",
+      "model": "Wider",
+      "eligible_queries": 248,
+      "mean_reciprocal_rank": 0.6580984567541106,
+      "recall_at_1": 0.5282258064516129,
+      "recall_at_5": 0.8185483870967742
+    },
+    {
+      "seed": 42,
+      "fold": "2001-02 -> 2000-01",
+      "model": "Frozen v4",
+      "eligible_queries": 248,
+      "mean_reciprocal_rank": 0.6052842423654529,
+      "recall_at_1": 0.4596774193548387,
+      "recall_at_5": 0.7983870967741935
+    },
+    {
+      "seed": 42,
+      "fold": "2001-02 -> 2000-01",
+      "model": "Wider",
+      "eligible_queries": 248,
+      "mean_reciprocal_rank": 0.6476472028432458,
+      "recall_at_1": 0.5201612903225806,
+      "recall_at_5": 0.8266129032258065
+    },
+    {
+      "seed": 42,
+      "fold": "2002-03 -> 2001-02",
+      "model": "Frozen v4",
+      "eligible_queries": 245,
+      "mean_reciprocal_rank": 0.6823866044635614,
+      "recall_at_1": 0.5387755102040817,
+      "recall_at_5": 0.8571428571428571
+    },
+    {
+      "seed": 42,
+      "fold": "2002-03 -> 2001-02",
+      "model": "Wider",
+      "eligible_queries": 245,
+      "mean_reciprocal_rank": 0.6871798882732926,
+      "recall_at_1": 0.5510204081632653,
+      "recall_at_5": 0.8571428571428571
+    },
+    {
+      "seed": 42,
+      "fold": "2004-05 -> 2003-04",
+      "model": "Frozen v4",
+      "eligible_queries": 257,
+      "mean_reciprocal_rank": 0.6360434958413057,
+      "recall_at_1": 0.5019455252918288,
+      "recall_at_5": 0.8093385214007782
+    },
+    {
+      "seed": 42,
+      "fold": "2004-05 -> 2003-04",
+      "model": "Wider",
+      "eligible_queries": 257,
+      "mean_reciprocal_rank": 0.6446552911144466,
+      "recall_at_1": 0.5097276264591439,
+      "recall_at_5": 0.8093385214007782
+    },
+    {
+      "seed": 42,
+      "fold": "2006-07 -> 2005-06",
+      "model": "Frozen v4",
+      "eligible_queries": 263,
+      "mean_reciprocal_rank": 0.6854844365432371,
+      "recall_at_1": 0.5703422053231939,
+      "recall_at_5": 0.844106463878327
+    },
+    {
+      "seed": 42,
+      "fold": "2006-07 -> 2005-06",
+      "model": "Wider",
+      "eligible_queries": 263,
+      "mean_reciprocal_rank": 0.6962556717704881,
+      "recall_at_1": 0.5779467680608364,
+      "recall_at_5": 0.8365019011406845
+    },
+    {
+      "seed": 42,
+      "fold": "2007-08 -> 2006-07",
+      "model": "Frozen v4",
+      "eligible_queries": 264,
+      "mean_reciprocal_rank": 0.6657037738339197,
+      "recall_at_1": 0.553030303030303,
+      "recall_at_5": 0.7916666666666666
+    },
+    {
+      "seed": 42,
+      "fold": "2007-08 -> 2006-07",
+      "model": "Wider",
+      "eligible_queries": 264,
+      "mean_reciprocal_rank": 0.6626014998704325,
+      "recall_at_1": 0.5454545454545454,
+      "recall_at_5": 0.8106060606060606
+    },
+    {
+      "seed": 42,
+      "fold": "2009-10 -> 2008-09",
+      "model": "Frozen v4",
+      "eligible_queries": 254,
+      "mean_reciprocal_rank": 0.709692780066886,
+      "recall_at_1": 0.5905511811023622,
+      "recall_at_5": 0.8661417322834646
+    },
+    {
+      "seed": 42,
+      "fold": "2009-10 -> 2008-09",
+      "model": "Wider",
+      "eligible_queries": 254,
+      "mean_reciprocal_rank": 0.7043598195052774,
+      "recall_at_1": 0.5787401574803149,
+      "recall_at_5": 0.8661417322834646
+    },
+    {
+      "seed": 42,
+      "fold": "2010-11 -> 2009-10",
+      "model": "Frozen v4",
+      "eligible_queries": 274,
+      "mean_reciprocal_rank": 0.6775424289786036,
+      "recall_at_1": 0.5766423357664233,
+      "recall_at_5": 0.7992700729927007
+    },
+    {
+      "seed": 42,
+      "fold": "2010-11 -> 2009-10",
+      "model": "Wider",
+      "eligible_queries": 274,
+      "mean_reciprocal_rank": 0.6843042888446399,
+      "recall_at_1": 0.5693430656934306,
+      "recall_at_5": 0.8284671532846716
+    },
+    {
+      "seed": 42,
+      "fold": "2012-13 -> 2011-12",
+      "model": "Frozen v4",
+      "eligible_queries": 252,
+      "mean_reciprocal_rank": 0.6940496494148437,
+      "recall_at_1": 0.5952380952380952,
+      "recall_at_5": 0.8055555555555556
+    },
+    {
+      "seed": 42,
+      "fold": "2012-13 -> 2011-12",
+      "model": "Wider",
+      "eligible_queries": 252,
+      "mean_reciprocal_rank": 0.6835983005629954,
+      "recall_at_1": 0.5634920634920635,
+      "recall_at_5": 0.8333333333333334
+    },
+    {
+      "seed": 42,
+      "fold": "2014-15 -> 2013-14",
+      "model": "Frozen v4",
+      "eligible_queries": 281,
+      "mean_reciprocal_rank": 0.7279174220835252,
+      "recall_at_1": 0.6156583629893239,
+      "recall_at_5": 0.8647686832740213
+    },
+    {
+      "seed": 42,
+      "fold": "2014-15 -> 2013-14",
+      "model": "Wider",
+      "eligible_queries": 281,
+      "mean_reciprocal_rank": 0.7350055728483149,
+      "recall_at_1": 0.6156583629893239,
+      "recall_at_5": 0.8896797153024911
+    },
+    {
+      "seed": 42,
+      "fold": "2015-16 -> 2014-15",
+      "model": "Frozen v4",
+      "eligible_queries": 288,
+      "mean_reciprocal_rank": 0.6406703572791317,
+      "recall_at_1": 0.5104166666666666,
+      "recall_at_5": 0.8229166666666666
+    },
+    {
+      "seed": 42,
+      "fold": "2015-16 -> 2014-15",
+      "model": "Wider",
+      "eligible_queries": 288,
+      "mean_reciprocal_rank": 0.6581567359424636,
+      "recall_at_1": 0.53125,
+      "recall_at_5": 0.8229166666666666
+    },
+    {
+      "seed": 42,
+      "fold": "2016-17 -> 2015-16",
+      "model": "Frozen v4",
+      "eligible_queries": 285,
+      "mean_reciprocal_rank": 0.7156002870556055,
+      "recall_at_1": 0.6,
+      "recall_at_5": 0.8456140350877193
+    },
+    {
+      "seed": 42,
+      "fold": "2016-17 -> 2015-16",
+      "model": "Wider",
+      "eligible_queries": 285,
+      "mean_reciprocal_rank": 0.7296868472424146,
+      "recall_at_1": 0.624561403508772,
+      "recall_at_5": 0.8596491228070176
+    },
+    {
+      "seed": 42,
+      "fold": "2019-20 -> 2018-19",
+      "model": "Frozen v4",
+      "eligible_queries": 265,
+      "mean_reciprocal_rank": 0.681102367052508,
+      "recall_at_1": 0.5660377358490566,
+      "recall_at_5": 0.8188679245283019
+    },
+    {
+      "seed": 42,
+      "fold": "2019-20 -> 2018-19",
+      "model": "Wider",
+      "eligible_queries": 265,
+      "mean_reciprocal_rank": 0.685150318200077,
+      "recall_at_1": 0.5773584905660377,
+      "recall_at_5": 0.8037735849056604
+    },
+    {
+      "seed": 42,
+      "fold": "2020-21 -> 2019-20",
+      "model": "Frozen v4",
+      "eligible_queries": 276,
+      "mean_reciprocal_rank": 0.6563787990607114,
+      "recall_at_1": 0.532608695652174,
+      "recall_at_5": 0.8043478260869565
+    },
+    {
+      "seed": 42,
+      "fold": "2020-21 -> 2019-20",
+      "model": "Wider",
+      "eligible_queries": 276,
+      "mean_reciprocal_rank": 0.6579834240127974,
+      "recall_at_1": 0.5398550724637681,
+      "recall_at_5": 0.8007246376811594
+    },
+    {
+      "seed": 73,
+      "fold": "1999-00 -> 1998-99",
+      "model": "Frozen v4",
+      "eligible_queries": 223,
+      "mean_reciprocal_rank": 0.61591795216171,
+      "recall_at_1": 0.49327354260089684,
+      "recall_at_5": 0.7757847533632287
+    },
+    {
+      "seed": 73,
+      "fold": "1999-00 -> 1998-99",
+      "model": "Wider",
+      "eligible_queries": 223,
+      "mean_reciprocal_rank": 0.6317447963289885,
+      "recall_at_1": 0.5067264573991032,
+      "recall_at_5": 0.7982062780269058
+    },
+    {
+      "seed": 73,
+      "fold": "2005-06 -> 2004-05",
+      "model": "Frozen v4",
+      "eligible_queries": 256,
+      "mean_reciprocal_rank": 0.6133587391139721,
+      "recall_at_1": 0.47265625,
+      "recall_at_5": 0.79296875
+    },
+    {
+      "seed": 73,
+      "fold": "2005-06 -> 2004-05",
+      "model": "Wider",
+      "eligible_queries": 256,
+      "mean_reciprocal_rank": 0.623514196059003,
+      "recall_at_1": 0.48046875,
+      "recall_at_5": 0.828125
+    },
+    {
+      "seed": 73,
+      "fold": "2011-12 -> 2010-11",
+      "model": "Frozen v4",
+      "eligible_queries": 257,
+      "mean_reciprocal_rank": 0.6826554787111822,
+      "recall_at_1": 0.5525291828793775,
+      "recall_at_5": 0.8715953307392996
+    },
+    {
+      "seed": 73,
+      "fold": "2011-12 -> 2010-11",
+      "model": "Wider",
+      "eligible_queries": 257,
+      "mean_reciprocal_rank": 0.7042226876456998,
+      "recall_at_1": 0.5719844357976653,
+      "recall_at_5": 0.8832684824902723
+    },
+    {
+      "seed": 73,
+      "fold": "2017-18 -> 2016-17",
+      "model": "Frozen v4",
+      "eligible_queries": 274,
+      "mean_reciprocal_rank": 0.6783115888974052,
+      "recall_at_1": 0.5547445255474452,
+      "recall_at_5": 0.8175182481751825
+    },
+    {
+      "seed": 73,
+      "fold": "2017-18 -> 2016-17",
+      "model": "Wider",
+      "eligible_queries": 274,
+      "mean_reciprocal_rank": 0.6878867327480893,
+      "recall_at_1": 0.5766423357664233,
+      "recall_at_5": 0.8175182481751825
+    },
+    {
+      "seed": 73,
+      "fold": "2021-22 -> 2020-21",
+      "model": "Frozen v4",
+      "eligible_queries": 300,
+      "mean_reciprocal_rank": 0.7060075887400847,
+      "recall_at_1": 0.5933333333333334,
+      "recall_at_5": 0.8633333333333333
+    },
+    {
+      "seed": 73,
+      "fold": "2021-22 -> 2020-21",
+      "model": "Wider",
+      "eligible_queries": 300,
+      "mean_reciprocal_rank": 0.7071750677405487,
+      "recall_at_1": 0.59,
+      "recall_at_5": 0.8666666666666667
+    },
+    {
+      "seed": 73,
+      "fold": "2000-01 -> 1999-00",
+      "model": "Frozen v4",
+      "eligible_queries": 248,
+      "mean_reciprocal_rank": 0.6323917799628783,
+      "recall_at_1": 0.4959677419354839,
+      "recall_at_5": 0.8064516129032258
+    },
+    {
+      "seed": 73,
+      "fold": "2000-01 -> 1999-00",
+      "model": "Wider",
+      "eligible_queries": 248,
+      "mean_reciprocal_rank": 0.6436078905807678,
+      "recall_at_1": 0.5120967741935484,
+      "recall_at_5": 0.8064516129032258
+    },
+    {
+      "seed": 73,
+      "fold": "2001-02 -> 2000-01",
+      "model": "Frozen v4",
+      "eligible_queries": 248,
+      "mean_reciprocal_rank": 0.6202302688440071,
+      "recall_at_1": 0.4798387096774194,
+      "recall_at_5": 0.7741935483870968
+    },
+    {
+      "seed": 73,
+      "fold": "2001-02 -> 2000-01",
+      "model": "Wider",
+      "eligible_queries": 248,
+      "mean_reciprocal_rank": 0.6337515225705185,
+      "recall_at_1": 0.4959677419354839,
+      "recall_at_5": 0.8064516129032258
+    },
+    {
+      "seed": 73,
+      "fold": "2002-03 -> 2001-02",
+      "model": "Frozen v4",
+      "eligible_queries": 245,
+      "mean_reciprocal_rank": 0.685746275909726,
+      "recall_at_1": 0.5469387755102041,
+      "recall_at_5": 0.8612244897959184
+    },
+    {
+      "seed": 73,
+      "fold": "2002-03 -> 2001-02",
+      "model": "Wider",
+      "eligible_queries": 245,
+      "mean_reciprocal_rank": 0.6921423372716146,
+      "recall_at_1": 0.5591836734693878,
+      "recall_at_5": 0.8530612244897959
+    },
+    {
+      "seed": 73,
+      "fold": "2004-05 -> 2003-04",
+      "model": "Frozen v4",
+      "eligible_queries": 257,
+      "mean_reciprocal_rank": 0.6365533977053576,
+      "recall_at_1": 0.5058365758754864,
+      "recall_at_5": 0.8210116731517509
+    },
+    {
+      "seed": 73,
+      "fold": "2004-05 -> 2003-04",
+      "model": "Wider",
+      "eligible_queries": 257,
+      "mean_reciprocal_rank": 0.6508817477343845,
+      "recall_at_1": 0.5252918287937743,
+      "recall_at_5": 0.8015564202334631
+    },
+    {
+      "seed": 73,
+      "fold": "2006-07 -> 2005-06",
+      "model": "Frozen v4",
+      "eligible_queries": 263,
+      "mean_reciprocal_rank": 0.6850652200075712,
+      "recall_at_1": 0.5627376425855514,
+      "recall_at_5": 0.8174904942965779
+    },
+    {
+      "seed": 73,
+      "fold": "2006-07 -> 2005-06",
+      "model": "Wider",
+      "eligible_queries": 263,
+      "mean_reciprocal_rank": 0.6793140628715012,
+      "recall_at_1": 0.5475285171102662,
+      "recall_at_5": 0.8288973384030418
+    },
+    {
+      "seed": 73,
+      "fold": "2007-08 -> 2006-07",
+      "model": "Frozen v4",
+      "eligible_queries": 264,
+      "mean_reciprocal_rank": 0.6661969365546745,
+      "recall_at_1": 0.5568181818181818,
+      "recall_at_5": 0.7992424242424242
+    },
+    {
+      "seed": 73,
+      "fold": "2007-08 -> 2006-07",
+      "model": "Wider",
+      "eligible_queries": 264,
+      "mean_reciprocal_rank": 0.6557613886297533,
+      "recall_at_1": 0.5416666666666666,
+      "recall_at_5": 0.803030303030303
+    },
+    {
+      "seed": 73,
+      "fold": "2009-10 -> 2008-09",
+      "model": "Frozen v4",
+      "eligible_queries": 254,
+      "mean_reciprocal_rank": 0.7090926295205348,
+      "recall_at_1": 0.5905511811023622,
+      "recall_at_5": 0.8543307086614174
+    },
+    {
+      "seed": 73,
+      "fold": "2009-10 -> 2008-09",
+      "model": "Wider",
+      "eligible_queries": 254,
+      "mean_reciprocal_rank": 0.7101993886044725,
+      "recall_at_1": 0.594488188976378,
+      "recall_at_5": 0.8622047244094488
+    },
+    {
+      "seed": 73,
+      "fold": "2010-11 -> 2009-10",
+      "model": "Frozen v4",
+      "eligible_queries": 274,
+      "mean_reciprocal_rank": 0.6649684632823317,
+      "recall_at_1": 0.551094890510949,
+      "recall_at_5": 0.7883211678832117
+    },
+    {
+      "seed": 73,
+      "fold": "2010-11 -> 2009-10",
+      "model": "Wider",
+      "eligible_queries": 274,
+      "mean_reciprocal_rank": 0.687399709670882,
+      "recall_at_1": 0.5802919708029197,
+      "recall_at_5": 0.8138686131386861
+    },
+    {
+      "seed": 73,
+      "fold": "2012-13 -> 2011-12",
+      "model": "Frozen v4",
+      "eligible_queries": 252,
+      "mean_reciprocal_rank": 0.6778273959696112,
+      "recall_at_1": 0.5634920634920635,
+      "recall_at_5": 0.8134920634920635
+    },
+    {
+      "seed": 73,
+      "fold": "2012-13 -> 2011-12",
+      "model": "Wider",
+      "eligible_queries": 252,
+      "mean_reciprocal_rank": 0.6870196778965674,
+      "recall_at_1": 0.5753968253968254,
+      "recall_at_5": 0.8214285714285714
+    },
+    {
+      "seed": 73,
+      "fold": "2014-15 -> 2013-14",
+      "model": "Frozen v4",
+      "eligible_queries": 281,
+      "mean_reciprocal_rank": 0.7127318915144866,
+      "recall_at_1": 0.5836298932384342,
+      "recall_at_5": 0.8576512455516014
+    },
+    {
+      "seed": 73,
+      "fold": "2014-15 -> 2013-14",
+      "model": "Wider",
+      "eligible_queries": 281,
+      "mean_reciprocal_rank": 0.7431627683158627,
+      "recall_at_1": 0.6334519572953736,
+      "recall_at_5": 0.8825622775800712
+    },
+    {
+      "seed": 73,
+      "fold": "2015-16 -> 2014-15",
+      "model": "Frozen v4",
+      "eligible_queries": 288,
+      "mean_reciprocal_rank": 0.6193346406925555,
+      "recall_at_1": 0.4756944444444444,
+      "recall_at_5": 0.7986111111111112
+    },
+    {
+      "seed": 73,
+      "fold": "2015-16 -> 2014-15",
+      "model": "Wider",
+      "eligible_queries": 288,
+      "mean_reciprocal_rank": 0.6516755408479755,
+      "recall_at_1": 0.5208333333333334,
+      "recall_at_5": 0.8263888888888888
+    },
+    {
+      "seed": 73,
+      "fold": "2016-17 -> 2015-16",
+      "model": "Frozen v4",
+      "eligible_queries": 285,
+      "mean_reciprocal_rank": 0.7271190651047487,
+      "recall_at_1": 0.624561403508772,
+      "recall_at_5": 0.8421052631578947
+    },
+    {
+      "seed": 73,
+      "fold": "2016-17 -> 2015-16",
+      "model": "Wider",
+      "eligible_queries": 285,
+      "mean_reciprocal_rank": 0.7380846432319588,
+      "recall_at_1": 0.6350877192982456,
+      "recall_at_5": 0.8666666666666667
+    },
+    {
+      "seed": 73,
+      "fold": "2019-20 -> 2018-19",
+      "model": "Frozen v4",
+      "eligible_queries": 265,
+      "mean_reciprocal_rank": 0.6776756253772176,
+      "recall_at_1": 0.5660377358490566,
+      "recall_at_5": 0.8188679245283019
+    },
+    {
+      "seed": 73,
+      "fold": "2019-20 -> 2018-19",
+      "model": "Wider",
+      "eligible_queries": 265,
+      "mean_reciprocal_rank": 0.6875285606123382,
+      "recall_at_1": 0.5811320754716981,
+      "recall_at_5": 0.8113207547169812
+    },
+    {
+      "seed": 73,
+      "fold": "2020-21 -> 2019-20",
+      "model": "Frozen v4",
+      "eligible_queries": 276,
+      "mean_reciprocal_rank": 0.6431420885068144,
+      "recall_at_1": 0.5144927536231884,
+      "recall_at_5": 0.8079710144927537
+    },
+    {
+      "seed": 73,
+      "fold": "2020-21 -> 2019-20",
+      "model": "Wider",
+      "eligible_queries": 276,
+      "mean_reciprocal_rank": 0.6602827048520847,
+      "recall_at_1": 0.5362318840579711,
+      "recall_at_5": 0.8260869565217391
+    },
+    {
+      "seed": 101,
+      "fold": "1999-00 -> 1998-99",
+      "model": "Frozen v4",
+      "eligible_queries": 223,
+      "mean_reciprocal_rank": 0.5805294175193132,
+      "recall_at_1": 0.43946188340807174,
+      "recall_at_5": 0.7443946188340808
+    },
+    {
+      "seed": 101,
+      "fold": "1999-00 -> 1998-99",
+      "model": "Wider",
+      "eligible_queries": 223,
+      "mean_reciprocal_rank": 0.6147015883108083,
+      "recall_at_1": 0.47533632286995514,
+      "recall_at_5": 0.7937219730941704
+    },
+    {
+      "seed": 101,
+      "fold": "2005-06 -> 2004-05",
+      "model": "Frozen v4",
+      "eligible_queries": 256,
+      "mean_reciprocal_rank": 0.6150373117767638,
+      "recall_at_1": 0.4765625,
+      "recall_at_5": 0.7890625
+    },
+    {
+      "seed": 101,
+      "fold": "2005-06 -> 2004-05",
+      "model": "Wider",
+      "eligible_queries": 256,
+      "mean_reciprocal_rank": 0.6330125599566689,
+      "recall_at_1": 0.5,
+      "recall_at_5": 0.78515625
+    },
+    {
+      "seed": 101,
+      "fold": "2011-12 -> 2010-11",
+      "model": "Frozen v4",
+      "eligible_queries": 257,
+      "mean_reciprocal_rank": 0.7052273949632218,
+      "recall_at_1": 0.5797665369649806,
+      "recall_at_5": 0.8521400778210116
+    },
+    {
+      "seed": 101,
+      "fold": "2011-12 -> 2010-11",
+      "model": "Wider",
+      "eligible_queries": 257,
+      "mean_reciprocal_rank": 0.717434566699832,
+      "recall_at_1": 0.5836575875486382,
+      "recall_at_5": 0.8715953307392996
+    },
+    {
+      "seed": 101,
+      "fold": "2017-18 -> 2016-17",
+      "model": "Frozen v4",
+      "eligible_queries": 274,
+      "mean_reciprocal_rank": 0.6849895753408739,
+      "recall_at_1": 0.5766423357664233,
+      "recall_at_5": 0.8211678832116789
+    },
+    {
+      "seed": 101,
+      "fold": "2017-18 -> 2016-17",
+      "model": "Wider",
+      "eligible_queries": 274,
+      "mean_reciprocal_rank": 0.6708773893799069,
+      "recall_at_1": 0.5620437956204379,
+      "recall_at_5": 0.8029197080291971
+    },
+    {
+      "seed": 101,
+      "fold": "2021-22 -> 2020-21",
+      "model": "Frozen v4",
+      "eligible_queries": 300,
+      "mean_reciprocal_rank": 0.6934782091431028,
+      "recall_at_1": 0.5666666666666667,
+      "recall_at_5": 0.86
+    },
+    {
+      "seed": 101,
+      "fold": "2021-22 -> 2020-21",
+      "model": "Wider",
+      "eligible_queries": 300,
+      "mean_reciprocal_rank": 0.7067350726004941,
+      "recall_at_1": 0.5966666666666667,
+      "recall_at_5": 0.8633333333333333
+    },
+    {
+      "seed": 101,
+      "fold": "2000-01 -> 1999-00",
+      "model": "Frozen v4",
+      "eligible_queries": 248,
+      "mean_reciprocal_rank": 0.6472836781862957,
+      "recall_at_1": 0.5161290322580645,
+      "recall_at_5": 0.8104838709677419
+    },
+    {
+      "seed": 101,
+      "fold": "2000-01 -> 1999-00",
+      "model": "Wider",
+      "eligible_queries": 248,
+      "mean_reciprocal_rank": 0.6457456660014609,
+      "recall_at_1": 0.5161290322580645,
+      "recall_at_5": 0.7903225806451613
+    },
+    {
+      "seed": 101,
+      "fold": "2001-02 -> 2000-01",
+      "model": "Frozen v4",
+      "eligible_queries": 248,
+      "mean_reciprocal_rank": 0.6207071386658579,
+      "recall_at_1": 0.47580645161290325,
+      "recall_at_5": 0.7983870967741935
+    },
+    {
+      "seed": 101,
+      "fold": "2001-02 -> 2000-01",
+      "model": "Wider",
+      "eligible_queries": 248,
+      "mean_reciprocal_rank": 0.6335646711201476,
+      "recall_at_1": 0.5040322580645161,
+      "recall_at_5": 0.8024193548387096
+    },
+    {
+      "seed": 101,
+      "fold": "2002-03 -> 2001-02",
+      "model": "Frozen v4",
+      "eligible_queries": 245,
+      "mean_reciprocal_rank": 0.6920273748547655,
+      "recall_at_1": 0.5591836734693878,
+      "recall_at_5": 0.8653061224489796
+    },
+    {
+      "seed": 101,
+      "fold": "2002-03 -> 2001-02",
+      "model": "Wider",
+      "eligible_queries": 245,
+      "mean_reciprocal_rank": 0.7121186261086138,
+      "recall_at_1": 0.5836734693877551,
+      "recall_at_5": 0.8571428571428571
+    },
+    {
+      "seed": 101,
+      "fold": "2004-05 -> 2003-04",
+      "model": "Frozen v4",
+      "eligible_queries": 257,
+      "mean_reciprocal_rank": 0.648228301579079,
+      "recall_at_1": 0.5214007782101168,
+      "recall_at_5": 0.8132295719844358
+    },
+    {
+      "seed": 101,
+      "fold": "2004-05 -> 2003-04",
+      "model": "Wider",
+      "eligible_queries": 257,
+      "mean_reciprocal_rank": 0.6399839018092321,
+      "recall_at_1": 0.5019455252918288,
+      "recall_at_5": 0.8093385214007782
+    },
+    {
+      "seed": 101,
+      "fold": "2006-07 -> 2005-06",
+      "model": "Frozen v4",
+      "eligible_queries": 263,
+      "mean_reciprocal_rank": 0.6928592309936331,
+      "recall_at_1": 0.5741444866920152,
+      "recall_at_5": 0.8326996197718631
+    },
+    {
+      "seed": 101,
+      "fold": "2006-07 -> 2005-06",
+      "model": "Wider",
+      "eligible_queries": 263,
+      "mean_reciprocal_rank": 0.699417819815522,
+      "recall_at_1": 0.5779467680608364,
+      "recall_at_5": 0.844106463878327
+    },
+    {
+      "seed": 101,
+      "fold": "2007-08 -> 2006-07",
+      "model": "Frozen v4",
+      "eligible_queries": 264,
+      "mean_reciprocal_rank": 0.6523894314941735,
+      "recall_at_1": 0.5265151515151515,
+      "recall_at_5": 0.7878787878787878
+    },
+    {
+      "seed": 101,
+      "fold": "2007-08 -> 2006-07",
+      "model": "Wider",
+      "eligible_queries": 264,
+      "mean_reciprocal_rank": 0.6719293322903761,
+      "recall_at_1": 0.5643939393939394,
+      "recall_at_5": 0.803030303030303
+    },
+    {
+      "seed": 101,
+      "fold": "2009-10 -> 2008-09",
+      "model": "Frozen v4",
+      "eligible_queries": 254,
+      "mean_reciprocal_rank": 0.7011286076810469,
+      "recall_at_1": 0.5787401574803149,
+      "recall_at_5": 0.8543307086614174
+    },
+    {
+      "seed": 101,
+      "fold": "2009-10 -> 2008-09",
+      "model": "Wider",
+      "eligible_queries": 254,
+      "mean_reciprocal_rank": 0.7039101401260061,
+      "recall_at_1": 0.5708661417322834,
+      "recall_at_5": 0.8700787401574803
+    },
+    {
+      "seed": 101,
+      "fold": "2010-11 -> 2009-10",
+      "model": "Frozen v4",
+      "eligible_queries": 274,
+      "mean_reciprocal_rank": 0.6695073952764673,
+      "recall_at_1": 0.5583941605839416,
+      "recall_at_5": 0.7992700729927007
+    },
+    {
+      "seed": 101,
+      "fold": "2010-11 -> 2009-10",
+      "model": "Wider",
+      "eligible_queries": 274,
+      "mean_reciprocal_rank": 0.691643791561922,
+      "recall_at_1": 0.5875912408759124,
+      "recall_at_5": 0.8175182481751825
+    },
+    {
+      "seed": 101,
+      "fold": "2012-13 -> 2011-12",
+      "model": "Frozen v4",
+      "eligible_queries": 252,
+      "mean_reciprocal_rank": 0.680615108192022,
+      "recall_at_1": 0.5714285714285714,
+      "recall_at_5": 0.7896825396825397
+    },
+    {
+      "seed": 101,
+      "fold": "2012-13 -> 2011-12",
+      "model": "Wider",
+      "eligible_queries": 252,
+      "mean_reciprocal_rank": 0.6897671944621105,
+      "recall_at_1": 0.5793650793650794,
+      "recall_at_5": 0.8174603174603174
+    },
+    {
+      "seed": 101,
+      "fold": "2014-15 -> 2013-14",
+      "model": "Frozen v4",
+      "eligible_queries": 281,
+      "mean_reciprocal_rank": 0.7175204842832935,
+      "recall_at_1": 0.597864768683274,
+      "recall_at_5": 0.8754448398576512
+    },
+    {
+      "seed": 101,
+      "fold": "2014-15 -> 2013-14",
+      "model": "Wider",
+      "eligible_queries": 281,
+      "mean_reciprocal_rank": 0.7424344329169283,
+      "recall_at_1": 0.6334519572953736,
+      "recall_at_5": 0.8683274021352313
+    },
+    {
+      "seed": 101,
+      "fold": "2015-16 -> 2014-15",
+      "model": "Frozen v4",
+      "eligible_queries": 288,
+      "mean_reciprocal_rank": 0.6475222338607174,
+      "recall_at_1": 0.5173611111111112,
+      "recall_at_5": 0.8333333333333334
+    },
+    {
+      "seed": 101,
+      "fold": "2015-16 -> 2014-15",
+      "model": "Wider",
+      "eligible_queries": 288,
+      "mean_reciprocal_rank": 0.629984068656803,
+      "recall_at_1": 0.4826388888888889,
+      "recall_at_5": 0.7986111111111112
+    },
+    {
+      "seed": 101,
+      "fold": "2016-17 -> 2015-16",
+      "model": "Frozen v4",
+      "eligible_queries": 285,
+      "mean_reciprocal_rank": 0.7260221050321263,
+      "recall_at_1": 0.6140350877192983,
+      "recall_at_5": 0.8596491228070176
+    },
+    {
+      "seed": 101,
+      "fold": "2016-17 -> 2015-16",
+      "model": "Wider",
+      "eligible_queries": 285,
+      "mean_reciprocal_rank": 0.7304685035885238,
+      "recall_at_1": 0.6280701754385964,
+      "recall_at_5": 0.8771929824561403
+    },
+    {
+      "seed": 101,
+      "fold": "2019-20 -> 2018-19",
+      "model": "Frozen v4",
+      "eligible_queries": 265,
+      "mean_reciprocal_rank": 0.683180533672743,
+      "recall_at_1": 0.5773584905660377,
+      "recall_at_5": 0.8188679245283019
+    },
+    {
+      "seed": 101,
+      "fold": "2019-20 -> 2018-19",
+      "model": "Wider",
+      "eligible_queries": 265,
+      "mean_reciprocal_rank": 0.6794932361594163,
+      "recall_at_1": 0.5622641509433962,
+      "recall_at_5": 0.8226415094339623
+    },
+    {
+      "seed": 101,
+      "fold": "2020-21 -> 2019-20",
+      "model": "Frozen v4",
+      "eligible_queries": 276,
+      "mean_reciprocal_rank": 0.6604793682115815,
+      "recall_at_1": 0.5398550724637681,
+      "recall_at_5": 0.8079710144927537
+    },
+    {
+      "seed": 101,
+      "fold": "2020-21 -> 2019-20",
+      "model": "Wider",
+      "eligible_queries": 276,
+      "mean_reciprocal_rank": 0.6665142503395788,
+      "recall_at_1": 0.5434782608695652,
+      "recall_at_5": 0.8079710144927537
+    }
+  ]
+}

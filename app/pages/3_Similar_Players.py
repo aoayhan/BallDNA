@@ -134,7 +134,7 @@ def _load_siamese_attribution_artifacts(path: str) -> dict:
 
 @st.cache_data(show_spinner=False)
 def _load_siamese_evaluation(root: str) -> dict | None:
-    path = settings.root_dir / "models/play_style/siamese_tabular_v4_summary.json"
+    path = settings.root_dir / "models/play_style/siamese_tabular_v5_summary.json"
     return json.loads(path.read_text(encoding="utf-8")) if path.exists() else None
 
 
@@ -248,7 +248,7 @@ if model_mode == "Trained Player DNA":
     temporal_artifact = _load_temporal_component(str(style_root))
     temporal_evaluation = _load_temporal_evaluation(str(style_root))
     siamese_embeddings = _load_siamese_embeddings(str(style_root))
-    attribution_path = settings.root_dir / "models/play_style/siamese_tabular_v4_inference.npz"
+    attribution_path = settings.root_dir / "models/play_style/siamese_tabular_v5_inference.npz"
     siamese_attribution_artifacts = (
         _load_siamese_attribution_artifacts(str(attribution_path))
         if attribution_path.exists()
@@ -881,9 +881,13 @@ if model_mode == "Trained Player DNA":
             render_copyable_table(promoted_evidence)
         if siamese_active and siamese_evaluation:
             siamese_evidence = pd.DataFrame([
-                {"evaluation_set": "19 chronological holdouts", **values}
+                {
+                    "evaluation_set": "19 chronological holdouts",
+                    "model": model.replace("_", " ").title(),
+                    **values,
+                }
                 for model, values in siamese_evaluation["all_19_holdouts"].items()
-            ]).assign(model=["Stable Siamese", "Coverage-aware ensemble"])
+            ])
             st.markdown("**Promoted Siamese component · retrieval evidence**")
             render_copyable_table(siamese_evidence)
         st.markdown(

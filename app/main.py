@@ -16,7 +16,7 @@ if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
 DATA = ROOT / "data" / "historical"
-MODEL = ROOT / "models" / "play_style" / "siamese_tabular_v4_inference.npz"
+MODEL = ROOT / "models" / "play_style" / "siamese_tabular_v5_inference.npz"
 LEGAL = ROOT / "LEGAL.md"
 
 

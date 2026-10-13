@@ -1,0 +1,83 @@
+{
+  "created_at": "2026-10-13T11:08:41+00:00",
+  "model_id": "siamese-tabular-v5-wider",
+  "status": "promoted_broad_offense_component",
+  "production_changed": true,
+  "architecture": "shared 128 -> 64 MLPs with 32-dimensional L2-normalized embeddings",
+  "objective": "Multi-positive supervised contrastive InfoNCE",
+  "positive_pairs": "Adjacent eligible seasons and stochastic feature views",
+  "stable_feature_count": 15,
+  "detailed_feature_count": 18,
+  "detail_coverage_start": "2007-08",
+  "input_exclusions": [
+    "player identity",
+    "player name",
+    "team",
+    "position",
+    "height",
+    "weight",
+    "shooting efficiency",
+    "DARKO impact"
+  ],
+  "selected_embedding_dimensions": 32,
+  "selected_temperature": 0.07,
+  "selected_detail_weight": 0.5,
+  "evaluation_protocol": "five seeds across 19 chronological holdout folds",
+  "all_19_holdouts": {
+    "coverage_aware_ensemble": {
+      "mean_reciprocal_rank": 0.6783519601337209,
+      "recall_at_1": 0.5564299357233211,
+      "recall_at_5": 0.8291072109409923
+    }
+  },
+  "paired_fold_evidence": {
+    "mean_reciprocal_rank": {
+      "mean_delta": 0.010436852429780848,
+      "fold_wins": 19,
+      "fold_ties": 0,
+      "fold_losses": 0,
+      "fold_bootstrap_95_percent_interval": [
+        0.0072392897524801185,
+        0.013910935493129712
+      ]
+    },
+    "recall_at_1": {
+      "mean_delta": 0.011699313429399918,
+      "fold_wins": 16,
+      "fold_ties": 0,
+      "fold_losses": 3,
+      "fold_bootstrap_95_percent_interval": [
+        0.007274417211124249,
+        0.016286535765898686
+      ]
+    },
+    "recall_at_5": {
+      "mean_delta": 0.008409974482115255,
+      "fold_wins": 15,
+      "fold_ties": 0,
+      "fold_losses": 4,
+      "fold_bootstrap_95_percent_interval": [
+        0.003727116424347826,
+        0.01376848801654953
+      ]
+    }
+  },
+  "latest_fold_seed_summary": {
+    "wider_mean": {
+      "mean_reciprocal_rank": 0.736052074242075,
+      "recall_at_1": 0.6364285714285713,
+      "recall_at_5": 0.8614285714285714
+    },
+    "frozen_v4_mean": {
+      "mean_reciprocal_rank": 0.7333925428,
+      "recall_at_1": 0.63714285714,
+      "recall_at_5": 0.8557142857200001
+    },
+    "wider_seed_standard_deviation": {
+      "mean_reciprocal_rank": 0.012092268649679048,
+      "recall_at_1": 0.019298937265866116,
+      "recall_at_5": 0.005868455973269674
+    }
+  },
+  "promotion_gate_pass": true
+}

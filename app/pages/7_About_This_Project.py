@@ -110,7 +110,7 @@ with right:
     )
 
 siamese = _read_json(
-    settings.root_dir / "models/play_style/siamese_tabular_v4_summary.json"
+    settings.root_dir / "models/play_style/siamese_tabular_v5_summary.json"
 )
 if siamese:
     detail_weight = siamese.get("selected_detail_weight", 0.50)
@@ -138,10 +138,9 @@ if siamese.get("all_19_holdouts"):
         "retained as simpler baselines."
     )
     st.caption(
-        f"The stable encoder achieved {siamese['all_19_holdouts']['stable_siamese']['mean_reciprocal_rank']:.3f} "
-        f"MRR before coverage-aware detail improved it to {best['mean_reciprocal_rank']:.3f}. "
-        "Split-season, bootstrap-stability, unseen-player, metadata-invariance, and permutation-null "
-        "checks were run before promotion."
+        f"The wider coverage-aware encoder achieved {best['mean_reciprocal_rank']:.3f} MRR "
+        "across five random seeds and 19 chronological folds. Split-season, bootstrap-stability, "
+        "unseen-player, metadata-invariance, and permutation-null checks were run before promotion."
     )
 
 metadata = get_data_metadata()

@@ -1,0 +1,744 @@
+{
+  "created_at": "2026-10-13T09:29:08+00:00",
+  "model_id": "siamese-wider-v1-promotion-gate",
+  "production_changed": false,
+  "architecture": "shared 128 -> 64 MLP with 32-dimensional normalized embeddings",
+  "automatic_gates": {
+    "seed_mean_mrr_beats_v4": true,
+    "seed_mean_recall_at_1_beats_v4": false,
+    "split_mrr_within_one_point": true,
+    "bootstrap_cosine_within_one_point": true,
+    "unseen_mrr_within_one_point": true,
+    "no_forbidden_metadata": true,
+    "metadata_perturbation_is_zero": true,
+    "held_out_behavior_at_least_four_of_five_within_five_percent": true
+  },
+  "automatic_gate_pass": false,
+  "promotion_decision": "not_promoted",
+  "qualitative_review_required": true,
+  "seed_stability": [
+    {
+      "seed": 7,
+      "eligible_queries": 280,
+      "mean_reciprocal_rank": 0.7517012300549141,
+      "recall_at_1": 0.6607142857142857,
+      "recall_at_5": 0.8642857142857143
+    },
+    {
+      "seed": 23,
+      "eligible_queries": 280,
+      "mean_reciprocal_rank": 0.7254425957954648,
+      "recall_at_1": 0.625,
+      "recall_at_5": 0.8571428571428571
+    },
+    {
+      "seed": 42,
+      "eligible_queries": 280,
+      "mean_reciprocal_rank": 0.7423429822068559,
+      "recall_at_1": 0.6464285714285715,
+      "recall_at_5": 0.8642857142857143
+    },
+    {
+      "seed": 73,
+      "eligible_queries": 280,
+      "mean_reciprocal_rank": 0.7382502454706645,
+      "recall_at_1": 0.6392857142857142,
+      "recall_at_5": 0.8678571428571429
+    },
+    {
+      "seed": 101,
+      "eligible_queries": 280,
+      "mean_reciprocal_rank": 0.7225233176824758,
+      "recall_at_1": 0.6107142857142858,
+      "recall_at_5": 0.8535714285714285
+    }
+  ],
+  "seed_summary": {
+    "wider_mean": {
+      "mean_reciprocal_rank": 0.736052074242075,
+      "recall_at_1": 0.6364285714285713,
+      "recall_at_5": 0.8614285714285714
+    },
+    "frozen_v4_mean": {
+      "mean_reciprocal_rank": 0.7333925428,
+      "recall_at_1": 0.63714285714,
+      "recall_at_5": 0.8557142857200001
+    },
+    "wider_seed_standard_deviation": {
+      "mean_reciprocal_rank": 0.012092268649679048,
+      "recall_at_1": 0.019298937265866116,
+      "recall_at_5": 0.005868455973269674
+    }
+  },
+  "split_season": [
+    {
+      "season": "1997-98",
+      "eligible_queries": 292,
+      "mean_reciprocal_rank": 0.7394564162009505,
+      "recall_at_1": 0.636986301369863,
+      "recall_at_5": 0.8732876712328768
+    },
+    {
+      "season": "2002-03",
+      "eligible_queries": 294,
+      "mean_reciprocal_rank": 0.7595447593717011,
+      "recall_at_1": 0.6496598639455783,
+      "recall_at_5": 0.9081632653061225
+    },
+    {
+      "season": "2007-08",
+      "eligible_queries": 300,
+      "mean_reciprocal_rank": 0.7530219699890752,
+      "recall_at_1": 0.6266666666666667,
+      "recall_at_5": 0.9066666666666666
+    },
+    {
+      "season": "2012-13",
+      "eligible_queries": 315,
+      "mean_reciprocal_rank": 0.7658399436329556,
+      "recall_at_1": 0.6666666666666666,
+      "recall_at_5": 0.8888888888888888
+    },
+    {
+      "season": "2017-18",
+      "eligible_queries": 337,
+      "mean_reciprocal_rank": 0.7585673242153707,
+      "recall_at_1": 0.655786350148368,
+      "recall_at_5": 0.8783382789317508
+    },
+    {
+      "season": "2022-23",
+      "eligible_queries": 345,
+      "mean_reciprocal_rank": 0.758205533484716,
+      "recall_at_1": 0.6695652173913044,
+      "recall_at_5": 0.8608695652173913
+    },
+    {
+      "season": "2024-25",
+      "eligible_queries": 342,
+      "mean_reciprocal_rank": 0.7323471068999676,
+      "recall_at_1": 0.6140350877192983,
+      "recall_at_5": 0.8713450292397661
+    },
+    {
+      "season": "2025-26",
+      "eligible_queries": 357,
+      "mean_reciprocal_rank": 0.725341571477482,
+      "recall_at_1": 0.6330532212885154,
+      "recall_at_5": 0.834733893557423
+    }
+  ],
+  "split_season_summary": {
+    "wider_mean": {
+      "mean_reciprocal_rank": 0.7490405781590272,
+      "recall_at_1": 0.6440524218995326,
+      "recall_at_5": 0.8777866573801107
+    },
+    "frozen_v4_mean": {
+      "mean_reciprocal_rank": 0.7415843717302728,
+      "recall_at_1": 0.635234586446908,
+      "recall_at_5": 0.87676386564367
+    }
+  },
+  "bootstrap": {
+    "wider": {
+      "mean_embedding_cosine": 0.9700557441386913,
+      "p10_embedding_cosine": 0.9394504777498867,
+      "mean_top_10_neighbor_jaccard": 0.5184457255434245,
+      "p10_top_10_neighbor_jaccard": 0.3333333333333333
+    },
+    "frozen_v4": {
+      "model": "Coverage-aware Siamese",
+      "mean_embedding_cosine": 0.9732470100194083,
+      "p10_embedding_cosine": 0.9461460476210659,
+      "mean_top_10_neighbor_jaccard": 0.5168453956890008,
+      "p10_top_10_neighbor_jaccard": 0.3333333333333333
+    }
+  },
+  "shortcut_audit": {
+    "forbidden_input_features": [],
+    "metadata_perturbation_max_abs_delta": 0.0,
+    "latest_test_by_training_exposure": {
+      "seen": {
+        "eligible_queries": 233,
+        "mean_reciprocal_rank": 0.7621614784945949,
+        "recall_at_1": 0.6652360515021459,
+        "recall_at_5": 0.8884120171673819
+      },
+      "unseen": {
+        "eligible_queries": 47,
+        "mean_reciprocal_rank": 0.6440938410357249,
+        "recall_at_1": 0.5531914893617021,
+        "recall_at_5": 0.7446808510638298
+      }
+    },
+    "permuted_identity_null_mrr_mean": 0.018210881138033704,
+    "frozen_v4_latest_test_by_training_exposure": {
+      "seen": {
+        "eligible_queries": 233,
+        "mean_reciprocal_rank": 0.753851315762764,
+        "recall_at_1": 0.6609442060085837,
+        "recall_at_5": 0.8884120171673819
+      },
+      "unseen": {
+        "eligible_queries": 47,
+        "mean_reciprocal_rank": 0.6215109121501599,
+        "recall_at_1": 0.5106382978723404,
+        "recall_at_5": 0.723404255319149
+      }
+    }
+  },
+  "held_out_behavior": [
+    {
+      "target": "rim_frequency",
+      "eligible_rows": 361,
+      "mae": 0.03668163214620128,
+      "normalized_mae": 0.19985380180464662,
+      "r2": 0.9334658503078432,
+      "mean_baseline_mae": 0.14349046960213246
+    },
+    {
+      "target": "free_throw_attempt_rate",
+      "eligible_rows": 361,
+      "mae": 0.06159630385210744,
+      "normalized_mae": 0.5789857217037069,
+      "r2": 0.4585379905442992,
+      "mean_baseline_mae": 0.08476225200407737
+    },
+    {
+      "target": "assists_per_36",
+      "eligible_rows": 361,
+      "mae": 0.9362164204385957,
+      "normalized_mae": 0.4799527475271402,
+      "r2": 0.5581862916523563,
+      "mean_baseline_mae": 1.5679509212550045
+    },
+    {
+      "target": "offensive_rebounds_per_36",
+      "eligible_rows": 361,
+      "mae": 0.4601784585740232,
+      "normalized_mae": 0.36766129752553756,
+      "r2": 0.7335782283742198,
+      "mean_baseline_mae": 0.9614935467503395
+    },
+    {
+      "target": "average_shot_distance",
+      "eligible_rows": 361,
+      "mae": 0.8931148098106179,
+      "normalized_mae": 0.1906228971824982,
+      "r2": 0.9400791800528927,
+      "mean_baseline_mae": 3.674953759722432
+    }
+  ],
+  "held_out_behavior_summary": {
+    "targets_improved": 1,
+    "targets_within_five_percent": 5,
+    "normalized_mae_ratio_by_target": {
+      "rim_frequency": 1.0297786877918402,
+      "free_throw_attempt_rate": 1.000610771832438,
+      "assists_per_36": 0.9943633773343636,
+      "offensive_rebounds_per_36": 1.0006320726053042,
+      "average_shot_distance": 1.017687870258887
+    }
+  },
+  "score_calibration": {
+    "frozen_v4": {
+      "different_player_quantiles": {
+        "0.5": 0.5752928256988525,
+        "0.75": 0.6478825211524963,
+        "0.9": 0.7087181210517883,
+        "0.95": 0.7427013516426086,
+        "0.99": 0.7994365096092224
+      },
+      "nearest_other_quantiles": {
+        "0.1": 0.7911086082458496,
+        "0.5": 0.8320410251617432,
+        "0.9": 0.8712896108627319
+      },
+      "shares_above_threshold": {
+        "0.8": 0.009821428571428571,
+        "0.85": 0.0012301587301587302,
+        "0.9": 4.96031746031746e-05,
+        "0.94": 0.0
+      }
+    },
+    "wider": {
+      "different_player_quantiles": {
+        "0.5": 0.5586642026901245,
+        "0.75": 0.6302965879440308,
+        "0.9": 0.6934434175491333,
+        "0.95": 0.7291090488433838,
+        "0.99": 0.7880568504333496
+      },
+      "nearest_other_quantiles": {
+        "0.1": 0.7780389785766602,
+        "0.5": 0.8216274976730347,
+        "0.9": 0.865821897983551
+      },
+      "shares_above_threshold": {
+        "0.8": 0.006974206349206349,
+        "0.85": 0.0007341269841269841,
+        "0.9": 1.984126984126984e-05,
+        "0.94": 0.0
+      }
+    }
+  },
+  "representative_player_checks": {
+    "Shai Gilgeous-Alexander": {
+      "season": "2025-26",
+      "frozen_v4": [
+        {
+          "player_name": "Allen Iverson",
+          "season": "2005-06",
+          "similarity_score": 0.8384281396865845
+        },
+        {
+          "player_name": "De'Aaron Fox",
+          "season": "2020-21",
+          "similarity_score": 0.8238734006881714
+        },
+        {
+          "player_name": "Chris Paul",
+          "season": "2006-07",
+          "similarity_score": 0.7919918298721313
+        },
+        {
+          "player_name": "DeMar DeRozan",
+          "season": "2020-21",
+          "similarity_score": 0.7910966873168945
+        },
+        {
+          "player_name": "Devin Booker",
+          "season": "2025-26",
+          "similarity_score": 0.789344310760498
+        }
+      ],
+      "wider": [
+        {
+          "player_name": "De'Aaron Fox",
+          "season": "2020-21",
+          "similarity_score": 0.812933623790741
+        },
+        {
+          "player_name": "Allen Iverson",
+          "season": "2005-06",
+          "similarity_score": 0.8067330121994019
+        },
+        {
+          "player_name": "Stephon Marbury",
+          "season": "2000-01",
+          "similarity_score": 0.7803934812545776
+        },
+        {
+          "player_name": "Lou Williams",
+          "season": "2018-19",
+          "similarity_score": 0.7779428958892822
+        },
+        {
+          "player_name": "Devin Booker",
+          "season": "2025-26",
+          "similarity_score": 0.7707681655883789
+        }
+      ]
+    },
+    "Stephen Curry": {
+      "season": "2024-25",
+      "frozen_v4": [
+        {
+          "player_name": "Bones Hyland",
+          "season": "2021-22",
+          "similarity_score": 0.8798191547393799
+        },
+        {
+          "player_name": "Jordan Poole",
+          "season": "2024-25",
+          "similarity_score": 0.8657296299934387
+        },
+        {
+          "player_name": "D'Angelo Russell",
+          "season": "2021-22",
+          "similarity_score": 0.844933807849884
+        },
+        {
+          "player_name": "Devonte' Graham",
+          "season": "2019-20",
+          "similarity_score": 0.8361638784408569
+        },
+        {
+          "player_name": "Kemba Walker",
+          "season": "2019-20",
+          "similarity_score": 0.8294011354446411
+        }
+      ],
+      "wider": [
+        {
+          "player_name": "Jordan Poole",
+          "season": "2024-25",
+          "similarity_score": 0.8614238500595093
+        },
+        {
+          "player_name": "Bones Hyland",
+          "season": "2021-22",
+          "similarity_score": 0.8554237484931946
+        },
+        {
+          "player_name": "Devonte' Graham",
+          "season": "2019-20",
+          "similarity_score": 0.8348832130432129
+        },
+        {
+          "player_name": "LaMelo Ball",
+          "season": "2022-23",
+          "similarity_score": 0.8293961882591248
+        },
+        {
+          "player_name": "D'Angelo Russell",
+          "season": "2021-22",
+          "similarity_score": 0.8287128210067749
+        }
+      ]
+    },
+    "Nikola Jokic": {
+      "season": "2024-25",
+      "frozen_v4": [
+        {
+          "player_name": "Alperen Sengun",
+          "season": "2024-25",
+          "similarity_score": 0.8769049644470215
+        },
+        {
+          "player_name": "Zach Collins",
+          "season": "2023-24",
+          "similarity_score": 0.789763331413269
+        },
+        {
+          "player_name": "Jusuf Nurkic",
+          "season": "2025-26",
+          "similarity_score": 0.787667989730835
+        },
+        {
+          "player_name": "Jonas Valanciunas",
+          "season": "2024-25",
+          "similarity_score": 0.7874764204025269
+        },
+        {
+          "player_name": "Cade Cunningham",
+          "season": "2024-25",
+          "similarity_score": 0.7810718417167664
+        }
+      ],
+      "wider": [
+        {
+          "player_name": "Alperen Sengun",
+          "season": "2024-25",
+          "similarity_score": 0.8401824235916138
+        },
+        {
+          "player_name": "Cade Cunningham",
+          "season": "2024-25",
+          "similarity_score": 0.7786386609077454
+        },
+        {
+          "player_name": "Zach Collins",
+          "season": "2023-24",
+          "similarity_score": 0.7741860151290894
+        },
+        {
+          "player_name": "Jusuf Nurkic",
+          "season": "2025-26",
+          "similarity_score": 0.7660554647445679
+        },
+        {
+          "player_name": "Scottie Barnes",
+          "season": "2023-24",
+          "similarity_score": 0.7587883472442627
+        }
+      ]
+    },
+    "LeBron James": {
+      "season": "2018-19",
+      "frozen_v4": [
+        {
+          "player_name": "Giannis Antetokounmpo",
+          "season": "2020-21",
+          "similarity_score": 0.8141771554946899
+        },
+        {
+          "player_name": "Bradley Beal",
+          "season": "2019-20",
+          "similarity_score": 0.8024716377258301
+        },
+        {
+          "player_name": "Dwyane Wade",
+          "season": "2009-10",
+          "similarity_score": 0.7962333559989929
+        },
+        {
+          "player_name": "Russell Westbrook",
+          "season": "2013-14",
+          "similarity_score": 0.7951974272727966
+        },
+        {
+          "player_name": "John Wall",
+          "season": "2016-17",
+          "similarity_score": 0.7930662631988525
+        }
+      ],
+      "wider": [
+        {
+          "player_name": "Dwyane Wade",
+          "season": "2009-10",
+          "similarity_score": 0.8114488124847412
+        },
+        {
+          "player_name": "Giannis Antetokounmpo",
+          "season": "2020-21",
+          "similarity_score": 0.8108929395675659
+        },
+        {
+          "player_name": "Russell Westbrook",
+          "season": "2015-16",
+          "similarity_score": 0.7972116470336914
+        },
+        {
+          "player_name": "Baron Davis",
+          "season": "2006-07",
+          "similarity_score": 0.7940965890884399
+        },
+        {
+          "player_name": "John Wall",
+          "season": "2016-17",
+          "similarity_score": 0.7848885655403137
+        }
+      ]
+    },
+    "Shaquille O'Neal": {
+      "season": "2001-02",
+      "frozen_v4": [
+        {
+          "player_name": "Bam Adebayo",
+          "season": "2021-22",
+          "similarity_score": 0.8411425948143005
+        },
+        {
+          "player_name": "Jarrett Allen",
+          "season": "2025-26",
+          "similarity_score": 0.8391585946083069
+        },
+        {
+          "player_name": "Pau Gasol",
+          "season": "2003-04",
+          "similarity_score": 0.8263524770736694
+        },
+        {
+          "player_name": "Anthony Davis",
+          "season": "2022-23",
+          "similarity_score": 0.8253366947174072
+        },
+        {
+          "player_name": "Jalen Duren",
+          "season": "2025-26",
+          "similarity_score": 0.8183119297027588
+        }
+      ],
+      "wider": [
+        {
+          "player_name": "Bam Adebayo",
+          "season": "2021-22",
+          "similarity_score": 0.8219814300537109
+        },
+        {
+          "player_name": "Jarrett Allen",
+          "season": "2025-26",
+          "similarity_score": 0.8135419487953186
+        },
+        {
+          "player_name": "Montrezl Harrell",
+          "season": "2018-19",
+          "similarity_score": 0.8047221899032593
+        },
+        {
+          "player_name": "Anthony Davis",
+          "season": "2022-23",
+          "similarity_score": 0.7905786037445068
+        },
+        {
+          "player_name": "Festus Ezeli",
+          "season": "2015-16",
+          "similarity_score": 0.7903705835342407
+        }
+      ]
+    },
+    "JJ Redick": {
+      "season": "2009-10",
+      "frozen_v4": [
+        {
+          "player_name": "Reggie Miller",
+          "season": "2002-03",
+          "similarity_score": 0.9597967863082886
+        },
+        {
+          "player_name": "Marco Belinelli",
+          "season": "2016-17",
+          "similarity_score": 0.8599606156349182
+        },
+        {
+          "player_name": "Derek Anderson",
+          "season": "2005-06",
+          "similarity_score": 0.8512417078018188
+        },
+        {
+          "player_name": "Chauncey Billups",
+          "season": "2002-03",
+          "similarity_score": 0.8487448692321777
+        },
+        {
+          "player_name": "DeShawn Stevenson",
+          "season": "2007-08",
+          "similarity_score": 0.8464054465293884
+        }
+      ],
+      "wider": [
+        {
+          "player_name": "Reggie Miller",
+          "season": "2002-03",
+          "similarity_score": 0.9567567110061646
+        },
+        {
+          "player_name": "Marco Belinelli",
+          "season": "2016-17",
+          "similarity_score": 0.8548765182495117
+        },
+        {
+          "player_name": "David Wesley",
+          "season": "2005-06",
+          "similarity_score": 0.8367409706115723
+        },
+        {
+          "player_name": "DeShawn Stevenson",
+          "season": "2007-08",
+          "similarity_score": 0.8366129398345947
+        },
+        {
+          "player_name": "Fred Hoiberg",
+          "season": "1999-00",
+          "similarity_score": 0.8310658931732178
+        }
+      ]
+    },
+    "Luka Doncic": {
+      "season": "2024-25",
+      "frozen_v4": [
+        {
+          "player_name": "James Harden",
+          "season": "2024-25",
+          "similarity_score": 0.8815274238586426
+        },
+        {
+          "player_name": "Trae Young",
+          "season": "2021-22",
+          "similarity_score": 0.8613532185554504
+        },
+        {
+          "player_name": "Cam Thomas",
+          "season": "2024-25",
+          "similarity_score": 0.8262026906013489
+        },
+        {
+          "player_name": "Damian Lillard",
+          "season": "2024-25",
+          "similarity_score": 0.8100895881652832
+        },
+        {
+          "player_name": "Donovan Mitchell",
+          "season": "2025-26",
+          "similarity_score": 0.8062233924865723
+        }
+      ],
+      "wider": [
+        {
+          "player_name": "James Harden",
+          "season": "2024-25",
+          "similarity_score": 0.8835875988006592
+        },
+        {
+          "player_name": "Trae Young",
+          "season": "2021-22",
+          "similarity_score": 0.8771495819091797
+        },
+        {
+          "player_name": "Cam Thomas",
+          "season": "2024-25",
+          "similarity_score": 0.8188802003860474
+        },
+        {
+          "player_name": "Damian Lillard",
+          "season": "2024-25",
+          "similarity_score": 0.812515377998352
+        },
+        {
+          "player_name": "Donovan Mitchell",
+          "season": "2025-26",
+          "similarity_score": 0.8093245029449463
+        }
+      ]
+    },
+    "Rudy Gobert": {
+      "season": "2024-25",
+      "frozen_v4": [
+        {
+          "player_name": "Jaxson Hayes",
+          "season": "2025-26",
+          "similarity_score": 0.9260615110397339
+        },
+        {
+          "player_name": "Damian Jones",
+          "season": "2019-20",
+          "similarity_score": 0.9140873551368713
+        },
+        {
+          "player_name": "Ryan Kalkbrenner",
+          "season": "2025-26",
+          "similarity_score": 0.8965701460838318
+        },
+        {
+          "player_name": "Daniel Gafford",
+          "season": "2019-20",
+          "similarity_score": 0.882660984992981
+        },
+        {
+          "player_name": "DeAndre Jordan",
+          "season": "2024-25",
+          "similarity_score": 0.8819943070411682
+        }
+      ],
+      "wider": [
+        {
+          "player_name": "Jaxson Hayes",
+          "season": "2025-26",
+          "similarity_score": 0.9173024892807007
+        },
+        {
+          "player_name": "Damian Jones",
+          "season": "2019-20",
+          "similarity_score": 0.896924614906311
+        },
+        {
+          "player_name": "Ryan Kalkbrenner",
+          "season": "2025-26",
+          "similarity_score": 0.8790587186813354
+        },
+        {
+          "player_name": "Daniel Gafford",
+          "season": "2019-20",
+          "similarity_score": 0.8625844120979309
+        },
+        {
+          "player_name": "DeAndre Jordan",
+          "season": "2024-25",
+          "similarity_score": 0.8613325357437134
+        }
+      ]
+    }
+  }
+}
