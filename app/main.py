@@ -612,9 +612,16 @@ def leaderboard_markup(frame: pd.DataFrame) -> str:
     """
 
 
-view = str(st.query_params.get("view", "home"))
+view = str(globals().get("ROUTE_OVERRIDE", st.query_params.get("view", "home")))
 if view not in {"home", "discover", "compare", "leaderboard", "legal"}:
     view = "home"
+route_pages = {
+    "home": ROOT / "app" / "main.py",
+    "discover": ROOT / "app" / "pages" / "Discover.py",
+    "compare": ROOT / "app" / "pages" / "Compare.py",
+    "leaderboard": ROOT / "app" / "pages" / "Leaderboard.py",
+    "legal": ROOT / "app" / "pages" / "Legal.py",
+}
 
 # Keep routed widget state alive while its controls are not rendered. Without
 # this, Streamlit can restore a stale first option when the user returns.
@@ -658,7 +665,7 @@ with st.container(key="mock_nav"):
     brand_column, discover_column, compare_column, leaderboard_column, legal_column, support_column = st.columns([5.1, .8, .75, 1, .55, 1.2])
     with brand_column:
         with st.container(key="mock_brand"):
-            st.page_link("main.py", label="Basketball DNA home", query_params={})
+            st.page_link(route_pages["home"], label="Basketball DNA home")
     for column, name, label in (
         (discover_column, "discover", "Discover"),
         (compare_column, "compare", "Compare"),
@@ -667,7 +674,7 @@ with st.container(key="mock_nav"):
     ):
         with column:
             with st.container(key=f"nav_{name}"):
-                st.page_link("main.py", label=label, query_params={"view": name})
+                st.page_link(route_pages[name], label=label)
     support_column.markdown(
         '<a class="bd-kofi" href="https://ko-fi.com/Q3A127SI46" target="_blank" rel="noopener noreferrer" aria-label="Support Basketball DNA on Ko-fi"><img src="app/static/kofi-button.png" alt="Support Basketball DNA on Ko-fi"></a>',
         unsafe_allow_html=True,
@@ -699,16 +706,14 @@ if view == "home":
             with discover_action:
                 with st.container(key="home_discover"):
                     st.page_link(
-                        "main.py",
+                        route_pages["discover"],
                         label="Explore Player DNA",
-                        query_params={"view": "discover"},
                     )
             with compare_action:
                 with st.container(key="home_compare"):
                     st.page_link(
-                        "main.py",
+                        route_pages["compare"],
                         label="Compare two players",
-                        query_params={"view": "compare"},
                     )
 
     st.markdown(
