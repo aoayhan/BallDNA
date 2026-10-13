@@ -73,6 +73,7 @@ st.markdown(
     }
     .st-key-mock_nav div[data-testid="stButton"] button:hover {color: var(--ink); background: transparent;}
     .st-key-mock_nav div[data-testid="stButton"] button:focus-visible {outline: 2px solid var(--orange); outline-offset: 4px;}
+    .st-key-browser_history_controls {display: none;}
     .bd-kofi {
         display: inline-flex; justify-content: center; align-items: center; min-height: 36px;
         border-radius: 8px; text-decoration: none !important;
@@ -613,7 +614,7 @@ def leaderboard_markup(frame: pd.DataFrame) -> str:
     """
 
 
-view = str(st.query_params.get("view", "home"))
+view = str(st.session_state.get("browser_view", st.query_params.get("view", "home")))
 if view not in {"home", "discover", "compare", "leaderboard", "legal"}:
     view = "home"
 
@@ -636,7 +637,68 @@ for widget_key in (
 def navigate(destination: str) -> None:
     """Update the route before Streamlit renders the next page."""
 
+    st.session_state["browser_view"] = destination
     st.query_params["view"] = destination
+
+
+def restore_browser_view(destination: str) -> None:
+    """Restore a history route without writing a new browser URL."""
+
+    st.session_state["browser_view"] = destination
+
+
+def enable_browser_history() -> None:
+    """Preserve the current URL before Streamlit replaces its query parameters."""
+
+    st.iframe(
+        """
+        <script>
+        const host = window.parent;
+        const routes = {
+          "Basketball DNA home": "home",
+          "Discover": "discover",
+          "Compare": "compare",
+          "Leaderboard": "leaderboard",
+          "Legal": "legal",
+          "Explore Player DNA": "discover",
+          "Compare two players": "compare"
+        };
+        const rememberPage = (event) => {
+          const button = event.target.closest("button");
+          if (!button) return;
+          const destination = routes[button.textContent.trim()];
+          if (!destination) return;
+          const current = new URL(host.location.href).searchParams.get("view") || "home";
+          if (destination !== current) host.history.pushState({}, "", host.location.href);
+        };
+        const restorePage = () => {
+          const destination = new URL(host.location.href).searchParams.get("view") || "home";
+          host.document.querySelector(`.st-key-history_${destination} button`)?.click();
+        };
+        if (host.__ballDnaHistoryHandler) {
+          host.document.removeEventListener("click", host.__ballDnaHistoryHandler, true);
+        }
+        if (host.__ballDnaPopstateHandler) {
+          host.removeEventListener("popstate", host.__ballDnaPopstateHandler);
+        }
+        host.__ballDnaHistoryHandler = rememberPage;
+        host.__ballDnaPopstateHandler = restorePage;
+        host.document.addEventListener("click", rememberPage, true);
+        host.addEventListener("popstate", restorePage);
+        </script>
+        """,
+        width=1,
+        height=1,
+        tab_index=-1,
+    )
+    with st.container(key="browser_history_controls"):
+        for destination in ("home", "discover", "compare", "leaderboard", "legal"):
+            st.button(
+                f"Restore {destination}",
+                key=f"history_{destination}",
+                on_click=restore_browser_view,
+                args=(destination,),
+            )
 
 page_copy = {
     "discover": (
@@ -652,6 +714,7 @@ page_copy = {
         "Explore the highest-scoring different-player season pairs produced by the deployed offensive Player DNA model.",
     ),
 }
+enable_browser_history()
 st.markdown(
     f"""
     <style>
