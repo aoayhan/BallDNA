@@ -6,23 +6,21 @@ import pytest
 from streamlit.testing.v1 import AppTest
 
 
-def test_navigation_uses_top_level_routes() -> None:
+def test_navigation_updates_url_and_restores_without_rewriting_it() -> None:
     app = AppTest.from_file(
         str(Path(__file__).parents[1] / "app/main.py"), default_timeout=60
     )
     app.run()
 
-    links = [
-        element.value
+    next(button for button in app.button if button.label == "Discover").click().run()
+    assert app.query_params["view"] == "discover"
+
+    next(button for button in app.button if button.label == "Restore compare").click().run()
+    assert app.query_params["view"] == "discover"
+    assert any(
+        "Put two styles under the microscope." in element.value
         for element in app.markdown
-        if 'class="bd-nav-link"' in element.value
-        or 'class="bd-brand-link"' in element.value
-        or 'class="bd-home-link"' in element.value
-    ]
-    assert links
-    assert all('target="_top"' in link for link in links)
-    assert any('href="/?view=discover"' in link for link in links)
-    assert any('href="/?view=compare"' in link for link in links)
+    )
 
 
 @pytest.mark.parametrize(
