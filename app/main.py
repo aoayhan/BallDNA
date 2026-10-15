@@ -58,22 +58,21 @@ st.markdown(
         padding: .2rem 2.2rem 5rem;
     }
     .st-key-mock_nav {margin-bottom: 1rem; border-bottom: 1px solid var(--line);}
-    .st-key-cloud_history_sync {display: none;}
     .st-key-mock_nav [data-testid="stHorizontalBlock"] {align-items: center; min-height: 50px;}
     .st-key-mock_brand {width: 132px;}
-    .st-key-mock_brand div[data-testid="stButton"] button {
-        width: 132px !important; height: 48px !important; min-height: 48px !important; padding: 0 !important;
-        color: transparent !important; font-size: 0 !important; cursor: pointer;
+    .bd-brand-link {
+        display: block; width: 132px; height: 48px; color: transparent !important;
+        font-size: 0; cursor: pointer;
         background: transparent url("app/static/balldna-logo.png") left center / 132px auto no-repeat !important;
     }
-    .st-key-mock_brand:has(button:focus-visible) {outline: 2px solid var(--orange); outline-offset: 5px; border-radius: 6px;}
-    .st-key-mock_nav div[data-testid="stButton"] button {
-        justify-content: center; padding: .35rem .15rem; color: var(--muted);
-        background: transparent; border: 0; border-radius: 0; font-size: .82rem;
-        min-height: 2rem; transition: color .18s ease;
+    .bd-brand-link:focus-visible {outline: 2px solid var(--orange); outline-offset: 5px; border-radius: 6px;}
+    .bd-nav-link {
+        display: flex; justify-content: center; align-items: center; min-height: 2rem;
+        padding: .35rem .15rem; color: var(--muted) !important; border-radius: 0;
+        font-size: .82rem; text-decoration: none !important; transition: color .18s ease;
     }
-    .st-key-mock_nav div[data-testid="stButton"] button:hover {color: var(--ink); background: transparent;}
-    .st-key-mock_nav div[data-testid="stButton"] button:focus-visible {outline: 2px solid var(--orange); outline-offset: 4px;}
+    .bd-nav-link:hover {color: var(--ink) !important;}
+    .bd-nav-link:focus-visible {outline: 2px solid var(--orange); outline-offset: 4px;}
     .bd-kofi {
         display: inline-flex; justify-content: center; align-items: center; min-height: 36px;
         border-radius: 8px; text-decoration: none !important;
@@ -129,15 +128,16 @@ st.markdown(
     .st-key-home_actions [data-testid="stHorizontalBlock"] > div {
         width: auto !important; min-width: 0 !important; flex: none !important;
     }
-    .st-key-home_discover button, .st-key-home_compare button {
-        min-height: 44px; padding: .65rem 1rem; border-radius: 10px;
-        font-size: .78rem; font-weight: 800;
+    .bd-home-link {
+        display: flex; justify-content: center; align-items: center; min-height: 44px;
+        padding: .65rem 1rem; border: 1px solid; border-radius: 10px;
+        font-size: .78rem; font-weight: 800; text-decoration: none !important;
     }
-    .st-key-home_discover button {color: #090b0f; background: var(--orange); border-color: var(--orange);}
-    .st-key-home_discover button:hover {color: #090b0f; background: #ff8052; border-color: #ff8052;}
-    .st-key-home_compare button {color: var(--ink); background: rgba(8,11,16,.68); border-color: var(--line);}
-    .st-key-home_compare button:hover {color: var(--ink); border-color: rgba(255,255,255,.22); background: rgba(255,255,255,.06);}
-    .st-key-home_actions button:focus-visible {outline: 2px solid var(--lime); outline-offset: 4px;}
+    .st-key-home_discover .bd-home-link {color: #090b0f; background: var(--orange); border-color: var(--orange);}
+    .st-key-home_discover .bd-home-link:hover {color: #090b0f; background: #ff8052; border-color: #ff8052;}
+    .st-key-home_compare .bd-home-link {color: var(--ink); background: rgba(8,11,16,.68); border-color: var(--line);}
+    .st-key-home_compare .bd-home-link:hover {color: var(--ink); border-color: rgba(255,255,255,.22); background: rgba(255,255,255,.06);}
+    .bd-home-link:focus-visible {outline: 2px solid var(--lime); outline-offset: 4px;}
     .bd-home-section {margin: 0 0 3.2rem;}
     .bd-home-section-head {display: grid; grid-template-columns: .75fr 1.25fr; gap: 2rem; align-items: end; margin-bottom: 1.35rem;}
     .bd-home-section h2 {margin: .55rem 0 0; font-size: clamp(1.7rem, 3vw, 2.65rem); letter-spacing: -.045em; line-height: 1;}
@@ -365,11 +365,9 @@ st.markdown(
         .st-key-mock_nav [data-testid="stColumn"]:nth-child(4) {grid-column: 3; grid-row: 2;}
         .st-key-mock_nav [data-testid="stColumn"]:nth-child(5) {grid-column: 4; grid-row: 2;}
         .st-key-mock_nav [data-testid="stColumn"]:has(.bd-kofi) {grid-column: 3 / 5; grid-row: 1; text-align: right;}
-        .st-key-mock_nav div[data-testid="stButton"] button {font-size: .72rem; white-space: nowrap;}
+        .bd-nav-link {font-size: .72rem; white-space: nowrap;}
         .st-key-mock_brand {width: 112px;}
-        .st-key-mock_brand div[data-testid="stButton"] button {
-            width: 112px !important; background-size: 112px auto !important;
-        }
+        .bd-brand-link {width: 112px; background-size: 112px auto !important;}
         .bd-kofi img {height: 32px;}
         .bd-home-title {font-size: 2.65rem;}
         .bd-pipeline, .bd-metrics {grid-template-columns: 1fr;}
@@ -634,47 +632,6 @@ for widget_key in (
         st.session_state[widget_key] = st.session_state[widget_key]
 
 
-def navigate(destination: str) -> None:
-    """Keep the active view in the browser URL."""
-
-    if destination == "home":
-        if "view" in st.query_params:
-            del st.query_params["view"]
-    else:
-        st.query_params["view"] = destination
-
-
-def sync_cloud_history() -> None:
-    """Sync Streamlit Cloud's embedded app after browser Back or Forward."""
-
-    with st.container(key="cloud_history_sync"):
-        st.iframe(
-            """
-            <script>
-            const app = window.parent;
-            const shell = window.top;
-            if (app !== shell) {
-              const sync = () => {
-                const desired = new URL(shell.location.href).search;
-                if (new URL(app.location.href).search === desired) return;
-                const url = new URL(app.location.href);
-                url.search = desired;
-                app.location.replace(url);
-              };
-              if (app.__ballDnaOuterPopstate) {
-                shell.removeEventListener("popstate", app.__ballDnaOuterPopstate);
-              }
-              app.__ballDnaOuterPopstate = sync;
-              shell.addEventListener("popstate", sync);
-            }
-            </script>
-            """,
-            width=1,
-            height=1,
-            tab_index=-1,
-        )
-
-
 page_copy = {
     "discover": (
         "Who plays like your favorite player?",
@@ -689,11 +646,10 @@ page_copy = {
         "Explore the highest-scoring different-player season pairs produced by the deployed offensive Player DNA model.",
     ),
 }
-sync_cloud_history()
 st.markdown(
     f"""
     <style>
-    .st-key-nav_{view} button {{color: var(--ink) !important; font-weight: 700;
+    .st-key-nav_{view} .bd-nav-link {{color: var(--ink) !important; font-weight: 700;
         text-decoration: underline !important; text-decoration-color: var(--orange) !important;}}
     </style>
     """,
@@ -703,7 +659,10 @@ with st.container(key="mock_nav"):
     brand_column, discover_column, compare_column, leaderboard_column, legal_column, support_column = st.columns([5.1, .8, .75, 1, .55, 1.2])
     with brand_column:
         with st.container(key="mock_brand"):
-            st.button("Basketball DNA home", key="go_home", on_click=navigate, args=("home",))
+            st.markdown(
+                '<a class="bd-brand-link" href="/" target="_top" aria-label="Basketball DNA home">Basketball DNA home</a>',
+                unsafe_allow_html=True,
+            )
     for column, name, label in (
         (discover_column, "discover", "Discover"),
         (compare_column, "compare", "Compare"),
@@ -712,12 +671,9 @@ with st.container(key="mock_nav"):
     ):
         with column:
             with st.container(key=f"nav_{name}"):
-                st.button(
-                    label,
-                    key=f"go_{name}",
-                    use_container_width=True,
-                    on_click=navigate,
-                    args=(name,),
+                st.markdown(
+                    f'<a class="bd-nav-link" href="/?view={name}" target="_top">{label}</a>',
+                    unsafe_allow_html=True,
                 )
     support_column.markdown(
         '<a class="bd-kofi" href="https://ko-fi.com/Q3A127SI46" target="_blank" rel="noopener noreferrer" aria-label="Support Basketball DNA on Ko-fi"><img src="app/static/kofi-button.png" alt="Support Basketball DNA on Ko-fi"></a>',
@@ -749,21 +705,15 @@ if view == "home":
             discover_action, compare_action = st.columns([1, 1.08])
             with discover_action:
                 with st.container(key="home_discover"):
-                    st.button(
-                        "Explore Player DNA",
-                        key="home_go_discover",
-                        use_container_width=True,
-                        on_click=navigate,
-                        args=("discover",),
+                    st.markdown(
+                        '<a class="bd-home-link" href="/?view=discover" target="_top">Explore Player DNA</a>',
+                        unsafe_allow_html=True,
                     )
             with compare_action:
                 with st.container(key="home_compare"):
-                    st.button(
-                        "Compare two players",
-                        key="home_go_compare",
-                        use_container_width=True,
-                        on_click=navigate,
-                        args=("compare",),
+                    st.markdown(
+                        '<a class="bd-home-link" href="/?view=compare" target="_top">Compare two players</a>',
+                        unsafe_allow_html=True,
                     )
 
     st.markdown(
