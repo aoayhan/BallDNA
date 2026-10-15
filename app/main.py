@@ -659,12 +659,27 @@ def enable_cloud_history_restore() -> None:
         <script>
         const app = window.parent;
         const shell = window.top;
+        if (!shell.__ballDnaNativePushState) {
+          shell.__ballDnaNativePushState = shell.history.pushState.bind(shell.history);
+          shell.__ballDnaNativeReplaceState = shell.history.replaceState.bind(shell.history);
+          shell.history.pushState = (state, title, url) => {
+            const next = new URL(url || shell.location.href, shell.location.href);
+            if (shell.__ballDnaRestoring && next.search === shell.location.search) {
+              shell.__ballDnaRestoring = false;
+              return shell.__ballDnaNativeReplaceState(state, title, url);
+            }
+            shell.__ballDnaRestoring = false;
+            return shell.__ballDnaNativePushState(state, title, url);
+          };
+        }
         const restore = () => {
           const shellUrl = new URL(shell.location.href);
           const destination = shellUrl.searchParams.get("view") || "home";
           const appUrl = new URL(app.location.href);
           appUrl.search = shellUrl.search;
           app.history.replaceState({}, "", appUrl);
+          shell.__ballDnaRestoring = true;
+          shell.setTimeout(() => { shell.__ballDnaRestoring = false; }, 1500);
           app.document.querySelector(`.st-key-history_${destination} button`)?.click();
         };
         if (app.__ballDnaPopstate) {
