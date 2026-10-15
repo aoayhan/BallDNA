@@ -58,6 +58,7 @@ st.markdown(
         padding: .2rem 2.2rem 5rem;
     }
     .st-key-mock_nav {margin-bottom: 1rem; border-bottom: 1px solid var(--line);}
+    .st-key-cloud_history_sync {display: none;}
     .st-key-mock_nav [data-testid="stHorizontalBlock"] {align-items: center; min-height: 50px;}
     .st-key-mock_brand {width: 132px;}
     .st-key-mock_brand div[data-testid="stButton"] button {
@@ -642,6 +643,38 @@ def navigate(destination: str) -> None:
     else:
         st.query_params["view"] = destination
 
+
+def sync_cloud_history() -> None:
+    """Sync Streamlit Cloud's embedded app after browser Back or Forward."""
+
+    with st.container(key="cloud_history_sync"):
+        st.iframe(
+            """
+            <script>
+            const app = window.parent;
+            const shell = window.top;
+            if (app !== shell) {
+              const sync = () => {
+                const desired = new URL(shell.location.href).search;
+                if (new URL(app.location.href).search === desired) return;
+                const url = new URL(app.location.href);
+                url.search = desired;
+                app.location.replace(url);
+              };
+              if (app.__ballDnaOuterPopstate) {
+                shell.removeEventListener("popstate", app.__ballDnaOuterPopstate);
+              }
+              app.__ballDnaOuterPopstate = sync;
+              shell.addEventListener("popstate", sync);
+            }
+            </script>
+            """,
+            width=1,
+            height=1,
+            tab_index=-1,
+        )
+
+
 page_copy = {
     "discover": (
         "Who plays like your favorite player?",
@@ -656,6 +689,7 @@ page_copy = {
         "Explore the highest-scoring different-player season pairs produced by the deployed offensive Player DNA model.",
     ),
 }
+sync_cloud_history()
 st.markdown(
     f"""
     <style>
