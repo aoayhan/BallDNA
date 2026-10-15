@@ -6,6 +6,19 @@ import pytest
 from streamlit.testing.v1 import AppTest
 
 
+def test_navigation_updates_the_visible_route() -> None:
+    app = AppTest.from_file(
+        str(Path(__file__).parents[1] / "app/main.py"), default_timeout=60
+    )
+    app.run()
+
+    next(button for button in app.button if button.label == "Discover").click().run()
+    assert app.query_params["view"] == "discover"
+
+    next(button for button in app.button if button.label == "Basketball DNA home").click().run()
+    assert "view" not in app.query_params
+
+
 @pytest.mark.parametrize(
     ("view", "state_key", "message"),
     [
