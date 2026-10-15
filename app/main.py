@@ -635,9 +635,14 @@ for widget_key in (
 
 
 def navigate(destination: str) -> None:
-    """Update the active app view."""
+    """Update the app and let Streamlit publish the visible URL."""
 
     st.session_state["browser_view"] = destination
+    if destination == "home":
+        if "view" in st.query_params:
+            del st.query_params["view"]
+    else:
+        st.query_params["view"] = destination
 
 
 def restore_browser_view(destination: str) -> None:
@@ -654,38 +659,18 @@ def enable_cloud_history_restore() -> None:
         <script>
         const app = window.parent;
         const shell = window.top;
-        const routes = {
-          "Basketball DNA home": "home",
-          "Discover": "discover",
-          "Compare": "compare",
-          "Leaderboard": "leaderboard",
-          "Legal": "legal",
-          "Explore Player DNA": "discover",
-          "Compare two players": "compare"
-        };
-        const remember = (event) => {
-          const destination = routes[event.target.closest("button")?.textContent.trim()];
-          if (!destination) return;
-          const url = new URL(shell.location.href);
-          const current = url.searchParams.get("view") || "home";
-          if (destination === current) return;
-          if (destination === "home") url.searchParams.delete("view");
-          else url.searchParams.set("view", destination);
-          shell.history.pushState({}, "", url);
-        };
         const restore = () => {
-          const destination = new URL(shell.location.href).searchParams.get("view") || "home";
+          const shellUrl = new URL(shell.location.href);
+          const destination = shellUrl.searchParams.get("view") || "home";
+          const appUrl = new URL(app.location.href);
+          appUrl.search = shellUrl.search;
+          app.history.replaceState({}, "", appUrl);
           app.document.querySelector(`.st-key-history_${destination} button`)?.click();
         };
-        if (app.__ballDnaRemember) {
-          app.document.removeEventListener("click", app.__ballDnaRemember, true);
-        }
         if (app.__ballDnaPopstate) {
           shell.removeEventListener("popstate", app.__ballDnaPopstate);
         }
-        app.__ballDnaRemember = remember;
         app.__ballDnaPopstate = restore;
-        app.document.addEventListener("click", remember, true);
         shell.addEventListener("popstate", restore);
         </script>
         """,
