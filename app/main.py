@@ -659,6 +659,11 @@ def enable_cloud_history_restore() -> None:
         <script>
         const app = window.parent;
         const shell = window.top;
+        if (app !== shell && !app.__ballDnaNativePushState) {
+          app.__ballDnaNativePushState = app.history.pushState.bind(app.history);
+          app.history.pushState = (state, title, url) =>
+            app.history.replaceState(state, title, url);
+        }
         if (!shell.__ballDnaNativePushState) {
           shell.__ballDnaNativePushState = shell.history.pushState.bind(shell.history);
           shell.__ballDnaNativeReplaceState = shell.history.replaceState.bind(shell.history);
