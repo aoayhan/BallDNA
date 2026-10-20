@@ -6,6 +6,25 @@ import pytest
 from streamlit.testing.v1 import AppTest
 
 
+def test_navigation_updates_url_and_history_restore_does_not_rewrite_it() -> None:
+    app = AppTest.from_file(
+        str(Path(__file__).parents[1] / "app/main.py"), default_timeout=60
+    )
+    app.run()
+
+    next(button for button in app.button if button.label == "Discover").click().run()
+    assert app.session_state["browser_view"] == "discover"
+    assert app.query_params["view"] == "discover"
+
+    next(button for button in app.button if button.label == "Restore compare").click().run()
+    assert app.session_state["browser_view"] == "compare"
+    assert app.query_params["view"] == "discover"
+    assert any(
+        "Put two styles under the microscope." in element.value
+        for element in app.markdown
+    )
+
+
 @pytest.mark.parametrize(
     ("view", "state_key", "message"),
     [

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import sys
 from html import escape
 from pathlib import Path
@@ -16,7 +17,8 @@ if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
 DATA = ROOT / "data" / "historical"
-MODEL = ROOT / "models" / "play_style" / "siamese_tabular_v4_inference.npz"
+MODEL = ROOT / "models" / "play_style" / "siamese_tabular_v5_inference.npz"
+MODEL_SUMMARY = ROOT / "models" / "play_style" / "siamese_tabular_v5_summary.json"
 LEGAL = ROOT / "LEGAL.md"
 
 
@@ -71,6 +73,7 @@ st.markdown(
     }
     .st-key-mock_nav div[data-testid="stButton"] button:hover {color: var(--ink); background: transparent;}
     .st-key-mock_nav div[data-testid="stButton"] button:focus-visible {outline: 2px solid var(--orange); outline-offset: 4px;}
+    .st-key-browser_history_controls {display: none;}
     .bd-kofi {
         display: inline-flex; justify-content: center; align-items: center; min-height: 36px;
         border-radius: 8px; text-decoration: none !important;
@@ -612,7 +615,7 @@ def leaderboard_markup(frame: pd.DataFrame) -> str:
     """
 
 
-view = str(st.query_params.get("view", "home"))
+view = str(st.session_state.get("browser_view", st.query_params.get("view", "home")))
 if view not in {"home", "discover", "compare", "leaderboard", "legal"}:
     view = "home"
 
@@ -633,9 +636,78 @@ for widget_key in (
 
 
 def navigate(destination: str) -> None:
-    """Update the route before Streamlit renders the next page."""
+    """Update the app and let Streamlit publish the visible URL."""
 
-    st.query_params["view"] = destination
+    st.session_state["browser_view"] = destination
+    if destination == "home":
+        if "view" in st.query_params:
+            del st.query_params["view"]
+    else:
+        st.query_params["view"] = destination
+
+
+def restore_browser_view(destination: str) -> None:
+    """Restore Back/Forward content without creating another history entry."""
+
+    st.session_state["browser_view"] = destination
+
+
+def enable_cloud_history_restore() -> None:
+    """Relay Streamlit Cloud's outer Back/Forward event into the embedded app."""
+
+    st.iframe(
+        """
+        <script>
+        const app = window.parent;
+        const shell = window.top;
+        if (app !== shell && !app.__ballDnaNativePushState) {
+          app.__ballDnaNativePushState = app.history.pushState.bind(app.history);
+          app.history.pushState = (state, title, url) =>
+            app.history.replaceState(state, title, url);
+        }
+        if (!shell.__ballDnaNativePushState) {
+          shell.__ballDnaNativePushState = shell.history.pushState.bind(shell.history);
+          shell.__ballDnaNativeReplaceState = shell.history.replaceState.bind(shell.history);
+          shell.history.pushState = (state, title, url) => {
+            const next = new URL(url || shell.location.href, shell.location.href);
+            if (shell.__ballDnaRestoring && next.search === shell.location.search) {
+              shell.__ballDnaRestoring = false;
+              return shell.__ballDnaNativeReplaceState(state, title, url);
+            }
+            shell.__ballDnaRestoring = false;
+            return shell.__ballDnaNativePushState(state, title, url);
+          };
+        }
+        const restore = () => {
+          const shellUrl = new URL(shell.location.href);
+          const destination = shellUrl.searchParams.get("view") || "home";
+          const appUrl = new URL(app.location.href);
+          appUrl.search = shellUrl.search;
+          app.history.replaceState({}, "", appUrl);
+          shell.__ballDnaRestoring = true;
+          shell.setTimeout(() => { shell.__ballDnaRestoring = false; }, 1500);
+          app.document.querySelector(`.st-key-history_${destination} button`)?.click();
+        };
+        if (app.__ballDnaPopstate) {
+          shell.removeEventListener("popstate", app.__ballDnaPopstate);
+        }
+        app.__ballDnaPopstate = restore;
+        shell.addEventListener("popstate", restore);
+        </script>
+        """,
+        width=1,
+        height=1,
+        tab_index=-1,
+    )
+    with st.container(key="browser_history_controls"):
+        for destination in ("home", "discover", "compare", "leaderboard", "legal"):
+            st.button(
+                f"Restore {destination}",
+                key=f"history_{destination}",
+                on_click=restore_browser_view,
+                args=(destination,),
+            )
+
 
 page_copy = {
     "discover": (
@@ -651,6 +723,7 @@ page_copy = {
         "Explore the highest-scoring different-player season pairs produced by the deployed offensive Player DNA model.",
     ),
 }
+enable_cloud_history_restore()
 st.markdown(
     f"""
     <style>
@@ -692,6 +765,8 @@ if view == "legal":
     st.stop()
 
 if view == "home":
+    evaluation = json.loads(MODEL_SUMMARY.read_text(encoding="utf-8"))
+    holdout = evaluation["all_19_holdouts"]["coverage_aware_ensemble"]
     with st.container(key="home_hero"):
         st.markdown(
             """
@@ -726,7 +801,7 @@ if view == "home":
                     )
 
     st.markdown(
-        """
+        f"""
         <section class="bd-home-section">
           <div class="bd-home-section-head">
             <div><div class="bd-kicker">How it works</div><h2>From basketball data to Player DNA.</h2></div>
@@ -744,14 +819,14 @@ if view == "home":
           <div class="bd-ml-copy">
             <div class="bd-kicker">The AI / ML work</div>
             <h2>Self-supervised learning, with the shortcuts removed.</h2>
-            <p>I trained shared <strong>64 → 32 MLP encoders</strong> with multi-positive contrastive InfoNCE, using adjacent player seasons and corrupted feature views as positive examples. The deployed representation combines stable cross-era features with richer detail when both seasons have reliable coverage.</p>
+            <p>I trained shared <strong>128 → 64 MLP encoders</strong> with multi-positive contrastive InfoNCE, using adjacent player seasons and corrupted feature views as positive examples. The deployed representation combines stable cross-era features with richer detail when both seasons have reliable coverage.</p>
             <p>Player identity, name, team, position, height, weight, shooting efficiency, and DARKO impact are excluded from the inputs. That forces the model to learn repeatable basketball behavior rather than memorize who the player is or how good he is.</p>
             <p>The pipeline uses Python, pandas, PyTorch, Parquet model assets, NumPy inference, and Streamlit. Impact and efficiency remain visible as separate context; they never inflate the style score.</p>
           </div>
           <div class="bd-metrics" aria-label="Chronological holdout evaluation">
-            <div class="bd-metric"><b>0.670</b><span>Holdout MRR</span></div>
-            <div class="bd-metric"><b>54.6%</b><span>Previous season at #1</span></div>
-            <div class="bd-metric"><b>82.3%</b><span>Previous season in top 5</span></div>
+            <div class="bd-metric"><b>{holdout['mean_reciprocal_rank']:.3f}</b><span>Holdout MRR</span></div>
+            <div class="bd-metric"><b>{holdout['recall_at_1']:.1%}</b><span>Previous season at #1</span></div>
+            <div class="bd-metric"><b>{holdout['recall_at_5']:.1%}</b><span>Previous season in top 5</span></div>
             <p class="bd-metric-note">Across 19 chronological holdouts. Each season queries an earlier-season pool; success means retrieving that player’s adjacent season near the top.</p>
           </div>
         </section>

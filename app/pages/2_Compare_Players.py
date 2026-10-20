@@ -203,7 +203,7 @@ def _render_style_matchup(
     models = _load_style_models(str(root))
     temporal_model = _load_temporal_model(str(root))
     siamese_embeddings = _load_siamese_embeddings(str(root))
-    attribution_path = settings.root_dir / "models/play_style/siamese_tabular_v4_inference.npz"
+    attribution_path = settings.root_dir / "models/play_style/siamese_tabular_v5_inference.npz"
     siamese_attribution_artifacts = (
         _load_siamese_attribution_artifacts(str(attribution_path))
         if attribution_path.exists()

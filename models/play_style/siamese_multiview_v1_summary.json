@@ -1,0 +1,682 @@
+{
+  "created_at": "2026-10-13T09:16:45+00:00",
+  "model_id": "siamese-multiview-v1-challenger",
+  "status": "offline_challenger",
+  "production_changed": false,
+  "objective": "Test a 128 -> 64 shared encoder, disjoint odd/even game views, and reliability-weighted supervised contrastive InfoNCE.",
+  "selected_by": "Development Recall@1, then MRR, then Recall@5",
+  "selected_challenger": "Wider encoder",
+  "variants": {
+    "Frozen v4 reproduction": {
+      "hidden": [
+        64,
+        32
+      ],
+      "views": false,
+      "weighted": false
+    },
+    "Wider encoder": {
+      "hidden": [
+        128,
+        64
+      ],
+      "views": false,
+      "weighted": false
+    },
+    "Odd/even views": {
+      "hidden": [
+        64,
+        32
+      ],
+      "views": true,
+      "weighted": false
+    },
+    "Reliability weighted": {
+      "hidden": [
+        64,
+        32
+      ],
+      "views": false,
+      "weighted": true
+    },
+    "Combined challenger": {
+      "hidden": [
+        128,
+        64
+      ],
+      "views": true,
+      "weighted": true
+    }
+  },
+  "view_rows": 18124,
+  "development_summary": [
+    {
+      "variant": "Wider encoder",
+      "mean_reciprocal_rank": 0.6967051553277896,
+      "recall_at_1": 0.5791433993511262,
+      "recall_at_5": 0.8446937501219178
+    },
+    {
+      "variant": "Frozen v4 reproduction",
+      "mean_reciprocal_rank": 0.6914788807187818,
+      "recall_at_1": 0.5731016263466125,
+      "recall_at_5": 0.843428828882484
+    },
+    {
+      "variant": "Reliability weighted",
+      "mean_reciprocal_rank": 0.6909039123687182,
+      "recall_at_1": 0.5715546423391392,
+      "recall_at_5": 0.841818517787871
+    },
+    {
+      "variant": "Combined challenger",
+      "mean_reciprocal_rank": 0.6841521058676647,
+      "recall_at_1": 0.5669784866525169,
+      "recall_at_5": 0.831350316513141
+    },
+    {
+      "variant": "Odd/even views",
+      "mean_reciprocal_rank": 0.679671657163987,
+      "recall_at_1": 0.5566560050038573,
+      "recall_at_5": 0.8312735271399319
+    }
+  ],
+  "development_evaluations": [
+    {
+      "variant": "Frozen v4 reproduction",
+      "fold": "2003-04 -> 2002-03",
+      "eligible_queries": 246,
+      "mean_reciprocal_rank": 0.6529765113411885,
+      "recall_at_1": 0.5365853658536586,
+      "recall_at_5": 0.8292682926829268,
+      "stable_pairs": 1191,
+      "detailed_pairs": 0
+    },
+    {
+      "variant": "Frozen v4 reproduction",
+      "fold": "2008-09 -> 2007-08",
+      "eligible_queries": 258,
+      "mean_reciprocal_rank": 0.6686146655115803,
+      "recall_at_1": 0.5348837209302325,
+      "recall_at_5": 0.8527131782945736,
+      "stable_pairs": 2458,
+      "detailed_pairs": 0
+    },
+    {
+      "variant": "Frozen v4 reproduction",
+      "fold": "2013-14 -> 2012-13",
+      "eligible_queries": 264,
+      "mean_reciprocal_rank": 0.6821492590722372,
+      "recall_at_1": 0.5568181818181818,
+      "recall_at_5": 0.8106060606060606,
+      "stable_pairs": 3765,
+      "detailed_pairs": 1043
+    },
+    {
+      "variant": "Frozen v4 reproduction",
+      "fold": "2018-19 -> 2017-18",
+      "eligible_queries": 277,
+      "mean_reciprocal_rank": 0.6962089402339742,
+      "recall_at_1": 0.5776173285198556,
+      "recall_at_5": 0.8303249097472925,
+      "stable_pairs": 5135,
+      "detailed_pairs": 2413
+    },
+    {
+      "variant": "Frozen v4 reproduction",
+      "fold": "2022-23 -> 2021-22",
+      "eligible_queries": 283,
+      "mean_reciprocal_rank": 0.7010592427191996,
+      "recall_at_1": 0.5830388692579506,
+      "recall_at_5": 0.8409893992932862,
+      "stable_pairs": 6227,
+      "detailed_pairs": 3505
+    },
+    {
+      "variant": "Frozen v4 reproduction",
+      "fold": "2023-24 -> 2022-23",
+      "eligible_queries": 289,
+      "mean_reciprocal_rank": 0.6926603343940176,
+      "recall_at_1": 0.5847750865051903,
+      "recall_at_5": 0.8512110726643599,
+      "stable_pairs": 6527,
+      "detailed_pairs": 3805
+    },
+    {
+      "variant": "Frozen v4 reproduction",
+      "fold": "2024-25 -> 2023-24",
+      "eligible_queries": 279,
+      "mean_reciprocal_rank": 0.7466832117592755,
+      "recall_at_1": 0.6379928315412187,
+      "recall_at_5": 0.8888888888888888,
+      "stable_pairs": 6810,
+      "detailed_pairs": 4088
+    },
+    {
+      "variant": "Wider encoder",
+      "fold": "2003-04 -> 2002-03",
+      "eligible_queries": 246,
+      "mean_reciprocal_rank": 0.6457000449651735,
+      "recall_at_1": 0.5040650406504065,
+      "recall_at_5": 0.8333333333333334,
+      "stable_pairs": 1191,
+      "detailed_pairs": 0
+    },
+    {
+      "variant": "Wider encoder",
+      "fold": "2008-09 -> 2007-08",
+      "eligible_queries": 258,
+      "mean_reciprocal_rank": 0.6821636217330694,
+      "recall_at_1": 0.5581395348837209,
+      "recall_at_5": 0.8333333333333334,
+      "stable_pairs": 2458,
+      "detailed_pairs": 0
+    },
+    {
+      "variant": "Wider encoder",
+      "fold": "2013-14 -> 2012-13",
+      "eligible_queries": 264,
+      "mean_reciprocal_rank": 0.7263855421222116,
+      "recall_at_1": 0.625,
+      "recall_at_5": 0.8560606060606061,
+      "stable_pairs": 3765,
+      "detailed_pairs": 1043
+    },
+    {
+      "variant": "Wider encoder",
+      "fold": "2018-19 -> 2017-18",
+      "eligible_queries": 277,
+      "mean_reciprocal_rank": 0.7072401926561251,
+      "recall_at_1": 0.5956678700361011,
+      "recall_at_5": 0.8303249097472925,
+      "stable_pairs": 5135,
+      "detailed_pairs": 2413
+    },
+    {
+      "variant": "Wider encoder",
+      "fold": "2022-23 -> 2021-22",
+      "eligible_queries": 283,
+      "mean_reciprocal_rank": 0.6955245960697688,
+      "recall_at_1": 0.5795053003533569,
+      "recall_at_5": 0.8515901060070671,
+      "stable_pairs": 6227,
+      "detailed_pairs": 3505
+    },
+    {
+      "variant": "Wider encoder",
+      "fold": "2023-24 -> 2022-23",
+      "eligible_queries": 289,
+      "mean_reciprocal_rank": 0.6767878065106138,
+      "recall_at_1": 0.5536332179930796,
+      "recall_at_5": 0.8408304498269896,
+      "stable_pairs": 6527,
+      "detailed_pairs": 3805
+    },
+    {
+      "variant": "Wider encoder",
+      "fold": "2024-25 -> 2023-24",
+      "eligible_queries": 279,
+      "mean_reciprocal_rank": 0.7431342832375656,
+      "recall_at_1": 0.6379928315412187,
+      "recall_at_5": 0.8673835125448028,
+      "stable_pairs": 6810,
+      "detailed_pairs": 4088
+    },
+    {
+      "variant": "Odd/even views",
+      "fold": "2003-04 -> 2002-03",
+      "eligible_queries": 246,
+      "mean_reciprocal_rank": 0.6511157528442868,
+      "recall_at_1": 0.516260162601626,
+      "recall_at_5": 0.8333333333333334,
+      "stable_pairs": 2969,
+      "detailed_pairs": 0
+    },
+    {
+      "variant": "Odd/even views",
+      "fold": "2008-09 -> 2007-08",
+      "eligible_queries": 258,
+      "mean_reciprocal_rank": 0.6669334716733993,
+      "recall_at_1": 0.5310077519379846,
+      "recall_at_5": 0.8372093023255814,
+      "stable_pairs": 5796,
+      "detailed_pairs": 0
+    },
+    {
+      "variant": "Odd/even views",
+      "fold": "2013-14 -> 2012-13",
+      "eligible_queries": 264,
+      "mean_reciprocal_rank": 0.6884373690976653,
+      "recall_at_1": 0.5643939393939394,
+      "recall_at_5": 0.8181818181818182,
+      "stable_pairs": 8699,
+      "detailed_pairs": 2639
+    },
+    {
+      "variant": "Odd/even views",
+      "fold": "2018-19 -> 2017-18",
+      "eligible_queries": 277,
+      "mean_reciprocal_rank": 0.6837256086854464,
+      "recall_at_1": 0.5703971119133574,
+      "recall_at_5": 0.8194945848375451,
+      "stable_pairs": 11767,
+      "detailed_pairs": 5707
+    },
+    {
+      "variant": "Odd/even views",
+      "fold": "2022-23 -> 2021-22",
+      "eligible_queries": 283,
+      "mean_reciprocal_rank": 0.6769386442405677,
+      "recall_at_1": 0.5618374558303887,
+      "recall_at_5": 0.8374558303886925,
+      "stable_pairs": 14231,
+      "detailed_pairs": 8171
+    },
+    {
+      "variant": "Odd/even views",
+      "fold": "2023-24 -> 2022-23",
+      "eligible_queries": 289,
+      "mean_reciprocal_rank": 0.6677603731312113,
+      "recall_at_1": 0.5397923875432526,
+      "recall_at_5": 0.8166089965397924,
+      "stable_pairs": 14892,
+      "detailed_pairs": 8832
+    },
+    {
+      "variant": "Odd/even views",
+      "fold": "2024-25 -> 2023-24",
+      "eligible_queries": 279,
+      "mean_reciprocal_rank": 0.7227903804753325,
+      "recall_at_1": 0.6129032258064516,
+      "recall_at_5": 0.8566308243727598,
+      "stable_pairs": 15534,
+      "detailed_pairs": 9474
+    },
+    {
+      "variant": "Reliability weighted",
+      "fold": "2003-04 -> 2002-03",
+      "eligible_queries": 246,
+      "mean_reciprocal_rank": 0.6537748977723818,
+      "recall_at_1": 0.532520325203252,
+      "recall_at_5": 0.8211382113821138,
+      "stable_pairs": 1191,
+      "detailed_pairs": 0
+    },
+    {
+      "variant": "Reliability weighted",
+      "fold": "2008-09 -> 2007-08",
+      "eligible_queries": 258,
+      "mean_reciprocal_rank": 0.6717382070633394,
+      "recall_at_1": 0.5426356589147286,
+      "recall_at_5": 0.8488372093023255,
+      "stable_pairs": 2458,
+      "detailed_pairs": 0
+    },
+    {
+      "variant": "Reliability weighted",
+      "fold": "2013-14 -> 2012-13",
+      "eligible_queries": 264,
+      "mean_reciprocal_rank": 0.6806460438862824,
+      "recall_at_1": 0.553030303030303,
+      "recall_at_5": 0.821969696969697,
+      "stable_pairs": 3765,
+      "detailed_pairs": 1043
+    },
+    {
+      "variant": "Reliability weighted",
+      "fold": "2018-19 -> 2017-18",
+      "eligible_queries": 277,
+      "mean_reciprocal_rank": 0.6963936964727582,
+      "recall_at_1": 0.5740072202166066,
+      "recall_at_5": 0.8231046931407943,
+      "stable_pairs": 5135,
+      "detailed_pairs": 2413
+    },
+    {
+      "variant": "Reliability weighted",
+      "fold": "2022-23 -> 2021-22",
+      "eligible_queries": 283,
+      "mean_reciprocal_rank": 0.6962787542742486,
+      "recall_at_1": 0.5795053003533569,
+      "recall_at_5": 0.8374558303886925,
+      "stable_pairs": 6227,
+      "detailed_pairs": 3505
+    },
+    {
+      "variant": "Reliability weighted",
+      "fold": "2023-24 -> 2022-23",
+      "eligible_queries": 289,
+      "mean_reciprocal_rank": 0.6929185913123558,
+      "recall_at_1": 0.5847750865051903,
+      "recall_at_5": 0.8477508650519031,
+      "stable_pairs": 6527,
+      "detailed_pairs": 3805
+    },
+    {
+      "variant": "Reliability weighted",
+      "fold": "2024-25 -> 2023-24",
+      "eligible_queries": 279,
+      "mean_reciprocal_rank": 0.744577195799661,
+      "recall_at_1": 0.6344086021505376,
+      "recall_at_5": 0.8924731182795699,
+      "stable_pairs": 6810,
+      "detailed_pairs": 4088
+    },
+    {
+      "variant": "Combined challenger",
+      "fold": "2003-04 -> 2002-03",
+      "eligible_queries": 246,
+      "mean_reciprocal_rank": 0.6549204366126536,
+      "recall_at_1": 0.524390243902439,
+      "recall_at_5": 0.8292682926829268,
+      "stable_pairs": 2969,
+      "detailed_pairs": 0
+    },
+    {
+      "variant": "Combined challenger",
+      "fold": "2008-09 -> 2007-08",
+      "eligible_queries": 258,
+      "mean_reciprocal_rank": 0.6767395608332805,
+      "recall_at_1": 0.5503875968992248,
+      "recall_at_5": 0.8372093023255814,
+      "stable_pairs": 5796,
+      "detailed_pairs": 0
+    },
+    {
+      "variant": "Combined challenger",
+      "fold": "2013-14 -> 2012-13",
+      "eligible_queries": 264,
+      "mean_reciprocal_rank": 0.705414218134434,
+      "recall_at_1": 0.6022727272727273,
+      "recall_at_5": 0.8333333333333334,
+      "stable_pairs": 8699,
+      "detailed_pairs": 2639
+    },
+    {
+      "variant": "Combined challenger",
+      "fold": "2018-19 -> 2017-18",
+      "eligible_queries": 277,
+      "mean_reciprocal_rank": 0.6856322600419992,
+      "recall_at_1": 0.5631768953068592,
+      "recall_at_5": 0.8267148014440433,
+      "stable_pairs": 11767,
+      "detailed_pairs": 5707
+    },
+    {
+      "variant": "Combined challenger",
+      "fold": "2022-23 -> 2021-22",
+      "eligible_queries": 283,
+      "mean_reciprocal_rank": 0.6759432813276938,
+      "recall_at_1": 0.5618374558303887,
+      "recall_at_5": 0.8268551236749117,
+      "stable_pairs": 14231,
+      "detailed_pairs": 8171
+    },
+    {
+      "variant": "Combined challenger",
+      "fold": "2023-24 -> 2022-23",
+      "eligible_queries": 289,
+      "mean_reciprocal_rank": 0.6640610301115378,
+      "recall_at_1": 0.5467128027681661,
+      "recall_at_5": 0.8166089965397924,
+      "stable_pairs": 14892,
+      "detailed_pairs": 8832
+    },
+    {
+      "variant": "Combined challenger",
+      "fold": "2024-25 -> 2023-24",
+      "eligible_queries": 279,
+      "mean_reciprocal_rank": 0.7263539540120542,
+      "recall_at_1": 0.6200716845878136,
+      "recall_at_5": 0.8494623655913979,
+      "stable_pairs": 15534,
+      "detailed_pairs": 9474
+    }
+  ],
+  "challenger_test_summary": [
+    {
+      "set": "all_19_holdouts",
+      "mean_reciprocal_rank": 0.6802625882022366,
+      "recall_at_1": 0.5581601219071759,
+      "recall_at_5": 0.8327579920846095
+    },
+    {
+      "set": "latest_test",
+      "mean_reciprocal_rank": 0.7423429822068559,
+      "recall_at_1": 0.6464285714285715,
+      "recall_at_5": 0.8642857142857143
+    }
+  ],
+  "challenger_test_evaluations": [
+    {
+      "variant": "Wider encoder",
+      "set": "all_19_holdouts",
+      "fold": "1999-00 -> 1998-99",
+      "eligible_queries": 223,
+      "mean_reciprocal_rank": 0.6357992045877859,
+      "recall_at_1": 0.4977578475336323,
+      "recall_at_5": 0.8161434977578476,
+      "stable_pairs": 247,
+      "detailed_pairs": 0
+    },
+    {
+      "variant": "Wider encoder",
+      "set": "all_19_holdouts",
+      "fold": "2005-06 -> 2004-05",
+      "eligible_queries": 256,
+      "mean_reciprocal_rank": 0.6226703463815849,
+      "recall_at_1": 0.48046875,
+      "recall_at_5": 0.796875,
+      "stable_pairs": 1682,
+      "detailed_pairs": 0
+    },
+    {
+      "variant": "Wider encoder",
+      "set": "all_19_holdouts",
+      "fold": "2011-12 -> 2010-11",
+      "eligible_queries": 257,
+      "mean_reciprocal_rank": 0.711759783069137,
+      "recall_at_1": 0.5875486381322957,
+      "recall_at_5": 0.8793774319066148,
+      "stable_pairs": 3234,
+      "detailed_pairs": 512
+    },
+    {
+      "variant": "Wider encoder",
+      "set": "all_19_holdouts",
+      "fold": "2017-18 -> 2016-17",
+      "eligible_queries": 274,
+      "mean_reciprocal_rank": 0.7061168388445481,
+      "recall_at_1": 0.6131386861313869,
+      "recall_at_5": 0.8065693430656934,
+      "stable_pairs": 4850,
+      "detailed_pairs": 2128
+    },
+    {
+      "variant": "Wider encoder",
+      "set": "all_19_holdouts",
+      "fold": "2021-22 -> 2020-21",
+      "eligible_queries": 300,
+      "mean_reciprocal_rank": 0.7139596851744445,
+      "recall_at_1": 0.5933333333333334,
+      "recall_at_5": 0.86,
+      "stable_pairs": 5951,
+      "detailed_pairs": 3229
+    },
+    {
+      "variant": "Wider encoder",
+      "set": "all_19_holdouts",
+      "fold": "2000-01 -> 1999-00",
+      "eligible_queries": 248,
+      "mean_reciprocal_rank": 0.6580984567541106,
+      "recall_at_1": 0.5282258064516129,
+      "recall_at_5": 0.8185483870967742,
+      "stable_pairs": 472,
+      "detailed_pairs": 0
+    },
+    {
+      "variant": "Wider encoder",
+      "set": "all_19_holdouts",
+      "fold": "2001-02 -> 2000-01",
+      "eligible_queries": 248,
+      "mean_reciprocal_rank": 0.6476472028432458,
+      "recall_at_1": 0.5201612903225806,
+      "recall_at_5": 0.8266129032258065,
+      "stable_pairs": 695,
+      "detailed_pairs": 0
+    },
+    {
+      "variant": "Wider encoder",
+      "set": "all_19_holdouts",
+      "fold": "2002-03 -> 2001-02",
+      "eligible_queries": 245,
+      "mean_reciprocal_rank": 0.6871798882732926,
+      "recall_at_1": 0.5510204081632653,
+      "recall_at_5": 0.8571428571428571,
+      "stable_pairs": 943,
+      "detailed_pairs": 0
+    },
+    {
+      "variant": "Wider encoder",
+      "set": "all_19_holdouts",
+      "fold": "2004-05 -> 2003-04",
+      "eligible_queries": 257,
+      "mean_reciprocal_rank": 0.6446552911144466,
+      "recall_at_1": 0.5097276264591439,
+      "recall_at_5": 0.8093385214007782,
+      "stable_pairs": 1436,
+      "detailed_pairs": 0
+    },
+    {
+      "variant": "Wider encoder",
+      "set": "all_19_holdouts",
+      "fold": "2006-07 -> 2005-06",
+      "eligible_queries": 263,
+      "mean_reciprocal_rank": 0.6962556717704881,
+      "recall_at_1": 0.5779467680608364,
+      "recall_at_5": 0.8365019011406845,
+      "stable_pairs": 1939,
+      "detailed_pairs": 0
+    },
+    {
+      "variant": "Wider encoder",
+      "set": "all_19_holdouts",
+      "fold": "2007-08 -> 2006-07",
+      "eligible_queries": 264,
+      "mean_reciprocal_rank": 0.6626014998704325,
+      "recall_at_1": 0.5454545454545454,
+      "recall_at_5": 0.8106060606060606,
+      "stable_pairs": 2195,
+      "detailed_pairs": 0
+    },
+    {
+      "variant": "Wider encoder",
+      "set": "all_19_holdouts",
+      "fold": "2009-10 -> 2008-09",
+      "eligible_queries": 254,
+      "mean_reciprocal_rank": 0.7043598195052774,
+      "recall_at_1": 0.5787401574803149,
+      "recall_at_5": 0.8661417322834646,
+      "stable_pairs": 2722,
+      "detailed_pairs": 0
+    },
+    {
+      "variant": "Wider encoder",
+      "set": "all_19_holdouts",
+      "fold": "2010-11 -> 2009-10",
+      "eligible_queries": 274,
+      "mean_reciprocal_rank": 0.6843042888446399,
+      "recall_at_1": 0.5693430656934306,
+      "recall_at_5": 0.8284671532846716,
+      "stable_pairs": 2980,
+      "detailed_pairs": 258
+    },
+    {
+      "variant": "Wider encoder",
+      "set": "all_19_holdouts",
+      "fold": "2012-13 -> 2011-12",
+      "eligible_queries": 252,
+      "mean_reciprocal_rank": 0.6835983005629954,
+      "recall_at_1": 0.5634920634920635,
+      "recall_at_5": 0.8333333333333334,
+      "stable_pairs": 3508,
+      "detailed_pairs": 786
+    },
+    {
+      "variant": "Wider encoder",
+      "set": "all_19_holdouts",
+      "fold": "2014-15 -> 2013-14",
+      "eligible_queries": 281,
+      "mean_reciprocal_rank": 0.7350055728483149,
+      "recall_at_1": 0.6156583629893239,
+      "recall_at_5": 0.8896797153024911,
+      "stable_pairs": 4017,
+      "detailed_pairs": 1295
+    },
+    {
+      "variant": "Wider encoder",
+      "set": "all_19_holdouts",
+      "fold": "2015-16 -> 2014-15",
+      "eligible_queries": 288,
+      "mean_reciprocal_rank": 0.6581567359424636,
+      "recall_at_1": 0.53125,
+      "recall_at_5": 0.8229166666666666,
+      "stable_pairs": 4281,
+      "detailed_pairs": 1559
+    },
+    {
+      "variant": "Wider encoder",
+      "set": "all_19_holdouts",
+      "fold": "2016-17 -> 2015-16",
+      "eligible_queries": 285,
+      "mean_reciprocal_rank": 0.7296868472424146,
+      "recall_at_1": 0.624561403508772,
+      "recall_at_5": 0.8596491228070176,
+      "stable_pairs": 4562,
+      "detailed_pairs": 1840
+    },
+    {
+      "variant": "Wider encoder",
+      "set": "all_19_holdouts",
+      "fold": "2019-20 -> 2018-19",
+      "eligible_queries": 265,
+      "mean_reciprocal_rank": 0.685150318200077,
+      "recall_at_1": 0.5773584905660377,
+      "recall_at_5": 0.8037735849056604,
+      "stable_pairs": 5409,
+      "detailed_pairs": 2687
+    },
+    {
+      "variant": "Wider encoder",
+      "set": "all_19_holdouts",
+      "fold": "2020-21 -> 2019-20",
+      "eligible_queries": 276,
+      "mean_reciprocal_rank": 0.6579834240127974,
+      "recall_at_1": 0.5398550724637681,
+      "recall_at_5": 0.8007246376811594,
+      "stable_pairs": 5686,
+      "detailed_pairs": 2964
+    },
+    {
+      "variant": "Wider encoder",
+      "set": "latest_test",
+      "fold": "2025-26 -> 2024-25",
+      "eligible_queries": 280,
+      "mean_reciprocal_rank": 0.7423429822068559,
+      "recall_at_1": 0.6464285714285715,
+      "recall_at_5": 0.8642857142857143,
+      "stable_pairs": 7099,
+      "detailed_pairs": 4377
+    }
+  ],
+  "frozen_v4_all_19_holdouts": {
+    "mean_reciprocal_rank": 0.6698368779957349,
+    "recall_at_1": 0.5464988804059625,
+    "recall_at_5": 0.8233723863974651
+  },
+  "frozen_v4_latest_test": {
+    "mean_reciprocal_rank": 0.7316370337277911,
+    "recall_at_1": 0.6357142857142857,
+    "recall_at_5": 0.8607142857142858
+  }
+}

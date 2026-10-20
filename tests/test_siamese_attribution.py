@@ -19,7 +19,7 @@ def test_numpy_attribution_reproduces_deployed_pair_score() -> None:
         settings.historical_data_dir / "siamese_offensive_embeddings.parquet"
     ).set_index(["player_id", "season"])
     artifacts = load_siamese_inference_artifacts(
-        Path("models/play_style/siamese_tabular_v4_inference.npz")
+        Path("models/play_style/siamese_tabular_v5_inference.npz")
     )
 
     score, attribution = siamese_pair_attribution(
