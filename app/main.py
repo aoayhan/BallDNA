@@ -46,6 +46,10 @@ st.markdown(
     :focus-visible {outline: 2px solid var(--orange); outline-offset: 3px;}
     ::selection {color: #090b0f; background: var(--lime);}
     header[data-testid="stHeader"], [data-testid="stSidebar"] {display: none;}
+    [data-testid="stElementContainer"]:has(.bd-skip),
+    [data-testid="stElementContainer"]:has([data-testid="stMarkdownContainer"] > style),
+    [data-testid="stLayoutWrapper"]:has(> .st-key-browser_history_controls),
+    [data-testid="stElementContainer"]:has(#ball-dna-main) {position: absolute;}
     [data-testid="stElementContainer"]:has(> [data-testid="stIFrame"]) {
         position: absolute; width: 1px; height: 1px; margin: -1px;
         overflow: hidden; clip: rect(0 0 0 0); border: 0;
@@ -61,7 +65,7 @@ st.markdown(
         max-width: 1320px;
         padding: .2rem 2.2rem 5rem;
     }
-    .st-key-mock_nav {margin-bottom: 1rem; border-bottom: 1px solid var(--line);}
+    .st-key-mock_nav {margin: .75rem 0 1rem; border-bottom: 1px solid var(--line);}
     .st-key-mock_nav [data-testid="stHorizontalBlock"] {align-items: center; min-height: 50px;}
     .st-key-mock_brand {width: 132px;}
     .st-key-mock_brand div[data-testid="stButton"] button {
