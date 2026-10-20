@@ -416,7 +416,8 @@ def load_player_dna() -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
             ("eligible", "==", True),
         ],
     )
-    embeddings = correct_known_positions(embeddings)
+    # Keep this display/retrieval correction local so Cloud hot reloads cannot cache an older helper module.
+    embeddings.loc[pd.to_numeric(embeddings["player_id"], errors="coerce").eq(203954), "position"] = "C"
     artifacts = load_attribution_model()
     feature_columns = list(dict.fromkeys([
         "player_id",
@@ -870,7 +871,6 @@ if view == "leaderboard":
 
 from ball_ai.analytics.play_style import (  # noqa: E402
     SIAMESE_ENSEMBLE_WEIGHT,
-    correct_known_positions,
     find_style_neighbors,
 )
 from ball_ai.analytics.siamese_attribution import (  # noqa: E402
