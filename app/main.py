@@ -46,6 +46,10 @@ st.markdown(
     :focus-visible {outline: 2px solid var(--orange); outline-offset: 3px;}
     ::selection {color: #090b0f; background: var(--lime);}
     header[data-testid="stHeader"], [data-testid="stSidebar"] {display: none;}
+    [data-testid="stElementContainer"]:has(> [data-testid="stIFrame"]) {
+        position: absolute; width: 1px; height: 1px; margin: -1px;
+        overflow: hidden; clip: rect(0 0 0 0); border: 0;
+    }
     [data-testid="stAppViewContainer"] {
         background:
             radial-gradient(circle at 78% -10%, rgba(158,140,255,.16), transparent 32rem),
