@@ -616,13 +616,26 @@ def tier(score: float) -> str:
     return "Unlike"
 
 
+def _exclusive_driver_frames(
+    attribution: pd.DataFrame,
+) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """Keep the Cloud entry point independent from hot-reloaded helper modules."""
+
+    similarity = attribution["Similarity contribution"].clip(lower=0)
+    difference = attribution["Difference penalty"].clip(lower=0)
+    similarity_share = similarity / similarity.sum() if similarity.sum() else similarity
+    difference_share = difference / difference.sum() if difference.sum() else difference
+    similarity_mask = similarity.gt(0) & similarity_share.ge(difference_share)
+    return attribution.loc[similarity_mask], attribution.loc[difference.gt(0) & ~similarity_mask]
+
+
 def driver_markup(
     frame: pd.DataFrame,
     metric: str,
     reference_name: str,
     match_name: str,
 ) -> str:
-    similarity, difference = exclusive_attribution_drivers(frame)
+    similarity, difference = _exclusive_driver_frames(frame)
     rows = (
         similarity if metric == "Similarity contribution" else difference
     ).nlargest(4, metric)
@@ -1014,7 +1027,6 @@ from ball_ai.analytics.play_style import (  # noqa: E402
     find_style_neighbors,
 )
 from ball_ai.analytics.siamese_attribution import (  # noqa: E402
-    exclusive_attribution_drivers,
     load_siamese_inference_artifacts,
     siamese_pair_attribution,
 )
