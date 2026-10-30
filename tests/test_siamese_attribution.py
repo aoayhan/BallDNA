@@ -7,6 +7,8 @@ import pandas as pd
 import pytest
 
 from ball_ai.analytics.siamese_attribution import (
+    exclusive_attribution_drivers,
+    format_attribution_table,
     load_siamese_inference_artifacts,
     siamese_pair_attribution,
 )
@@ -42,3 +44,24 @@ def test_numpy_attribution_reproduces_deployed_pair_score() -> None:
     assert score == pytest.approx(expected, abs=1e-6)
     assert attribution["Similarity contribution"].gt(0).any()
     assert attribution["Difference penalty"].gt(0).any()
+
+
+def test_driver_lists_assign_overlaps_to_the_stronger_relative_effect() -> None:
+    attribution = pd.DataFrame({
+        "Feature": ["A", "B", "C", "D"],
+        "Reference": [1.0, 2.0, 3.0, 4.0],
+        "Match": [1.1, 2.2, 3.3, 4.4],
+        "Similarity contribution": [0.6, 0.4, 0.2, 0.0],
+        "Difference penalty": [0.1, 0.9, 0.0, 0.2],
+    })
+
+    similarity, difference = exclusive_attribution_drivers(attribution)
+
+    assert similarity["Feature"].tolist() == ["A", "C"]
+    assert difference["Feature"].tolist() == ["B", "D"]
+    assert set(similarity["Feature"]).isdisjoint(difference["Feature"])
+    assert set(format_attribution_table(
+        attribution, "Similarity contribution", "One", "Two"
+    )["Feature"]).isdisjoint(format_attribution_table(
+        attribution, "Difference penalty", "One", "Two"
+    )["Feature"])

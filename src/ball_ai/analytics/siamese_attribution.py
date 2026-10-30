@@ -139,6 +139,22 @@ def siamese_pair_attribution(
     return baseline, pd.DataFrame(rows)
 
 
+def exclusive_attribution_drivers(
+    attribution: pd.DataFrame,
+) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """Assign each positive feature to its stronger relative explanation group."""
+
+    similarity = attribution["Similarity contribution"].clip(lower=0)
+    difference = attribution["Difference penalty"].clip(lower=0)
+    similarity_total = float(similarity.sum())
+    difference_total = float(difference.sum())
+    similarity_share = similarity / similarity_total if similarity_total else similarity
+    difference_share = difference / difference_total if difference_total else difference
+    similarity_mask = similarity.gt(0) & similarity_share.ge(difference_share)
+    difference_mask = difference.gt(0) & ~similarity_mask
+    return attribution.loc[similarity_mask].copy(), attribution.loc[difference_mask].copy()
+
+
 def format_attribution_table(
     attribution: pd.DataFrame,
     metric: str,
@@ -148,7 +164,9 @@ def format_attribution_table(
 ) -> pd.DataFrame:
     """Format the strongest positive local score effects for display."""
 
-    display = attribution.loc[attribution[metric].gt(0), [
+    similarity, difference = exclusive_attribution_drivers(attribution)
+    source = similarity if metric == "Similarity contribution" else difference
+    display = source.loc[:, [
         "Feature", "Reference", "Match", metric,
     ]].nlargest(limit, metric).rename(columns={
         "Reference": reference_name,

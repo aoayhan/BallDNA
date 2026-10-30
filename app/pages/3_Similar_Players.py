@@ -792,6 +792,7 @@ if model_mode == "Trained Player DNA":
                 f"Local sensitivity around this {attributed_score:.2%} Siamese score. "
                 "Similarity effect is the score drop when one player's feature is neutralized; "
                 "difference effect is the score gain when one player's value is matched to the other. "
+                "Each feature appears only where its normalized local effect is stronger. "
                 "Effects are symmetric, non-additive, and do not change the ranking."
             )
             st.markdown("### Observed statistical evidence")

@@ -170,11 +170,32 @@ st.markdown(
     .bd-metric span {display: block; margin-top: .25rem; color: #758095; font-size: .62rem; letter-spacing: .08em; text-transform: uppercase;}
     .bd-metric-note {grid-column: 1 / -1; margin: .9rem 0 0; color: #707b8f; font-size: .69rem; line-height: 1.5; text-align: center;}
     .bd-home-limit {margin: -1.8rem 0 3rem; color: #697488; font-size: .7rem; line-height: 1.5;}
-    .st-key-mock_control_shell {
+    .st-key-mock_control_shell {margin-bottom: 1.35rem;}
+    .st-key-mock_control_shell:not(:has(.st-key-discover_player_shell)) {
         border: 1px solid var(--line); border-radius: 20px; padding: .7rem 1rem .2rem;
         background: linear-gradient(125deg, rgba(255,255,255,.055), rgba(255,255,255,.018));
-        box-shadow: 0 24px 70px rgba(0,0,0,.22); margin-bottom: 1.35rem;
+        box-shadow: 0 24px 70px rgba(0,0,0,.22);
     }
+    .st-key-mock_control_shell:has(.st-key-discover_player_shell) {
+        display: grid; grid-template-columns: 1.45fr 3.35fr;
+        grid-template-areas: "player adjust" "match match"; align-items: stretch;
+    }
+    .st-key-mock_control_shell > div[data-testid="stLayoutWrapper"]:has(> .st-key-discover_player_shell) {grid-area: player;}
+    .st-key-mock_control_shell > div[data-testid="stLayoutWrapper"]:has(> .st-key-discover_adjust_shell) {grid-area: adjust;}
+    .st-key-mock_control_shell > div[data-testid="stLayoutWrapper"]:has(> .st-key-discover_match_shell) {grid-area: match;}
+    .st-key-discover_player_shell {
+        grid-area: player; padding: .7rem .5rem .2rem 1rem;
+        border: 1px solid var(--line); border-right: 0; border-radius: 20px 0 0 20px;
+        background: linear-gradient(125deg, rgba(255,255,255,.055), rgba(255,255,255,.018));
+        box-shadow: 0 24px 70px rgba(0,0,0,.22);
+    }
+    .st-key-discover_adjust_shell {
+        grid-area: adjust; padding: .7rem 1rem .2rem .5rem;
+        border: 1px solid var(--line); border-left: 0; border-radius: 0 20px 20px 0;
+        background: linear-gradient(125deg, rgba(255,255,255,.035), rgba(255,255,255,.018));
+    }
+    .st-key-discover_match_shell {grid-area: match; min-width: 0;}
+    .st-key-discover_adjust_open {display: none;}
     .bd-control-label {
         color: #687388; font: 700 .65rem/1 ui-monospace, SFMono-Regular, Menlo, monospace;
         letter-spacing: .12em; text-transform: uppercase; margin-bottom: -.2rem;
@@ -363,6 +384,10 @@ st.markdown(
         .st-key-closest_pair [data-testid="stHorizontalBlock"] > div {width: auto !important; min-width: 0 !important; flex: none !important;}
     }
     @media (max-width: 600px) {
+        [data-testid="stMainBlockContainer"] {
+            padding: .15rem max(.75rem, env(safe-area-inset-right)) 4rem max(.75rem, env(safe-area-inset-left));
+        }
+        .st-key-mock_nav {margin: .35rem 0 .75rem;}
         .st-key-mock_nav [data-testid="stHorizontalBlock"] {
             display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .2rem;
         }
@@ -372,18 +397,130 @@ st.markdown(
         .st-key-mock_nav [data-testid="stColumn"]:nth-child(3) {grid-column: 2; grid-row: 2;}
         .st-key-mock_nav [data-testid="stColumn"]:nth-child(4) {grid-column: 3; grid-row: 2;}
         .st-key-mock_nav [data-testid="stColumn"]:nth-child(5) {grid-column: 4; grid-row: 2;}
-        .st-key-mock_nav [data-testid="stColumn"]:has(.bd-kofi) {grid-column: 3 / 5; grid-row: 1; text-align: right;}
-        .st-key-mock_nav div[data-testid="stButton"] button {font-size: .72rem; white-space: nowrap;}
-        .st-key-mock_brand {width: 112px;}
-        .st-key-mock_brand div[data-testid="stButton"] button {
-            width: 112px !important; background-size: 112px auto !important;
+        .st-key-mock_nav [data-testid="stColumn"]:has(.bd-kofi) {
+            grid-column: 3 / 5; grid-row: 1; width: 100% !important; justify-self: stretch;
         }
-        .bd-kofi img {height: 32px;}
-        .bd-home-title {font-size: 2.65rem;}
-        .bd-pipeline, .bd-metrics {grid-template-columns: 1fr;}
-        .bd-pipeline-step, .bd-pipeline-step + .bd-pipeline-step {padding: 1.1rem 0; border-left: 0; border-top: 1px solid var(--line);}
-        .bd-pipeline-step:first-child {border-top: 0;}
-        .bd-metric + .bd-metric {border-left: 0; border-top: 1px solid var(--line);}
+        .st-key-mock_nav div[data-testid="stButton"] button {min-height: 44px; font-size: .7rem; white-space: nowrap;}
+        .st-key-mock_brand {width: 104px;}
+        .st-key-mock_brand div[data-testid="stButton"] button {
+            width: 104px !important; min-height: 44px !important; background-size: 104px auto !important;
+        }
+        .bd-kofi {display: flex; width: max-content; margin-left: auto;}
+        .bd-kofi img {height: 30px;}
+        .bd-title {font-size: 2.25rem; line-height: .96;}
+        .bd-intro {gap: .65rem; margin-bottom: .9rem;}
+        .bd-intro p {font-size: .84rem; line-height: 1.45;}
+        .bd-intro .bd-chip-row {display: none;}
+        .st-key-home_hero {
+            min-height: 0; margin: .75rem 0 2rem; padding: 1.5rem 1.35rem;
+            border-radius: 16px; justify-content: flex-end;
+        }
+        .st-key-home_hero::before {background-position: 62% 25%; opacity: .55;}
+        .st-key-home_hero::after {background: linear-gradient(90deg, rgba(11,14,20,.98), rgba(11,14,20,.7) 72%, rgba(11,14,20,.25));}
+        .bd-home-title {margin: .65rem 0 .85rem; font-size: 2.25rem; line-height: .96;}
+        .bd-home-lede {font-size: .88rem; line-height: 1.5;}
+        .bd-home-joke {display: none;}
+        .st-key-home_actions {margin-top: .85rem;}
+        .st-key-home_discover button, .st-key-home_compare button {padding: .55rem .6rem; font-size: .72rem;}
+        .bd-home-section {margin-bottom: 2rem;}
+        .bd-home-section-head {gap: .65rem; margin-bottom: .9rem;}
+        .bd-home-section h2, .bd-ml-copy h2 {font-size: 1.65rem; line-height: 1.05;}
+        .bd-home-section-head p {font-size: .78rem; line-height: 1.5;}
+        .bd-pipeline {grid-template-columns: repeat(2, minmax(0, 1fr));}
+        .bd-pipeline-step, .bd-pipeline-step + .bd-pipeline-step {padding: 1rem .7rem 1rem 0;}
+        .bd-pipeline-step:nth-child(even) {padding-left: .7rem; border-left: 1px solid var(--line);}
+        .bd-pipeline-step:nth-child(n+3) {border-top: 1px solid var(--line);}
+        .bd-pipeline-step h3 {font-size: .82rem;}
+        .bd-pipeline-step p {font-size: .68rem;}
+        .bd-ml-panel {padding: 1.2rem;}
+        .bd-ml-copy p {font-size: .76rem; line-height: 1.55;}
+        .bd-ml-copy p:nth-of-type(n+2) {display: none;}
+        .bd-metrics {grid-template-columns: repeat(3, minmax(0, 1fr));}
+        .bd-metric {padding: .85rem .35rem;}
+        .bd-metric + .bd-metric {border-left: 1px solid var(--line); border-top: 0;}
+        .bd-metric b {font-size: 1.35rem;}
+        .bd-metric span {font-size: .5rem; letter-spacing: .04em;}
+        .bd-metric-note {font-size: .62rem;}
+        .bd-home-limit {margin: -1rem 0 2rem;}
+        .st-key-mock_control_shell {margin-bottom: 1rem;}
+        .st-key-mock_control_shell:not(:has(.st-key-discover_player_shell)) {padding: .65rem .7rem .15rem; border-radius: 16px;}
+        .st-key-mock_control_shell:has(.st-key-discover_player_shell) {
+            grid-template-columns: 1fr; grid-template-areas: "player" "match" "adjust"; gap: .7rem;
+        }
+        .st-key-discover_player_shell {
+            padding: .55rem .7rem .1rem; border: 1px solid var(--line); border-radius: 16px;
+        }
+        .st-key-discover_player_shell .bd-control-label {display: none;}
+        .st-key-discover_adjust_shell {
+            padding: 0; border: 0; border-radius: 0; background: transparent;
+        }
+        .st-key-discover_adjust_open {display: block; width: 100%;}
+        .st-key-discover_adjust_open [data-testid="stCheckbox"] {
+            width: 100%; min-height: 46px; padding: .65rem .8rem; border: 1px solid var(--line);
+            border-radius: 14px; background: rgba(10,14,20,.72);
+        }
+        .st-key-discover_adjust_open [data-testid="stCheckbox"] label {
+            width: 100%; flex-direction: row-reverse; justify-content: space-between;
+        }
+        .st-key-discover_adjust_open [data-testid="stCheckbox"] p {font-size: .78rem; font-weight: 700;}
+        .st-key-discover_adjust_controls {display: none; padding: .15rem .7rem .55rem;}
+        .st-key-discover_adjust_shell:has(.st-key-discover_adjust_open input:checked) .st-key-discover_adjust_controls {
+            display: block;
+        }
+        .st-key-discover_adjust_controls [data-testid="stHorizontalBlock"] {
+            display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .45rem .55rem;
+        }
+        .st-key-discover_adjust_controls [data-testid="stHorizontalBlock"] > div {
+            width: auto !important; min-width: 0 !important; flex: none !important;
+        }
+        .st-key-mock_control_shell:has(.bd-compare-controls) [data-testid="stHorizontalBlock"] {
+            grid-template-columns: minmax(0, 1.45fr) minmax(88px, .55fr);
+        }
+        .st-key-mock_control_shell:has(.bd-compare-controls) [data-testid="stHorizontalBlock"] > div:first-child {
+            grid-column: auto;
+        }
+        div[data-testid="stSelectbox"] div[role="group"], div[data-testid="stPopover"] button {min-height: 44px;}
+        div[data-testid="stSelectbox"] label p, .bd-field-label {font-size: .66rem !important;}
+        .bd-match-stage {
+            grid-template-columns: minmax(0, 1fr) 104px minmax(0, 1fr); min-height: 190px;
+            margin: 0; border-radius: 18px;
+        }
+        .bd-player {justify-content: flex-start; gap: .7rem; padding: 1rem .7rem;}
+        .bd-player:last-child {text-align: right; align-items: flex-end;}
+        .bd-rank {font-size: .5rem; letter-spacing: .08em;}
+        .bd-avatar {width: 58px; height: 58px; border-radius: 16px; font-size: 1rem;}
+        .bd-player-name {font-size: .95rem; line-height: 1.08; overflow-wrap: anywhere;}
+        .bd-player-meta {margin-top: .3rem; font-size: .62rem;}
+        .bd-score {padding: .9rem 0;}
+        .bd-score-ring {width: 92px; height: 92px;}
+        .bd-score-value {font-size: 1.18rem;}
+        .bd-score-label {font-size: .43rem; letter-spacing: .06em;}
+        .bd-score-tier {margin-top: .5rem; font-size: .58rem; line-height: 1.25;}
+        .bd-impact-pair {width: 96px; gap: .25rem; margin-top: .5rem; padding-top: .5rem;}
+        .bd-impact-pair small {font-size: .43rem;}
+        .bd-impact-pair b {font-size: .62rem;}
+        .bd-section-head {align-items: flex-end; margin-top: 1.5rem;}
+        .bd-section-head h2 {font-size: 1.1rem;}
+        .bd-section-head span {max-width: 45%; font-size: .55rem; line-height: 1.35; text-align: right;}
+        .bd-match-card {min-height: 116px; padding: .8rem;}
+        [class*="st-key-match_card_"] div[data-testid="stButton"] button {min-height: 116px;}
+        [class*="st-key-match_card_"]:has(button:active) .bd-match-card {
+            transform: scale(.98); border-color: rgba(255,107,53,.65); background: rgba(255,107,53,.09);
+        }
+        .bd-match-name {margin-top: 1rem; font-size: .86rem;}
+        .bd-match-score {font-size: 1.05rem;}
+        .bd-driver-panel {padding: 1rem .85rem; border-radius: 14px;}
+        .bd-driver {grid-template-columns: minmax(0, 1fr) 48px; gap: .55rem;}
+        .bd-driver-name {font-size: .7rem;}
+        .bd-driver-values {font-size: .59rem;}
+        .bd-driver-effect {font-size: .61rem;}
+        .bd-table-wrap {overflow-x: hidden;}
+        .bd-table {min-width: 0; table-layout: fixed; font-size: .64rem;}
+        .bd-table th {font-size: .5rem; letter-spacing: .06em;}
+        .bd-table th:first-child {width: 9%;}
+        .bd-table th:nth-child(4) {width: 23%;}
+        .bd-table th:nth-child(n+5), .bd-table td:nth-child(n+5) {display: none;}
+        .bd-table th, .bd-table td {padding: .68rem .45rem; overflow-wrap: anywhere;}
     }
     @media (prefers-reduced-motion: reduce) {
         *, *::before, *::after {scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important;}
@@ -485,7 +622,10 @@ def driver_markup(
     reference_name: str,
     match_name: str,
 ) -> str:
-    rows = frame.loc[frame[metric].gt(0)].nlargest(4, metric)
+    similarity, difference = exclusive_attribution_drivers(frame)
+    rows = (
+        similarity if metric == "Similarity contribution" else difference
+    ).nlargest(4, metric)
     maximum = max(float(rows[metric].max()), .0001) if not rows.empty else 1
     short_reference = escape(reference_name.split()[0])
     short_match = escape(match_name.split()[0])
@@ -596,7 +736,7 @@ def render_model_drivers(
           <section class="bd-driver-panel"><h3>Similarity drivers</h3>{similarity_drivers}</section>
           <section class="bd-driver-panel"><h3>Difference drivers</h3>{difference_drivers}</section>
         </div>
-        <div class="bd-footnote">Score effects show how the Siamese model changes when one observed input is neutralized or equalized. They explain this pair locally and do not retrain or alter the ranking.</div>
+        <div class="bd-footnote">Each feature appears once, in the list where its normalized local effect is stronger. Score effects explain this pair locally and do not retrain or alter the ranking.</div>
         """
     )
     return attributed_score
@@ -874,6 +1014,7 @@ from ball_ai.analytics.play_style import (  # noqa: E402
     find_style_neighbors,
 )
 from ball_ai.analytics.siamese_attribution import (  # noqa: E402
+    exclusive_attribution_drivers,
     load_siamese_inference_artifacts,
     siamese_pair_attribution,
 )
@@ -960,7 +1101,7 @@ if view == "compare":
         else 0
     )
     with st.container(key="mock_control_shell"):
-        st.markdown('<div class="bd-control-label">Choose two player-seasons</div>', unsafe_allow_html=True)
+        st.markdown('<div class="bd-control-label bd-compare-controls">Choose two player-seasons</div>', unsafe_allow_html=True)
         first_player_column, first_season_column, second_player_column, second_season_column = st.columns([1.45, .65, 1.45, .65])
         with first_player_column:
             first_selection = st.selectbox(
@@ -1069,11 +1210,8 @@ default_name = "Stephen Curry"
 default_index = player_options.index(default_name) if default_name in player_options else 0
 control_shell = st.container(key="mock_control_shell")
 with control_shell:
-    st.markdown('<div class="bd-control-label">Build a query</div>', unsafe_allow_html=True)
-    player_column, lens_column, season_column, mode_column, refinement_column = st.columns(
-        [1.45, .72, .62, .85, .58]
-    )
-    with player_column:
+    with st.container(key="discover_player_shell"):
+        st.markdown('<div class="bd-control-label">Build a query</div>', unsafe_allow_html=True)
         player_selection = st.selectbox(
             "Player",
             player_options,
@@ -1093,80 +1231,88 @@ with control_shell:
     ]
     if st.session_state.get("mock_lens") not in available_lenses:
         st.session_state["mock_lens"] = available_lenses[0]
-    with lens_column:
-        lens = st.selectbox("Lens", available_lenses, key="mock_lens")
-    eligible_history = history.loc[history["lens"].eq(lens)]
-    seasons = sorted(
-        eligible_history.loc[
-            eligible_history["player_id"].astype(int).eq(player_id), "season"
-        ].unique()
-    )
-    previous_season = st.session_state.get("mock_season")
-    if previous_season not in seasons:
-        st.session_state["mock_season"] = min(
-            seasons,
-            key=lambda candidate: abs(
-                int(candidate.split("-")[0])
-                - int(str(previous_season or seasons[-1]).split("-")[0])
-            ),
-        )
-    with season_column:
-        season = st.selectbox("Season", seasons, key="mock_season")
-    reference = eligible_history.loc[
-        eligible_history["player_id"].astype(int).eq(player_id)
-        & eligible_history["season"].eq(season)
-    ].iloc[0]
-    impact_column = {"Offensive": "o_dpm", "Overall": "dpm", "Defensive": "d_dpm"}[lens]
-    impact_label = {"Offensive": "O-DPM", "Overall": "DPM", "Defensive": "D-DPM"}[lens]
-    reference_impact = pd.to_numeric(
-        pd.Series([reference[impact_column]]), errors="coerce"
-    ).iloc[0]
-    result_sets = ["Style Twin", "Impact-adjusted"] if pd.notna(reference_impact) else ["Style Twin"]
-    if st.session_state.get("mock_result_set") not in result_sets:
-        st.session_state["mock_result_set"] = "Style Twin"
-    with mode_column:
-        result_set = st.selectbox("Result set", result_sets, key="mock_result_set")
+    adjust_shell = st.container(key="discover_adjust_shell")
+    with adjust_shell:
+        st.checkbox("Adjust search", value=False, key="discover_adjust_open")
+        adjust_controls = st.container(key="discover_adjust_controls")
+        with adjust_controls:
+            lens_column, season_column, mode_column, refinement_column = st.columns(
+                [.72, .62, .85, .58]
+            )
+            with lens_column:
+                lens = st.selectbox("Lens", available_lenses, key="mock_lens")
+            eligible_history = history.loc[history["lens"].eq(lens)]
+            seasons = sorted(
+                eligible_history.loc[
+                    eligible_history["player_id"].astype(int).eq(player_id), "season"
+                ].unique()
+            )
+            previous_season = st.session_state.get("mock_season")
+            if previous_season not in seasons:
+                st.session_state["mock_season"] = min(
+                    seasons,
+                    key=lambda candidate: abs(
+                        int(candidate.split("-")[0])
+                        - int(str(previous_season or seasons[-1]).split("-")[0])
+                    ),
+                )
+            with season_column:
+                season = st.selectbox("Season", seasons, key="mock_season")
+            reference = eligible_history.loc[
+                eligible_history["player_id"].astype(int).eq(player_id)
+                & eligible_history["season"].eq(season)
+            ].iloc[0]
+            impact_column = {"Offensive": "o_dpm", "Overall": "dpm", "Defensive": "d_dpm"}[lens]
+            impact_label = {"Offensive": "O-DPM", "Overall": "DPM", "Defensive": "D-DPM"}[lens]
+            reference_impact = pd.to_numeric(
+                pd.Series([reference[impact_column]]), errors="coerce"
+            ).iloc[0]
+            result_sets = ["Style Twin", "Impact-adjusted"] if pd.notna(reference_impact) else ["Style Twin"]
+            if st.session_state.get("mock_result_set") not in result_sets:
+                st.session_state["mock_result_set"] = "Style Twin"
+            with mode_column:
+                result_set = st.selectbox("Result set", result_sets, key="mock_result_set")
 
-    candidate_seasons = sorted(eligible_history["season"].dropna().unique())
-    candidate_ages = pd.to_numeric(
-        eligible_history["age"], errors="coerce"
-    ).dropna().astype(int)
-    with refinement_column:
-        st.markdown('<div class="bd-field-label">Candidate pool</div>', unsafe_allow_html=True)
-        with st.popover("Refine pool", use_container_width=True):
-            unique_players = st.toggle(
-                "Unique players",
-                value=True,
-                help="Keep only the highest-ranked season for each matching player.",
-            )
-            position_aware = st.toggle(
-                "Position-aware",
-                value=False,
-                help="Filter by broad G/F/C labels; position never enters the model.",
-            )
-            season_range = st.select_slider(
-                "Candidate seasons",
-                options=candidate_seasons,
-                value=(candidate_seasons[0], candidate_seasons[-1]),
-            )
-            age_range = st.slider(
-                "Candidate ages",
-                min_value=int(candidate_ages.min()),
-                max_value=int(candidate_ages.max()),
-                value=(int(candidate_ages.min()), int(candidate_ages.max())),
-            )
-            impact_tolerance = None
-            if result_set == "Impact-adjusted":
-                impact_tolerance = st.slider(
-                    f"Maximum {impact_label} difference",
-                    min_value=.5,
-                    max_value=5.0,
-                    value=1.5,
-                    step=.5,
-                )
-                st.caption(
-                    f"DARKO {impact_label} filters the candidate pool. It never increases a style score."
-                )
+            candidate_seasons = sorted(eligible_history["season"].dropna().unique())
+            candidate_ages = pd.to_numeric(
+                eligible_history["age"], errors="coerce"
+            ).dropna().astype(int)
+            with refinement_column:
+                st.markdown('<div class="bd-field-label">Candidate pool</div>', unsafe_allow_html=True)
+                with st.popover("Refine pool", use_container_width=True):
+                    unique_players = st.toggle(
+                        "Unique players",
+                        value=True,
+                        help="Keep only the highest-ranked season for each matching player.",
+                    )
+                    position_aware = st.toggle(
+                        "Position-aware",
+                        value=False,
+                        help="Filter by broad G/F/C labels; position never enters the model.",
+                    )
+                    season_range = st.select_slider(
+                        "Candidate seasons",
+                        options=candidate_seasons,
+                        value=(candidate_seasons[0], candidate_seasons[-1]),
+                    )
+                    age_range = st.slider(
+                        "Candidate ages",
+                        min_value=int(candidate_ages.min()),
+                        max_value=int(candidate_ages.max()),
+                        value=(int(candidate_ages.min()), int(candidate_ages.max())),
+                    )
+                    impact_tolerance = None
+                    if result_set == "Impact-adjusted":
+                        impact_tolerance = st.slider(
+                            f"Maximum {impact_label} difference",
+                            min_value=.5,
+                            max_value=5.0,
+                            value=1.5,
+                            step=.5,
+                        )
+                        st.caption(
+                            f"DARKO {impact_label} filters the candidate pool. It never increases a style score."
+                        )
 
 query_signature = (
     player_id,
@@ -1219,7 +1365,7 @@ pool_label = (
     f"{lens.lower()} · {'unique players' if unique_players else 'all player-seasons'} · "
     f"{'position-aware' if position_aware else 'all positions'}"
 )
-with control_shell:
+with adjust_controls:
     st.caption(
         pool_label
         + (
@@ -1233,20 +1379,22 @@ focused_index = min(int(st.session_state.get("mock_focused_index", 0)), len(neig
 
 match = neighbors.iloc[int(focused_index)]
 score = float(match["similarity_score"])
-st.markdown(
-    match_stage_markup(
-        reference,
-        match,
-        score,
-        reference_label="Reference",
-        match_label=f"Match #{int(focused_index) + 1}",
-        lens=lens,
-        impact_label=impact_label if result_set == "Impact-adjusted" else None,
-        reference_impact=reference[impact_column],
-        match_impact=match[impact_column],
-    ),
-    unsafe_allow_html=True,
-)
+with control_shell:
+    with st.container(key="discover_match_shell"):
+        st.markdown(
+            match_stage_markup(
+                reference,
+                match,
+                score,
+                reference_label="Reference",
+                match_label=f"Match #{int(focused_index) + 1}",
+                lens=lens,
+                impact_label=impact_label if result_set == "Impact-adjusted" else None,
+                reference_impact=reference[impact_column],
+                match_impact=match[impact_column],
+            ),
+            unsafe_allow_html=True,
+        )
 
 st.markdown(
     f"""

@@ -324,7 +324,8 @@ def _render_style_matchup(
             ))
             st.caption(
                 "Score drop when either player's feature is neutralized. Positive values indicate "
-                "behaviors that pull this pair together in the Siamese embedding."
+                "behaviors that pull this pair together in the Siamese embedding. Each feature "
+                "appears only in the driver list where its normalized local effect is stronger."
             )
             st.markdown("**Observed shared tendencies**")
         render_copyable_table(
@@ -344,7 +345,8 @@ def _render_style_matchup(
             ))
             st.caption(
                 "Score gain when either player's value is matched to the other. Positive values "
-                "indicate behaviors that push this pair apart; effects are symmetric and non-additive."
+                "indicate behaviors that push this pair apart; effects are symmetric and non-additive. "
+                "Features assigned to the similarity list are omitted here."
             )
             st.markdown("**Observed largest differences**")
         render_copyable_table(
