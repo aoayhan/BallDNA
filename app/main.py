@@ -936,7 +936,6 @@ if view == "home":
             <div class="bd-home-eyebrow">NBA player similarity, learned from behavior</div>
             <h1 class="bd-home-title">Find out who your favorite player plays like.</h1>
             <p class="bd-home-lede">Basketball DNA learns Player DNA from NBA shot selection, creation, playmaking, and defensive actions, then searches basketball history for the closest style matches.</p>
-            <p class="bd-home-joke">AI here means embeddings—not Allen Iverson, although he is in the search pool.</p>
           </div>
             """,
             unsafe_allow_html=True,

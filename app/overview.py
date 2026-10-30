@@ -70,7 +70,6 @@ def render_overview() -> None:
             <h1>Find out who your favorite player plays like.</h1>
             <p>Basketball DNA learns Player DNA from NBA shot selection, creation, playmaking,
             and defensive actions, then searches basketball history for the closest style matches.</p>
-            <p class="overview-joke">AI here means embeddings—not Allen Iverson, although he is in the search pool.</p>
         </section>
         """,
         unsafe_allow_html=True,
