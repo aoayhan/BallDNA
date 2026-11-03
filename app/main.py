@@ -17,6 +17,7 @@ if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
 DATA = ROOT / "data" / "historical"
+LIVE_DATA = ROOT / "data" / "live"
 MODEL = ROOT / "models" / "play_style" / "siamese_tabular_v5_inference.npz"
 MODEL_SUMMARY = ROOT / "models" / "play_style" / "siamese_tabular_v5_summary.json"
 LEGAL = ROOT / "LEGAL.md"
@@ -537,7 +538,7 @@ st.markdown('<a class="bd-skip" href="#ball-dna-main">Skip to main content</a>',
 
 
 @st.cache_resource(show_spinner=False)
-def load_player_dna() -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
+def load_player_dna(live_version: str | None = None) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
     """Load the filtered, read-only inference assets used by the app."""
 
     embedding_columns = [f"embedding_{index:02d}" for index in range(34)]
@@ -545,7 +546,8 @@ def load_player_dna() -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
         DATA / "player_style_embeddings.parquet",
         columns=[
             "player_id", "player_name", "season", "age", "position", "eligible",
-            "profile", "lens", "method", *embedding_columns,
+            "games_played", "shot_attempts", "reliability", "profile", "lens", "method",
+            *embedding_columns,
         ],
         filters=[
             ("profile", "==", "Broad history"),
@@ -567,6 +569,19 @@ def load_player_dna() -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
         columns=feature_columns,
     )
     siamese = pd.read_parquet(DATA / "siamese_offensive_embeddings.parquet")
+    live_embeddings = LIVE_DATA / "player_style_embeddings.parquet"
+    live_features = LIVE_DATA / "player_style_features.parquet"
+    live_siamese = LIVE_DATA / "siamese_offensive_embeddings.parquet"
+    if live_embeddings.exists() and live_features.exists() and live_siamese.exists():
+        embeddings = pd.concat([
+            embeddings,
+            pd.read_parquet(live_embeddings).reindex(columns=embeddings.columns),
+        ], ignore_index=True)
+        features = pd.concat([
+            features,
+            pd.read_parquet(live_features).reindex(columns=features.columns),
+        ], ignore_index=True)
+        siamese = pd.concat([siamese, pd.read_parquet(live_siamese)], ignore_index=True)
     impact = pd.read_parquet(
         DATA / "darko_dpm.parquet",
         columns=["player_id", "season", "dpm", "o_dpm", "d_dpm"],
@@ -578,6 +593,16 @@ def load_player_dna() -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
         validate="many_to_one",
     )
     return history, features, siamese
+
+
+def load_live_metadata() -> dict:
+    """Return live snapshot metadata without making app startup depend on it."""
+
+    path = LIVE_DATA / "metadata.json"
+    try:
+        return json.loads(path.read_text()) if path.exists() else {}
+    except (OSError, json.JSONDecodeError):
+        return {}
 
 
 @st.cache_data(show_spinner=False)
@@ -1030,7 +1055,8 @@ from ball_ai.analytics.siamese_attribution import (  # noqa: E402
     siamese_pair_attribution,
 )
 
-history, features, siamese = load_player_dna()
+live_metadata = load_live_metadata()
+history, features, siamese = load_player_dna(live_metadata.get("updated_at"))
 players = (
     history.sort_values("season")
     .drop_duplicates("player_id", keep="last")
@@ -1178,6 +1204,20 @@ if view == "compare":
         ),
         unsafe_allow_html=True,
     )
+    live_rows = [
+        (name, row)
+        for name, row in ((first_name, reference), (second_name, comparison))
+        if str(row["season"]) == live_metadata.get("season")
+    ]
+    if live_rows:
+        samples = ", ".join(
+            f"{name}: {int(row['games_played'])} games, {int(row['shot_attempts'])} shots"
+            for name, row in live_rows
+        )
+        st.info(
+            f"Provisional season-to-date profile · {samples} · data through "
+            f"{live_metadata.get('games_through', 'the latest completed games')}."
+        )
     st.html(
         f'<div class="bd-chip-row"><span class="bd-chip">{escape(first_name)} O-DPM {signed(reference["o_dpm"])}</span>'
         f'<span class="bd-chip">{escape(second_name)} O-DPM {signed(comparison["o_dpm"])}</span>'
@@ -1336,6 +1376,14 @@ query_signature = (
     age_range,
     impact_tolerance,
 )
+if season == live_metadata.get("season"):
+    live_games = int(pd.to_numeric(pd.Series([reference.get("games_played")]), errors="coerce").fillna(0).iloc[0])
+    live_shots = int(pd.to_numeric(pd.Series([reference.get("shot_attempts")]), errors="coerce").fillna(0).iloc[0])
+    st.info(
+        f"Provisional {season} season-to-date profile · {live_games} games · {live_shots} shots · "
+        f"data through {live_metadata.get('games_through', 'the latest completed games')}. "
+        "Early-season matches can move quickly."
+    )
 if st.session_state.get("mock_query_signature") != query_signature:
     st.session_state["mock_query_signature"] = query_signature
     st.session_state["mock_focused_index"] = 0

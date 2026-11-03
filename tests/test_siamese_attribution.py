@@ -7,6 +7,7 @@ import pandas as pd
 import pytest
 
 from ball_ai.analytics.siamese_attribution import (
+    encode_siamese_features,
     exclusive_attribution_drivers,
     format_attribution_table,
     load_siamese_inference_artifacts,
@@ -44,6 +45,23 @@ def test_numpy_attribution_reproduces_deployed_pair_score() -> None:
     assert score == pytest.approx(expected, abs=1e-6)
     assert attribution["Similarity contribution"].gt(0).any()
     assert attribution["Difference penalty"].gt(0).any()
+
+
+def test_frozen_encoder_reproduces_stored_embeddings() -> None:
+    features = pd.read_parquet(
+        settings.historical_data_dir / "player_style_features.parquet"
+    ).loc[lambda frame: frame["player_id"].eq(201939) & frame["season"].eq("2024-25")]
+    stored = pd.read_parquet(
+        settings.historical_data_dir / "siamese_offensive_embeddings.parquet"
+    ).loc[lambda frame: frame["player_id"].eq(201939) & frame["season"].eq("2024-25")]
+    artifacts = load_siamese_inference_artifacts(
+        Path("models/play_style/siamese_tabular_v5_inference.npz")
+    )
+
+    encoded = encode_siamese_features(features, artifacts)
+    columns = [column for column in stored if "embedding_" in column]
+
+    assert np.allclose(encoded[columns], stored[columns], atol=1e-6)
 
 
 def test_driver_lists_assign_overlaps_to_the_stronger_relative_effect() -> None:

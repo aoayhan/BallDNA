@@ -71,6 +71,20 @@ def _score(
     return 1 - np.arccos(cosine) / pi
 
 
+def encode_siamese_features(features: pd.DataFrame, artifacts: dict) -> pd.DataFrame:
+    """Encode new player-season rows with the frozen deployed Siamese models."""
+
+    output = features[["player_id", "season"]].copy()
+    for prefix, component in (
+        ("siamese_embedding", artifacts["stable"]),
+        ("detailed_siamese_embedding", artifacts["detailed"]),
+    ):
+        values = np.vstack([_encode(component, row) for _, row in features.iterrows()])
+        for index in range(values.shape[1]):
+            output[f"{prefix}_{index:02d}"] = values[:, index]
+    return output
+
+
 def siamese_pair_attribution(
     features: pd.DataFrame,
     artifacts: dict,

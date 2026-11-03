@@ -1,6 +1,6 @@
 # Legal, privacy, and accessibility
 
-_Last updated: 7 October 2026_
+_Last updated: 3 November 2026_
 
 Basketball DNA is an independent, non-commercial portfolio and research demonstration. It is not affiliated with, endorsed by, or sponsored by the NBA, its teams, its players, DARKO, nbarapm, Basketball Reference, or any other data provider mentioned below.
 
@@ -38,6 +38,7 @@ Nothing in this notice creates permission to reuse third-party names, statistics
 - Shot and event archive: [cdechoch/nba-data-archive](https://huggingface.co/datasets/cdechoch/nba-data-archive), whose dataset card declares Apache-2.0 and identifies its upstream sources.
 - Impact context: DARKO Daily Plus-Minus by Kostya Medvedovsky, accessed through the historical export at [nbarapm](https://nbarapm.com/datasets/MetricHistory). DARKO values are credited, shown only as separate context, and are not model inputs.
 - NBA names and statistics are used for identification and analysis. NBA.com is attributed as an upstream source. NBA and team names and marks belong to their respective owners.
+- The provisional ongoing-season feature uses NBA.com season totals and shot charts refreshed after completed games. It displays derived Player DNA outputs rather than a live or play-by-play game feed.
 - Current-player headshots are displayed from the NBA CDN for identification. They remain the property of their respective rightsholders; Basketball DNA claims no ownership, affiliation, or endorsement and will remove disputed material on request.
 - The homepage Allen Iverson artwork was supplied by the project owner for this non-commercial portfolio. Basketball DNA claims no ownership, affiliation, or endorsement and will remove disputed material on request.
 - Ko-fi button artwork is an official Ko-fi brand asset used to link to the project's Ko-fi page.

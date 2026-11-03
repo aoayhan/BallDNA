@@ -100,6 +100,16 @@ tests/                     Unit and integration tests
 8. SQL and Parquet read models retrieve only the player and date windows each feature needs.
 9. pandas functions add eFG%, true shooting, assist-to-turnover ratio, recent trend splits, and shot-style features.
 10. Player DNA has two independently trained depths: Broad History excludes possession-action fields for consistent cross-era comparison, while Modern Detailed requires 2020+ action coverage. Offensive candidates span shot-detail history from 1996-97; matchup-based defense begins in 2017-18. Models train only through 2022-23, while later seasons remain validation and test data.
+11. A separate NBA.com updater builds provisional ongoing-season offensive features after completed games. It applies the frozen encoders without retraining and uses a three-game, 15-shot discovery floor; the UI always shows the sample size and labels these results provisional.
+
+Refresh the live snapshot manually with:
+
+```bash
+pip install -r requirements-live.txt
+python scripts/update_live_season.py
+```
+
+On macOS, `scripts/install_live_season_launch_agent.sh` installs a 10:00 local-time daily job. The job refreshes the four compact `data/live/` assets, commits only those files, and pushes them to `main` so Streamlit Cloud redeploys. The Mac must be awake, the checkout must be able to push to GitHub, and its virtual environment must include `requirements-live.txt`.
 
 The base Player DNA model is frozen as `play-style-v1`: its parameters and
 artifact hashes live in `models/play_style/v1/champion_manifest.json`. Compact
