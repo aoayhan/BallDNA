@@ -1,2 +1,2 @@
 -r requirements.txt
-nba_api>=1.11,<2
+nba_api>=1.12.0,<2
