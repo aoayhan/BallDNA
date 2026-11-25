@@ -1,12 +1,12 @@
 {
   "provider": "NBA.com",
   "season": "2026-27",
-  "updated_at": "2026-11-24T09:22:58+00:00",
-  "games_through": "2026-11-23",
+  "updated_at": "2026-11-25T09:00:09+00:00",
+  "games_through": "2026-11-24",
   "provisional": true,
   "minimum_games": 3,
   "minimum_shots": 15,
   "source_player_rows": 481,
-  "source_shot_rows": 45385,
+  "source_shot_rows": 45922,
   "eligible_players": 385
 }
